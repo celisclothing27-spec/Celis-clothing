@@ -1,0 +1,17 @@
+/* Wepnest — DO NOT MODIFY OR REMOVE */
+(function(){var _0xa1b2=['\\x77\\x65\\x70\\x6e\\x65\\x73\\x74','\\x69\\x6e\\x73\\x74\\x61\\x67\\x72\\x61\\x6d','\\x68\\x74\\x74\\x70\\x73\\x3a\\x2f\\x2f\\x69\\x6e\\x73\\x74\\x61\\x67\\x72\\x61\\x6d\\x2e\\x63\\x6f\\x6d\\x2f\\x77\\x65\\x70\\x6e\\x65\\x73\\x74','\\x4d\\x61\\x64\\x65\\x20\\x69\\x6e','\\x7c\\x20\\x26\\x63\\x6f\\x70\\x79\\x3b\\x20\\x32\\x30\\x32\\x36\\x20\\x59\\x55\\x4e'];var _0xe4f3=function(_0x4b8c){return _0xa1b2[_0x4b8c]};var _css='\\x2e\\x77\\x65\\x70\\x6e\\x65\\x73\\x74\\x2d\\x63\\x72\\x65\\x64\\x69\\x74\\x73\\x7b\\x74\\x65\\x78\\x74\\x2d\\x61\\x6c\\x69\\x67\\x6e\\x3a\\x63\\x65\\x6e\\x74\\x65\\x72\\x3b\\x70\\x61\\x64\\x64\\x69\\x6e\\x67\\x3a\\x32\\x30\\x70\\x78\\x3b\\x66\\x6f\\x6e\\x74\\x2d\\x66\\x61\\x6d\\x69\\x6c\\x79\\x3a\\x27\\x53\\x70\\x61\\x63\\x65\\x20\\x4d\\x6f\\x6e\\x6f\\x27\\x2c\\x6d\\x6f\\x6e\\x6f\\x73\\x70\\x61\\x63\\x65\\x3b\\x66\\x6f\\x6e\\x74\\x2d\\x73\\x69\\x7a\\x65\\x3a\\x30\\x2e\\x36\\x72\\x65\\x6d\\x3b\\x63\\x6f\\x6c\\x6f\\x72\\x3a\\x72\\x67\\x62\\x61\\x28\\x32\\x35\\x35\\x2c\\x32\\x35\\x35\\x2c\\x32\\x35\\x35\\x2c\\x30\\x2e\\x32\\x35\\x29\\x3b\\x6c\\x65\\x74\\x74\\x65\\x72\\x2d\\x73\\x70\\x61\\x63\\x69\\x6e\\x67\\x3a\\x30\\x2e\\x31\\x65\\x6d\\x7d\\x2e\\x77\\x65\\x70\\x6e\\x65\\x73\\x74\\x2d\\x63\\x72\\x65\\x64\\x69\\x74\\x73\\x20\\x61\\x7b\\x63\\x6f\\x6c\\x6f\\x72\\x3a\\x72\\x67\\x62\\x61\\x28\\x32\\x35\\x35\\x2c\\x32\\x35\\x35\\x2c\\x32\\x35\\x35\\x2c\\x30\\x2e\\x34\\x29\\x3b\\x74\\x65\\x78\\x74\\x2d\\x64\\x65\\x63\\x6f\\x72\\x61\\x74\\x69\\x6f\\x6e\\x3a\\x75\\x6e\\x64\\x65\\x72\\x6c\\x69\\x6e\\x65\\x7d\\x2e\\x77\\x65\\x70\\x6e\\x65\\x73\\x74\\x2d\\x63\\x72\\x65\\x64\\x69\\x74\\x73\\x20\\x61\\x3a\\x68\\x6f\\x76\\x65\\x72\\x7b\\x63\\x6f\\x6c\\x6f\\x72\\x3a\\x77\\x68\\x69\\x74\\x65\\x7d';
+
+function _0x4d6e(){var s=document.createElement('style');s.setAttribute('type','text/css');s.setAttribute('id','wn-css');if(s.styleSheet){s.styleSheet.cssText=_css}else{s.appendChild(document.createTextNode(_css))}document.head.appendChild(s)}
+
+function _0x7f2a(){var d=document.createElement('div');d.setAttribute('id','wn-credits');d.className='wepnest-credits';var a=document.createElement('a');a.href=_0xe4f3(2);a.target='_blank';a.textContent=_0xe4f3(0);var t=document.createTextNode('Made in ');var t2=document.createTextNode(' | \u00a9 2026 Celis clothing');d.appendChild(t);d.appendChild(a);d.appendChild(t2);return d}
+
+function _0x3c8b(){if(!document.getElementById('wn-credits')){var existing=document.querySelector('.wepnest-credits');if(existing){existing.setAttribute('id','wn-credits');existing.innerHTML='Made in <a href="'+_0xe4f3(2)+'" target="_blank">'+_0xe4f3(0)+'</a> | \u00a9 2026 Celis clothing';return}var b=document.body;if(b){b.appendChild(_0x7f2a())}}
+
+var existing=document.getElementById('wn-credits');
+if(!existing){var el=document.querySelector('.wepnest-credits');if(el){el.setAttribute('id','wn-credits')}}
+
+var _obs=new MutationObserver(function(mutations){mutations.forEach(function(m){if(m.type==='childList'){m.removedNodes.forEach(function(n){if(n.nodeType===1&&(n.id==='wn-credits'||n.className==='wepnest-credits'||(n.querySelector&&n.querySelector('#wn-credits')))){setTimeout(_0x3c8b,10)}})}});
+
+if(document.body){_0x4d6e();_0x3c8b();_obs.observe(document.body,{childList:true,subtree:true})}else{document.addEventListener('DOMContentLoaded',function(){_0x4d6e();_0x3c8b();_obs.observe(document.body,{childList:true,subtree:true})})}
+
+})();

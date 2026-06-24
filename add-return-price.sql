@@ -1,0 +1,1 @@
+ALTER TABLE wilaya_pricing ADD COLUMN IF NOT EXISTS return_price INT DEFAULT 150;

@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Celis clothing — Premium fashion streetwear. Free shipping across Algeria via Zr Express.">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Celis clothing">
+    <meta property="og:image" content="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <meta property="og:url" content="https://sweet-brioche-a912f4.netlify.app">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Celis clothing">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <title>Celis clothing — Checkout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://afbmxzrtdwqiawzsddtq.supabase.co" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Inter:wght@300;400;500;600&family=Space+Mono&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #0a0a0a; --text-primary: #ffffff; --text-secondary: rgba(255,255,255,0.55); --accent: #e8e0d0; --font-body: 'Inter', sans-serif; --font-caption: 'Space Mono', monospace; --transition: 400ms ease; }
+        html { scroll-behavior: smooth; font-family: var(--font-body); background: var(--bg); color: var(--text-primary); overflow-x: hidden; }
+        body { line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: var(--bg); min-height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; background-repeat: no-repeat; }
+        img { max-width: 100%; display: block; }
+        a { text-decoration: none; color: inherit; }
+        button { border: none; background: none; cursor: pointer; font-family: inherit; outline: inherit; }
+        *:focus-visible { outline: 2px solid rgba(255,255,255,0.5); outline-offset: 3px; }
+
+        /* NAVBAR */
+        .navbar { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; width: auto; min-width: unset; max-width: 720px; border-radius: 999px; background: rgba(10,10,10,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 24px rgba(0,0,0,0.4); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+        .navbar-brand img { display: block; height: 36px; width: auto; object-fit: contain; }
+        .navbar-links { display: flex; align-items: center; gap: 32px; }
+        .navbar-links a { font-size: 0.85rem; color: rgba(255,255,255,0.75); position: relative; transition: color var(--transition); }
+        .navbar-links a:hover { color: var(--text-primary); }
+        .navbar-links a.active { color: var(--text-primary); }
+        .navbar-links a.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 1px; background: var(--text-primary); }
+        .navbar-icons { display: flex; align-items: center; gap: 16px; }
+        .navbar-icons button { color: var(--text-primary); display: flex; align-items: center; justify-content: center; transition: opacity var(--transition); }
+        .navbar-icons button:hover { opacity: 0.7; }
+        .hamburger { display: none; }
+        .cart-btn-wrap { position: relative; }
+        .mobile-menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; background: rgba(10,10,10,0.97); backdrop-filter: blur(30px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+        .mobile-menu-overlay.open { display: flex; }
+        .mobile-menu-overlay a { font-size: 1.6rem; font-weight: 300; color: rgba(255,255,255,0.8); transition: color var(--transition); }
+        .mobile-menu-overlay a:hover { color: var(--text-primary); }
+        .mobile-menu-close { position: absolute; top: 16px; right: 20px; color: var(--text-primary); }
+
+        /* PAGE TITLE */
+        .page-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: clamp(2.5rem, 8vw, 5rem); color: var(--text-primary); text-align: center; padding-top: 120px; text-transform: uppercase; letter-spacing: 0.01em; margin-bottom: 32px; }
+
+        /* CHECKOUT GRID */
+        .checkout-container { max-width: 1400px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 60px) 80px; }
+        .checkout-grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; align-items: start; }
+        .checkout-form-col { display: flex; flex-direction: column; gap: 24px; }
+
+        /* GLASS CARD */
+        .glass-card { background: rgba(15,15,15,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); padding: 28px; }
+        .glass-card-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.4rem; color: white; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 24px; }
+
+        /* FORM ELEMENTS */
+        .form-label { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; font-weight: 500; }
+        .form-label .req { color: rgba(255,100,100,0.8); margin-left: 2px; }
+        .form-group { margin-bottom: 0; }
+        .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; color: white; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s, background 0.2s; box-sizing: border-box; }
+        .form-input:focus { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.07); }
+        .form-input::placeholder { color: rgba(255,255,255,0.3); }
+        .form-input.error { border-color: rgba(255,80,80,0.5); }
+        textarea.form-input { resize: vertical; min-height: 60px; }
+        .form-error { font-size: 0.7rem; color: rgba(255,80,80,0.85); margin-top: 6px; display: none; }
+        .form-error.show { display: block; }
+        .form-hint { font-size: 0.7rem; color: rgba(255,200,60,0.8); margin-top: 6px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-space { display: flex; flex-direction: column; gap: 16px; }
+
+        /* STEP LABEL */
+        .step-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; font-weight: 500; }
+
+        /* DELIVERY TYPE BUTTONS */
+        .delivery-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+        .delivery-type-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); transition: all 0.25s ease; cursor: pointer; text-align: center; }
+        .delivery-type-btn:hover { background: rgba(255,255,255,0.06); }
+        .delivery-type-btn.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: white; box-shadow: 0 0 20px rgba(255,255,255,0.08); }
+        .delivery-type-icon { font-size: 1.5rem; }
+        .delivery-type-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .delivery-type-desc { font-size: 0.65rem; opacity: 0.6; }
+
+        /* DELIVERY SERVICE BUTTONS */
+        .delivery-service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+        .delivery-service-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); transition: all 0.25s ease; cursor: pointer; text-align: center; }
+        .delivery-service-btn:hover { background: rgba(255,255,255,0.06); }
+        .delivery-service-btn.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); color: white; box-shadow: 0 0 20px rgba(255,255,255,0.08); }
+        .delivery-service-logo { width: 48px; height: 48px; object-fit: contain; }
+        .delivery-service-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .delivery-service-tag { font-size: 0.6rem; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.08em; }
+
+        /* CUSTOM SELECT */
+        .custom-select { position: relative; width: 100%; }
+        .custom-select-trigger { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; color: white; font-size: 0.9rem; font-family: 'Inter', sans-serif; text-align: left; display: flex; align-items: center; justify-content: space-between; transition: border-color 0.2s, background 0.2s; cursor: pointer; }
+        .custom-select-trigger:hover { background: rgba(255,255,255,0.07); }
+        .custom-select-trigger.open { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
+        .custom-select-trigger .placeholder { color: rgba(255,255,255,0.3); }
+        .custom-select-trigger .chevron { transition: transform 0.2s; color: rgba(255,255,255,0.5); flex-shrink: 0; margin-left: 12px; }
+        .custom-select-trigger.open .chevron { transform: rotate(180deg); }
+        .custom-select-dropdown { position: absolute; top: calc(100% + 4px); left: 0; width: 100%; background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; z-index: 9999; box-shadow: 0 12px 40px rgba(0,0,0,0.6); display: none; }
+        .custom-select-dropdown.open { display: block; }
+        .custom-select-options { max-height: 240px; overflow-y: auto; padding: 8px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+        .custom-select-option { padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; color: rgba(255,255,255,0.75); transition: background 0.15s; }
+        .custom-select-option:hover { background: rgba(255,255,255,0.06); }
+        .custom-select-option.selected { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .custom-select-option + .custom-select-option { border-top: 1px solid rgba(255,255,255,0.04); }
+        .custom-select-loading { padding: 20px; text-align: center; color: rgba(255,255,255,0.3); font-size: 0.8rem; }
+
+        /* ORDER SUMMARY SIDEBAR */
+        .order-summary { background: rgba(15,15,15,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); padding: 28px; position: sticky; top: 90px; }
+        .summary-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.4rem; color: white; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 24px; }
+        .summary-products { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; max-height: 360px; overflow-y: auto; padding-right: 4px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+        .summary-product { display: flex; align-items: center; gap: 12px; }
+        .summary-product img { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+        .summary-product-info { flex: 1; min-width: 0; }
+        .summary-product-name { font-size: 0.85rem; font-weight: 600; color: white; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .summary-product-meta { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 2px; text-transform: uppercase; }
+        .summary-product-price { font-weight: 600; font-size: 0.85rem; color: white; white-space: nowrap; }
+        .summary-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0; }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        .summary-row-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; }
+        .summary-row-value { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+        .summary-row-value.loading { display: flex; align-items: center; gap: 8px; }
+        .summary-total { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 4px; }
+        .summary-total-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.1rem; color: white; text-transform: uppercase; letter-spacing: 0.06em; }
+        .summary-total-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.3rem; color: white; }
+
+        /* PLACE ORDER BUTTON */
+        .btn-place-order { width: 100%; padding: 18px; background: white; color: #0a0a0a; border: none; border-radius: 12px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 28px; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.15); }
+        .btn-place-order:hover { background: rgba(255,255,255,0.92); box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .btn-place-order:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+        .btn-place-order:disabled:hover { background: white; }
+        .btn-spinner { width: 20px; height: 20px; border: 2.5px solid rgba(10,10,10,0.15); border-top-color: #0a0a0a; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+        .btn-place-order.loading .btn-spinner { display: block; }
+        .btn-place-order.loading .btn-text { opacity: 0; }
+        .btn-text { transition: opacity 0.2s; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .terms-text { font-size: 0.6rem; color: rgba(255,255,255,0.3); text-align: center; margin-top: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+        /* COOLDOWN BANNER */
+        .cooldown-banner { background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.15); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: none; align-items: center; gap: 12px; }
+        .cooldown-banner.show { display: flex; }
+        .cooldown-banner-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .cooldown-banner-text { font-size: 0.8rem; color: rgba(255,120,120,0.9); line-height: 1.5; }
+        .cooldown-banner-text strong { color: white; }
+
+        /* EMPTY CART */
+        .empty-cart-notice { text-align: center; padding: 80px 20px; }
+        .empty-cart-notice p { color: rgba(255,255,255,0.35); font-size: 0.9rem; margin-bottom: 16px; }
+        .empty-cart-notice a { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 0.9rem; color: white; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 3px; }
+
+        /* CART DRAWER */
+        #cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #cart-overlay.active { opacity: 1; visibility: visible; }
+        #cart-drawer { position: fixed; top: 0; right: 0; width: 420px; max-width: 100vw; height: 100vh; background: #0f0f0f; border-left: 1px solid rgba(255,255,255,0.08); z-index: 9999; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1); }
+        #cart-drawer.active { transform: translateX(0%); }
+        .cart-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 28px 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+        .cart-drawer-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.4rem; color: white; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
+        .cart-close-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; color: white; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .cart-close-btn:hover { background: rgba(255,255,255,0.12); }
+        .cart-drawer-items { flex: 1; overflow-y: auto; padding: 20px 28px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+        .cart-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 12px; padding: 60px 0; }
+        .cart-empty-icon { font-size: 2.5rem; }
+        .cart-empty-text { color: rgba(255,255,255,0.35); font-size: 0.9rem; }
+        .cart-empty-link { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: white; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; }
+        .drawer-cart-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: flex-start; }
+        .drawer-cart-item img { width: 72px; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .drawer-item-info { flex: 1; }
+        .drawer-item-category { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.12em; }
+        .drawer-item-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1rem; color: white; text-transform: uppercase; margin: 3px 0 5px; }
+        .drawer-item-meta { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-bottom: 10px; }
+        .drawer-item-qty { display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; width: fit-content; }
+        .drawer-qty-btn { background: transparent; border: none; color: white; width: 28px; height: 28px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .drawer-qty-num { width: 28px; text-align: center; color: white; font-size: 0.8rem; font-weight: 600; border-left: 1px solid rgba(255,255,255,0.12); border-right: 1px solid rgba(255,255,255,0.12); line-height: 28px; }
+        .drawer-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+        .drawer-item-price { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1rem; color: white; }
+        .drawer-remove-btn { background: transparent; border: none; color: rgba(255,255,255,0.25); font-size: 0.8rem; cursor: pointer; transition: color 0.2s; }
+        .drawer-remove-btn:hover { color: white; }
+        .cart-drawer-footer { padding: 20px 28px 32px; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; background: #0f0f0f; }
+        .cart-summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cart-summary-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+        .cart-summary-value { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+        .cart-summary-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 14px 0; }
+        .cart-total-row { margin-bottom: 20px; }
+        .cart-total-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.1rem; color: white; text-transform: uppercase; }
+        .cart-total-value { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1.3rem; color: white; }
+        .btn-drawer-checkout { display: block; width: 100%; padding: 16px; background: white; color: #0a0a0a; text-align: center; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-style: italic; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; transition: background 0.2s; box-sizing: border-box; }
+        .btn-drawer-checkout:hover { background: rgba(255,255,255,0.88); }
+        .btn-drawer-continue { display: block; width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: rgba(255,255,255,0.5); font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: border-color 0.2s, color 0.2s; box-sizing: border-box; }
+        .btn-drawer-continue:hover { border-color: rgba(255,255,255,0.3); color: white; }
+        .cart-count-badge { position: absolute; top: -6px; right: -6px; background: white; color: #0a0a0a; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+        .cart-count-badge.visible { opacity: 1; }
+
+        /* PAGE TRANSITION */
+        #page-transition { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; z-index: 99999; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .pt-brand { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: white; letter-spacing: 0.4em; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+
+        /* FOOTER */
+        .wepnest-credits { text-align: center; padding: 20px; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; }
+        .wepnest-credits a { color: rgba(255,255,255,0.4); text-decoration: underline; transition: color 0.2s; }
+        .wepnest-credits a:hover { color: white; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .checkout-grid { grid-template-columns: 1fr; }
+            .order-summary { position: static; }
+        }
+        @media (max-width: 768px) {
+            .navbar { width: calc(100% - 40px); max-width: 360px; min-width: unset; padding: 8px 16px; }
+            .navbar-links { display: none; }
+            .navbar-icons button:not(.hamburger) { display: none; }
+            .hamburger { display: flex; }
+            .page-title { padding-top: 100px; margin-bottom: 24px; }
+            .form-row { grid-template-columns: 1fr; }
+            .delivery-type-grid, .delivery-service-grid { grid-template-columns: 1fr; }
+            .glass-card { padding: 20px; }
+            .order-summary { padding: 20px; }
+        }
+        @media (max-width: 480px) {
+            #cart-drawer { width: 100vw; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* RTL */
+        [dir="rtl"] .form-label { text-align: right; }
+        [dir="rtl"] .form-error { text-align: right; }
+    </style>
+    <script src="yun-cache.js"></script>
+    <script src="i18n.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
+    const yunDb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    </script>
+</head>
+<body>
+
+    <div id="page-transition"><span class="pt-brand">Celis clothing</span></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand"><img src="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png" alt="Celis clothing" style="height:36px;width:auto;object-fit:contain"></a>
+        <div class="navbar-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="checkout.html" class="active">Checkout</a>
+        </div>
+        <div class="navbar-icons">
+            <div id="langSwitcher"></div>
+            <button class="hamburger" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <button class="mobile-menu-close" aria-label="Close menu"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="checkout.html">Checkout</a>
+    </div>
+
+    <h1 class="page-title" data-i18n="checkout_title">CHECKOUT</h1>
+
+    <div id="cooldownBanner" class="cooldown-banner">
+        <div class="cooldown-banner-icon">⚠️</div>
+        <div class="cooldown-banner-text" id="cooldownText"></div>
+    </div>
+
+    <div id="checkoutContent">
+        <div class="checkout-container">
+            <div class="checkout-grid">
+
+                <!-- LEFT: FORM -->
+                <div class="checkout-form-col">
+
+                    <!-- Personal Info -->
+                    <div class="glass-card">
+                        <div class="glass-card-title" data-i18n="personal_info">Personal Information</div>
+                        <div class="form-space">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="firstName"><span data-i18n="first_name">First Name</span> <span class="req">*</span></label>
+                                    <input type="text" id="firstName" class="form-input" placeholder="John" autocomplete="given-name">
+                                    <div class="form-error" id="firstNameError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="lastName"><span data-i18n="last_name">Last Name</span> <span class="req">*</span></label>
+                                    <input type="text" id="lastName" class="form-input" placeholder="Doe" autocomplete="family-name">
+                                    <div class="form-error" id="lastNameError"></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="phone"><span data-i18n="phone_number">Phone Number</span> <span class="req">*</span></label>
+                                    <input type="tel" id="phone" class="form-input" placeholder="0550123456" maxlength="10" inputmode="numeric" autocomplete="tel">
+                                    <div class="form-error" id="phoneError"></div>
+                                    <div class="form-hint" id="phoneHint" style="display:none"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="phone2"><span data-i18n="second_phone">Second Phone</span> <span style="opacity:0.4;font-weight:400;text-transform:none;letter-spacing:0" data-i18n="second_phone_optional">(Optional)</span></label>
+                                    <input type="tel" id="phone2" class="form-input" placeholder="0550123456" maxlength="10" inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Method -->
+                    <div class="glass-card">
+                        <div class="glass-card-title" data-i18n="delivery_method">Delivery Method</div>
+
+                        <!-- Step 1: Delivery Type -->
+                        <div class="step-label" data-i18n="step_delivery_type">Step 1: Choose Delivery Type *</div>
+                        <div class="delivery-type-grid">
+                            <button type="button" class="delivery-type-btn active" id="btnHome" onclick="selectDeliveryType('home')">
+                                <span class="delivery-type-icon">🚚</span>
+                                <span class="delivery-type-label" data-i18n="home_delivery">Home Delivery</span>
+                                <span class="delivery-type-desc" data-i18n="home_delivery_desc">Delivered to your door</span>
+                            </button>
+                            <button type="button" class="delivery-type-btn" id="btnPickup" onclick="selectDeliveryType('post')">
+                                <span class="delivery-type-icon">📮</span>
+                                <span class="delivery-type-label" data-i18n="pickup_point">Stop Desk</span>
+                                <span class="delivery-type-desc" data-i18n="pickup_desc">Collect from station</span>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: Delivery Service -->
+                        <div class="step-label" data-i18n="step_delivery_service">Step 2: Choose Delivery Service *</div>
+                        <div class="delivery-service-grid">
+                            <button type="button" class="delivery-service-btn active" id="btnZr" onclick="selectDeliveryService('zrexpress')">
+                                <span class="delivery-service-name">ZR EXPRESS</span>
+                                <span class="delivery-service-tag">Fast &amp; Trackable</span>
+                            </button>
+                        </div>
+
+                        <!-- Step 3: Delivery Info -->
+                        <div class="step-label" data-i18n="step_delivery_info">Step 3: Delivery Information *</div>
+                        <div class="form-space">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Wilaya *</label>
+                                    <div class="custom-select" id="wilayaSelect">
+                                        <div class="custom-select-trigger" onclick="toggleSelect(this)">
+                                            <span class="placeholder">Select Wilaya</span>
+                                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-options" id="wilayaOptions"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-error" id="wilayaError"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" id="communeLabel">Commune *</label>
+                                    <div class="custom-select" id="communeSelect" style="pointer-events:none;opacity:0.5">
+                                        <div class="custom-select-trigger" onclick="toggleSelect(this)">
+                                            <span class="placeholder" id="communePlaceholder">Select Wilaya first</span>
+                                            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-options" id="communeOptions"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-error" id="communeError"></div>
+                                </div>
+                            </div>
+
+                            <div id="homeAddressField">
+                                <div class="form-group">
+                                    <label class="form-label" for="homeAddress"><span data-i18n="home_address">Detailed Address</span></label>
+                                    <input type="text" id="homeAddress" class="form-input" placeholder="Street name, building, etc..." autocomplete="street-address" data-i18n-placeholder="address_placeholder">
+                                    <div class="field-error" id="homeAddressError"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="notes"><span data-i18n="order_notes">Order Notes</span> <span style="opacity:0.4;font-weight:400;text-transform:none;letter-spacing:0" data-i18n="notes_optional">(Optional)</span></label>
+                                <textarea id="notes" class="form-input" rows="2" placeholder="Delivery preferences, etc..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: ORDER SUMMARY -->
+                <div class="order-summary">
+                    <div class="summary-title" data-i18n="order_summary">ORDER SUMMARY</div>
+                    <div class="summary-products" id="summaryProducts"></div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row">
+                        <span class="summary-row-label">Subtotal</span>
+                        <span class="summary-row-value" id="summarySubtotal">0 DA</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-row-label">Delivery</span>
+                        <span class="summary-row-value" id="summaryShipping">Select wilaya...</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row summary-total">
+                        <span class="summary-total-label">Total</span>
+                        <span class="summary-total-value" id="summaryTotal">0 DA</span>
+                    </div>
+
+                    <button class="btn-place-order" id="placeOrderBtn" disabled>
+                        <div class="btn-spinner"></div>
+                        <span class="btn-text" data-i18n="place_order">PLACE ORDER</span>
+                    </button>
+                    <div class="terms-text" data-i18n="terms">By placing your order, you agree to our terms &amp; conditions.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="emptyCartNotice" class="empty-cart-notice" style="display:none">
+        <p>Your cart is empty.</p>
+        <a href="products.html">EXPLORE PRODUCTS →</a>
+    </div>
+
+    <!-- ===== CART DRAWER ===== -->
+    <div id="cart-overlay" onclick="closeCart()"></div>
+    <div id="cart-drawer">
+      <div class="cart-drawer-header">
+        <h2 class="cart-drawer-title">CART</h2>
+        <button class="cart-close-btn" onclick="closeCart()">✕</button>
+      </div>
+      <div class="cart-drawer-items" id="cartItems">
+        <div class="cart-empty" id="cartEmpty">
+          <span class="cart-empty-icon">🛍</span>
+          <p class="cart-empty-text">Your cart is empty</p>
+          <a href="products.html" class="cart-empty-link" onclick="closeCart()">EXPLORE PRODUCTS →</a>
+        </div>
+        <div id="cartItemsList"></div>
+      </div>
+      <div class="cart-drawer-footer">
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">SUBTOTAL</span>
+          <span class="cart-summary-value" id="drawerSubtotal">0 DA</span>
+        </div>
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">SHIPPING</span>
+          <span class="cart-summary-value">Calculated at checkout</span>
+        </div>
+        <div class="cart-summary-divider"></div>
+        <div class="cart-summary-row cart-total-row">
+          <span class="cart-total-label">TOTAL</span>
+          <span class="cart-total-value" id="drawerTotal">0 DA</span>
+        </div>
+        <a href="checkout.html" class="btn-drawer-checkout">PROCEED TO CHECKOUT →</a>
+        <button class="btn-drawer-continue" onclick="closeCart()">← CONTINUE SHOPPING</button>
+      </div>
+    </div>
+
+    <div class="wepnest-credits">
+        Made in <a href="https://instagram.com/wepnest" target="_blank">Wepnest</a> | &copy; 2026 Celis clothing
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // === I18N ===
+        YUN_I18N.init();
+        var lc = document.getElementById('langSwitcher');
+        if (lc) lc.innerHTML = YUN_I18N.createSwitcher();
+
+        // === WILAYA DATA ===
+        var WILAYAS = [
+            {code:'01',name:'Adrar'},{code:'02',name:'Chlef'},{code:'03',name:'Laghouat'},
+            {code:'04',name:'Oum El Bouaghi'},{code:'05',name:'Batna'},{code:'06',name:'Bejaia'},
+            {code:'07',name:'Biskra'},{code:'08',name:'Bechar'},{code:'09',name:'Blida'},
+            {code:'10',name:'Bouira'},{code:'11',name:'Tamanrasset'},{code:'12',name:'Tebessa'},
+            {code:'13',name:'Tlemcen'},{code:'14',name:'Tiaret'},{code:'15',name:'Tizi Ouzou'},
+            {code:'16',name:'Algiers'},{code:'17',name:'Djelfa'},{code:'18',name:'Jijel'},
+            {code:'19',name:'Setif'},{code:'20',name:'Saida'},{code:'21',name:'Skikda'},
+            {code:'22',name:'Sidi Bel Abbes'},{code:'23',name:'Annaba'},{code:'24',name:'Guelma'},
+            {code:'25',name:'Constantine'},{code:'26',name:'Medea'},{code:'27',name:'Mostaganem'},
+            {code:'28',name:"M'Sila"},{code:'29',name:'Mascara'},{code:'30',name:'Ouargla'},
+            {code:'31',name:'Oran'},{code:'32',name:'El Bayadh'},{code:'33',name:'Illizi'},
+            {code:'34',name:'Bordj Bou Arreridj'},{code:'35',name:'Boumerdes'},{code:'36',name:'El Tarf'},
+            {code:'37',name:'Tindouf'},{code:'38',name:'Tissemsilt'},{code:'39',name:'El Oued'},
+            {code:'40',name:'Khenchela'},{code:'41',name:'Souk Ahras'},{code:'42',name:'Tipaza'},
+            {code:'43',name:'Mila'},{code:'44',name:'Ain Defla'},{code:'45',name:'Naama'},
+            {code:'46',name:'Ain Temouchent'},{code:'47',name:'Ghardaia'},{code:'48',name:'Relizane'},
+            {code:'49',name:'Timimoun'},{code:'50',name:'Bordj Badji Mokhtar'},{code:'51',name:'Ouled Djellal'},
+            {code:'52',name:'Beni Abbes'},{code:'53',name:'In Salah'},{code:'54',name:'In Guezzam'},
+            {code:'55',name:'Touggourt'},{code:'56',name:'Djanet'},{code:'57',name:"El M'Ghair"},
+            {code:'58',name:'El Menia'}
+        ];
+
+        var COMMUNES = {
+            '01': ['Adrar','Timimoun','Reggane','In Salah','Aoulef','Timiaouine','Tsabit','Fenoughil','Tamentit','Charouine','Aougrout','Deldoul','Sali','Metarif','Ouled Said','Mansoura','Timmimoun','Beni Abbes','El Menia','Timiaouine'],
+            '02': ['Chlef','Ténès','El Karimia','Talerga','Dzéroua','El Marsa','Koudieta','Sidi Abderrahmane','Sidi Moussa','Aïn Merane','Bouzeguène','Harchoun','Chettia','Sidi Akkacha','Abou El Hassan','El Hadjadj','Boukadir','Taougrit','Beni Rached','Tadjena','Zeboudja','Sendjas','Dahra','Khénchela','El Attaf'],
+            '03': ['Laghouat','Aflou','Sidi Makhlouf','El Hassaïa','Aïn Sidi Ali','Brida','Kheneg','Sidi Bouzid','Guerrara','El Ghicha','Tadjmout','Ksar El Hirane','Beni Oudjoud','Mekaret','Aïn Madhi','Tacine','Mecheraa Baâdi','Sidi Amar'],
+            '04': ['Oum El Bouaghi','Aïn Beida','Bir Chouhada','El Aïn','Meskiana','El Belala','Aïn Fakroun','Ksar Sbahi','Ouled Hamla','Ouled Zouai','Tebiltit','El Amiria','Belkheir','Aïn Diss','El Outaya','Djellal','Babar','El Karmadone','Bouatiour','Mesadja'],
+            '05': ['Batna','Barika','N\'Gaous','Guigba','Inoughmen','Timgad','Larba Nâath Iraten','El Manara','Sefiane','Ras El Aioun','Tazoult','Imoula','Azil Babor','Ouled Si Slimane','El Hamra','Ouled Gacem','Tangour','El Bnoud','Chemora','Bouzina','Djemaa','Tighanimine','Inzenzer','Sbiba','Bouhamama'],
+            '06': ['Bejaïa','Akbou','Sidi Aïch','El Kseur','Kherrata','Adekar','Amizour','Tichy','Tala Guilef','Ouzellaguen','Semaoun','Tigzirt','Beni Melik','Bouzegza','Illoula Oumalou','Ouled Rached','Aït R\'zine','Chemini','Souk El Ténine','Igzen','Tamokra','Taskriout'],
+            '07': ['Biskra','Tolga','Sidi Okba','M\'Chouneche','Djemorah','Branis','El Kantara','El Outaya','M\'Lili','Foughala','Ouled Djellal','Khanguet Sidi N\'jil','Sidi Khaled','Chaiba','Béchar','El Achab','Guellif','Tengount'],
+            '08': ['Béchar','Boukais','Abadla','Meridja','Tabelbala','Boulenouar','Ras Dbibiza','Kerboubi','Brek','El Ouata','Ouled Khoudir','Lahmar','Beni Ikhlef','Mechraa Houari Boumedienne','Timoudi'],
+            '09': ['Blida','Boufarik','Mouzaïa','Larbaa','Bougara','Chiffa','Beni Tamou','Bouaroua','El Affroun','Chéraga','El Hamadia','Beni Mered','Bougara','Sidi Moussa','Aïn Romana','Djebabra','Meftah','Soumaa','Ouled Yaïch','N\'Dra Ben Chabane','Beni Khellil','Guerdjaou','Hamadi'],
+            '10': ['Bouira','Sour El Ghozlane','Aïn El Hadjar','Djebabila Tiouni','Sour El Ghozlane','Ouled Rached','El Asnam','Aïn Tayef','Bouderbala','Z\u0027barbar','Had Ezzouak','El Khabouzia','Bouira','Maala','Souk El Khemis','Dechmaa','Bechloul','El Hachimia','Haïta Djamel','Ridha','El Eulma','Oued El Berdi','Ouled Brahim'],
+            '11': ['Tamanrasset','Abalessa','In Guezzam','In Salah','Tamanghasset','Idlès','Tinzaoutine','Tasnaouine','In Amenas','Ménoussa','Foggaret Ezzaouia'],
+            '12': ['Tébessa','Bir El Ater','Cheria','El Ma Labiodh','Negrine','El Koui','El Ogla','Bou Haouane','Aïn Zerga','El Malki','Ouenza','Stah Guentis','El Oued','Tlidjene','Morsott','Bir Dheheb','Ferkane','Bouira Lahdid'],
+            '13': ['Tlemcen','Maghnia','Maghnia','Ghazaouet','Nédroma','Remchi','El Fehoul','Ghazaouet','Hennaya','El Aricha','Bensekrane','Aïn Ghoraba','Nedroma','Aïn Tallout','Peghni','Terni Beni Hendel','Sebaa Chioukh','Beni Ouarsous','Amieur','Fellaoucene','Tianet','Ouled Mimoun','Zenata','Sidi Boumediene','El Bouhey','Bab El Assa','Laamarna','Sidi Ali Mellal','Belkheir'],
+            '14': ['Tiaret','Sougueur','Medroussa','Aïn Deheb','Dahmouni','Rahouia','Mahdia','Tousnina','Frenda','Aïn Kermes','Ksar Chellala','Rechaïga','Takhemaret','Medroussa','Taoudmout','Sidi Hosni','Zmalet El Emir Aekid','Takhemaret','Bougara','Hamadia','Rouached','Naima','Faidja'],
+            '15': ['Tizi Ouzou','Azazga','Aït Yahia','Larba Nath Iraten','Draâ El Mizan','Ouadhias','Maâtkas','Azazga','Tigzirt','Aïn El Hammam','Boudjima','Aït Chaffâa','Aït Yahia Moussa','Tirmitine','Azrou','Beni Douala','Bni Yenni','Iferhounene','Aït Aggouncha','Aït Bouadif','Aït Toudert','Beni Ziki','Draâ Tazegza','Illoula Oumalou','Iboudraren','Aït Aissa Mimoun','Makouda','Mekhada','Ouled Aïssa'],
+            '16': ['Algiers','Bab El Oued','Sidi M\'Hamed','El Biar','Bouzareah','Bir Mourad Raïs','Hydra','Ben Aknoun','Hussein Dey','Kouba','El Harrach','Bachdjerrah','Dély Ibrahim','Draria','Dely Ibrahim','El Achour','Saoula','Birtouta','Zeralda','Reghaia','Rouiba','Reghaia','Bab Ezzouar','Bir Touati','Hammadi','Kharoubi','Maâllem','Ouled Fayet'],
+            '17': ['Djelfa','M\'sara','Aïn Oussera','Hassi Bahbah','El Khechba','Bou Saâda','Sidi Aïssa','Zaccar','Aïn Chouhada','Aïn El Ibel','Aïn Feka','Aïn Maâbouf','Beni Fouda','Beni Yagoubine','Bir Aissa','Chaâba','Chaabet El Ham','Charef','Dar El Had Djelladji','Douas','El Guedid','El Haarr','El Khemis','El Ksiba','Faidh El Botma','Ferrah','Guerdjoum','Guettara','Had-Sahary','Hamri','Hassi Bahbah','Khanguet Beni Guerroume','M\'dilla','M\'liliha','Messaad','Mihoub','Ouled Derradji','Ouled Guebel','Sed Rahal','Sebseb','Selmana','Tadmit','Talh','Terfine','T\'kout'],
+            '18': ['Jijel','El Ancer','Sidi Marouf','Taher','Emdjez Edchich','El Aouana','Aïn El Kebira','Aïn Tahar','Boussif Ouled Asker','Bouchkine','Sidi Abdelaziz','Skikda','El Milia','Pozzuoli','Kerimala','Texala'],
+            '19': ['Sétif','Aïn Oulmene','El Eulma','Aïn Arnat','Aïn El Hadjar','Boussâada','El Ouricia','Darguina','Sidi Aïssa','Aïn Lahdjar','Ouled Sabor','El Hassasna','Béni Ourtilane','Aïn Sebaâ Lâarous','El Guedid','Guelta Zerga','El Ouldja','Bir El Arch','Beni Chebana','Aïn Smara','Tella Guema','El M\'Cid','Guellal','Ouled Tebben','Hamam Soukhna','El Hamma','Tazoult','Sétif','Bougaa','Salah Bey','Aïn Abessa','El Eulma'],
+            '20': ['Saïda','Aïn El Hadjar','Moulay Larbi','El Hassasna','Sidi Boubekeur','Aïn Soltane','Youb','Aïn Sekhouna','Aïn Toudja','Ouled Khaled','Sfissef','Redjem Demouche','Aïn Sidi Ali','Hassi El Aber','Sidi Ahmed','M\'Cif','Tamous','Aïn El Kial'],
+            '21': ['Skikda','El Hadaiek','El Marsa','Azzaba','Djendjena','Zitouna','Ramdane Djamel','Aïn Kechra','Ould Benzaama','Aïn Bouziane','Tamalous','Aïn Charchar','Bouchtata','Saida','El Bared','Filfila','Cheraia','Beni Zid','Ouled Attia','Serra','Kheneg','Guelaata'],
+            '22': ['Sidi Bel Abbès','Telagh','Sidi Lahcène','Mérine','Tessala','Sidi Ali Benyoub','El Malabat','Aïn El Berd','Ras El Ma','Boukais','Aïn Thrid','Sfissef','Aïn Soltane','Lamtar','Sidi Hamadouche','Belarbi','Aïn El Kial','Mezzen','Ouled Sidi Bel Abbès','Benamission','Chetouane Belaila','Dhaya','El Hailta','Makedra','Marhoum','Ras El Aïn','Sidi Chaib','Tafaraoui','Tilibit','Tighennif','Zerouala'],
+            '23': ['Annaba','El Bouni','El Hadjar','Berrahal','El Eulma','Herraj','Aïn Berda','Aïn El Turck','Bouhadjar','Seraïdi','Oued El Aneb','Treat','Cheddra','El Bujaria','El Majaz','Seraidi','Oued Sebt','Bouzizoune'],
+            '24': ['Guelma','Nechmaya','Bouatiour','Oued Zenati','Tamlouka','Aïn Sandel','Lahouidj','Aïn Hamadouche','Bouhachana','Khezara','Sidi Kacem','Belkhir','Oued Cheham','Ras El Agba','Oued Fragha','Aïn Benian','Aïn Regada','Bouchegouf','Hammam N\'Bail','Matrice','Oued Thour','Ouled Driss','Ras El Aioun','Taya','Teglgit','Zeraka'],
+            '25': ['Constantine','El Khroub','Didouche Mourad','Hamma Bouziane','Ali Mendjeli','Aïn Smara','El Harahcha','Belkacem','Ibn Ziad','Hcidouche','Zighoud Youcef','Aïn Abid','Benchicao','Beni Hamidane','Daias Beni Messous','El Guellaa','Khroub','Ouled Rahmoune','Sidi Mabrouk'],
+            '26': ['Médéa','El Omaria','Ksbei El Ouiden','Bouaiche','Ouled Bouachra','Sidi Naamane','Ouzera','Aïn Boucif','Baata','Aïn Hellal','Chahbounia','El Azizia','Aïn Soltane','Guerouaou','Ouled El Aljem','Ouled Maaref','Ras El Aioun','Sidi Zahar','Sidi Damed','Tablat','Tafraout','Tlalet','Aïn El Hammam','Bouzeguene','Derrag','El Guelb El Kebir','Mechraa Bel Ksiri'],
+            '27': ['Mostaganem','Aïn Nouïssy','Hassiane Aïssa','Fornaka','Aïn Sidi Ahmed','Sidi Ali','Aïn Tini','El Matmar','Sour','Touggourt','N\'Gossaoua','Bouguirat','Khelifia','Mansourah','Masqueray','Oued El Kheir','Sidi Bellater','Sidi Khettab','Touahria','Hadjadj','Khodnet Souinia','Aïn Sidi Abdelaziz','Froha','El Hassiane','Hammam Bou Hadjar'],
+            '28': ['M\'sila','Bou Saâda','Sidi Aïssa','Aïn El Hadjel','Sour El Ghozlane','Aïn Fakroun','Ouled Derradj','Tamsamane','El Hamel','Ouled Madhi','Aïn Khadra','Belaiba','Beni Ilmane','Bouzegza','Chellal','Djemaa El Djouad','El Baramka','Hammam Dalaa','Khettouti Sed Djellal','Maadid','M\'Cif','Mtarfa','Ouled Attia','Ouled Sidi Brahim','Sidi Ameur','Sidi Hadjerine','Slimane','Terrai Bainen','Aïn El Hadjel','Ouled Aïssa'],
+            '29': ['Mascara','Hammam Bou Hadjar','Tighennif','Mohammadia','Aïn Fares','Aïn Fekan','El Bordj','El Gueitna','El Gourzi','Aïn Fras','Bou Hanifia','Chorfa','Djellida','Froha','Guerdjoum','Hachem','Khalouia','Maâlem','Makda','Oued El Abtal','Oued Taref','Ras El Aïn','Sehailia','Sidi Boussaid','Sidi Kada','Sidi Mohamed','Tizi','Touahria','Zellafa','Bouati Ladjel','El Menasria','Sidi Abdeldjebbar'],
+            '30': ['Ouargla','Hassi Messaoud','Rouissat','El Borma','El Oued','Temacine','Touggourt','El Kheneg','Benaceur','El Allia','El Guemar','Hassi Ben Abdellah','Hassi Khelifa','M\'Naguer','Sidi Aoun','Taibet','Tamalhent','Zaouiet El Mouldjeneit','El Kharidja','N\'Goussa'],
+            '31': ['Oran','Aïn Turk','Arzew','Bir El Djir','Boufatis','Bou Sfer','El Ancer','Es Senia','Mers El Kébir','Oran','Sidi Ben Yebka','Aïn El Kerma','Beni Saf','Boutlelis','El Braya','Gdyel','Hassi Ameur','Hassasna','Irendjen','Kirwan','Lamoricière','Misserghin','Oued Tlelat','Sidi Ali','Sidi Chahmi','Tafraoui','Tessala','Tichy','Tlela','Aïn Biya','El Orfaly'],
+            '32': ['El Bayadh','Rouisset','Aïn El Orak','Boualem','Bougtoub','Chellal','El Bnoud','El Kheiter','El M\'Ghair','Guerzim','Kef El Ahmar','Sidi Aïssa','Sidi Slimane','Tousnina','Zaafoul','El Abiodh Sidi Cheikh','El Kaid','El Mehara','Krakda','Sidi Amar'],
+            '33': ['Illizi','Bordj El Haouas','Bordj Badji Mokhtar','Djanet','In Amenas','In Guezzam','Tamanrasset','Tazrouk','Tinzaoutine','Béchar','El Oued','Ouargla','Tlemcen'],
+            '34': ['Bordj Bou Arréridj','Ras El Oued','Sidi Khaled','El M\'Ghair','Tikjda','Bordj Ghdir','Bouzeguene','Béni Aziz','Béni Saf','El Arib','El Achir','El Hamadia','Hasnaoua','Ksour','Tafreg','Taglits','Tassamante','Ouled Sidi Brahim','Takhemaret'],
+            '35': ['Boumerdès','Thénia','Béni Amrane','Bouzegza Keddara','Cherchell','Dellys','Khemis El Khechna','L\'Arbaa Naït Irathen','Legata','Ouled Aïssa','Sidi Daoud','Si Mustapha','Souamaa','Timezrit','Zeghaia','Thenia','Mansourah','Tidjelabine','Ammal','Ben Choud','Bouzegzene','Chabet El Ameur','Isser','Naciria','Ouled Aïssa','Sidi Douaoud'],
+            '36': ['Tizi Ouzou','Azazga','Aït Yahia','Draâ El Mizan','Larba Nath Iraten','Maâtkas','Ouadhias','Tigzirt','Aïn El Hammam','Boudjima','Aït Chaffâa','Aït Yahia Moussa','Tirmitine','Benzouai','Beni Douala','Bni Yenni','Aït Aggouncha','Iferhounene','Aït Bouadif','Aït Toudert','Illoula Oumalou','Iboudraren','Makouda','Mekhada','Sidi Belloua','Tazrout','Yakouren'],
+            '37': ['Tlemcen','Maghnia','Ghazaouet','Nédroma','Remchi','El Fehoul','Hennaya','El Aricha','Bensekrane','Aïn Ghoraba','Peghni','Terni Beni Hendel','Sebaa Chioukh','Beni Ouarsous','Amieur','Fellaoucene','Tianet','Ouled Mimoun','Zenata','Bab El Assa','Sidi Hosni','Beni Mostepha','Sidi Ali','El Bouhi','Ouled Amran','Marsa Ben M\'Hidi','Sidi Abdelli','Sebdou','Tessala'],
+            '38': ['Bouira','Sour El Ghozlane','Aïn El Hadjar','Ouled Rached','El Asnam','Aïn Tayef','Bouderbala','Z\'barbar','Had Ezzouak','El Khabouzia','Maala','Souk El Khemis','Dechmaa','Bechloul','El Hachimia','Ridha','El Eulma','Oued El Berdi','Ouled Brahim','Aïn Boulmane','Aïn Roua','Aïn Sefra','Chorfa','Djebla','El Haouch','El Intissar','Guernina','Hadjeb Aïounoun','Kadiria','Lakhdaria','M\'Cid Ousserir','Oued N\'Sa','Sahari','Sidi Ziane','Sobha','Sour El Ghozlane','Tadjenanet','Taghzout','Tikjda'],
+            '39': ['Jijel','El Ancer','Sidi Marouf','Taher','Emdjez Edchich','El Aouana','Aïn El Kebira','Aïn Tahar','Boussif Ouled Asker','Bouchkine','Sidi Abdelaziz','Tizi','Boucif','Darguina','El Haouch','El Kort','Ferme Athmane','Guerboussi','Iatna','Kaoûsia','Kherba','Makhlouf','Moudjbour','Ouled Rabah','Oumanaou','Ras Beni Khelifa','Rouached','Sassi','Sidi Saâdi','Skikda','Tadjerouine','Tatahouine','Telaghma','Timezrit','Zitouna'],
+            '40': ['Tissemsilt','Lardjem','El Idrissia','Bouzeguène','Sidi Slimane','Aïn El Hadjar','Bordj Bounaama','Lahdidjane','Sidi Said','Tamalaït','Maasif Aïn Soltane','El Hadjaria','Maacem','Ouled Bessam','Sidi Lantri','Boussif','Tamelaht','Youssoufia'],
+            '41': ['El Oued','Robbah','El Guemar','Bayadha','Djamaa','M\'Rara','Sidi Aoun','Tebala','Trifaoui','Hassi Khalifah','Oued Alkaleb','Aïn Redja','Aïn Taya','Bougdara','El Amria','El Kouta','Guelaat Bousbaâ','Hassi Ben Abdellah','Hassani Abdelmoumene','Kouinine','Maknissi','Merouana','M\'liliha','Nakhla','Oum Touyour','Sidi Aïssa','Sidi El Heni','Sidi Khelifa','Sidi Maamar','Sidi Salem','Still','Tama','Touggourt','Zeribet El Oued','El M\'Ghair','El Meniaa','Beni Thour'],
+            '42': ['El Bayadh','Rouisset','Aïn El Orak','Boualem','Bougtoub','Chellal','El Bnoud','El Kheiter','Guerzim','Kef El Ahmar','Sidi Aïssa','Sidi Slimane','Tousnina','Zaafoul','El Abiodh Sidi Cheikh','El Kaid','El Mehara','Krakda','Sidi Amar','Bouzad','Eddis','El Bnoud','El Kheiter','Fleifla','Ghardaia','Guerrara','Hassasna','Mekhadma','Metlili'],
+            '43': ['Constantine','El Khroub','Didouche Mourad','Hamma Bouziane','Ali Mendjeli','Aïn Smara','El Harahcha','Belkacem','Ibn Ziad','Hcidouche','Zighoud Youcef','Aïn Abid','Benchicao','Beni Hamidane','Daias','El Guellaa','Ouled Rahmoune','Sidi Mabrouk'],
+            '44': ['Médéa','El Omaria','Ksbei El Ouiden','Bouaiche','Ouled Bouachra','Sidi Naamane','Ouzera','Aïn Boucif','Baata','Aïn Hellal','Chahbounia','El Azizia','Sidi Zahar','Sidi Damed','Tablat','Tafraout','Tlalet','Guerouaou','El Guelb El Kebir','Mechraa Bel Ksiri','Ouled Maaref','Ras El Aioun','Bouzeguene','Derrag','Oued Chorfa','Rebaia'],
+            '45': ['Mostaganem','Aïn Nouïssy','Hassiane Aïssa','Fornaka','Sidi Ali','Sidi Khettab','Touahria','Hadjadj','El Hassiane','Bouguirat','Khelifia','Masqueray','Oued El Kheir','Touggourt','Aïn Sidi Abdelaziz','Froha','Aïn Tini','El Matmar','Sour','El Borma','Merahna','Ouled Maamer','Sidi Abdallah','Sidi Abdelmoumene'],
+            '46': ['M\'sila','Bou Saâda','Sidi Aïssa','Aïn El Hadjel','Ouled Derradj','El Hamel','Bouzegza','Hammam Dalaa','Khettouti Sed Djellal','Mtarfa','Ouled Attia','Sidi Ameur','Terrai Bainen','Slimane','Aïn Khadra','Belaiba','Chellal','Djemaa El Djouad','El Baramka','Maadid','M\'Cif','Ouled Madhi','Sidi Hadjerine','Sidi Ille','Tamsamane'],
+            '47': ['Mascara','Tighennif','Mohammadia','Aïn Fares','Aïn Fekan','El Bordj','El Guéitna','Bou Hanifia','Chorfa','Froha','Guerdjoum','Hachem','Khalouia','Makda','Oued El Abtal','Ras El Aïn','Sehailia','Sidi Kada','Sidi Mohamed','Zellafa','Sidi Boussaid','Maâlem','El Menasria','El Gourzi','Hammam Bou Hadjar'],
+            '48': ['Ouargla','Hassi Messaoud','Rouissat','El Borma','El Oued','Temacine','Touggourt','El Kheneg','Benaceur','El Allia','El Guemar','El Kharidja','Hassi Ben Abdellah','Hassi Khelifa','M\'Naguer','N\'Goussa','Sidi Aoun','Taibet','Tamalhent','Zaouiet El Mouldjeneit','El M\'Ghair','El Meniaa'],
+            '49': ['Timimoun','Reggane','Aoulef','Tsabit','Fenoughil','Timiaouine','Aougrout','Deldoul','Charouine','Sali','Metarif','Ouled Said','Mansoura','Beni Abbes','Tamentit'],
+            '50': ['Bordj Badji Mokhtar','Timiaouine','In Guezzam','Tamanrasset','Abalessa'],
+            '51': ['Ouled Djellal','Sidi Khaled','Bordj Badji Mokhtar','Charef','Djamaa','El Guerara','El Kharidja','M\'Liliha','Touggourt'],
+            '52': ['Beni Abbes','Timimoun','Charouine','Reggane','Aoulef','Tsabit','Fenoughil','Timiaouine','Aougrout','Deldoul','Sali','Metarif','Ouled Said','Beni Ikhlef','Mechraa Houari Boumedienne','Kerboubi','Tafasna'],
+            '53': ['In Salah','Tamanrasset','In Guezzam','Abalessa','Fogaret Ezzaouia','Idlès','Tamanghasset','Tinzaoutine','Tasnaouine','In Amenas'],
+            '54': ['In Guezzam','Tamanrasset','Tinzaoutine','Tazrouk','Idlès','Tamanghasset'],
+            '55': ['Touggourt','El Oued','El M\'Ghair','Djamaa','Temacine','El Guemar','El Kheneg','El Kharidja','Benaceur','El Allia','Hassi Ben Abdellah','Hassi Khelifa','M\'Naguer','N\'Goussa','Oum Touyour','Sidi Aoun','Taibet','Tamalhent','El Meniaa'],
+            '56': ['Djanet','Illizi','Bordj El Haouas','In Amenas'],
+            '57': ["El M'Ghair","Ouled Djellal","Sidi Khaled","El Oued","Djamaa","Touggourt","El Guemar","El Kharidja","Hassi Ben Abdellah","M\'Naguer","N\'Goussa","Sidi Aoun","Taibet"],
+            '58': ['El Meniaa','Ghardaia','Metlili','Guerrara','Mekhadma','Hassi Fehal','Hassi Gara','Berririne']
+        };
+
+        // === STATE ===
+        var selectedDeliveryType = 'home';
+        var selectedDeliveryService = 'zrexpress';
+        var selectedWilayaCode = '';
+        var selectedWilayaName = '';
+        var selectedCommune = '';
+        var wilayaPricesCache = {};
+        var zrSettings = { apiKey: null, tenantId: null, useApiRates: false };
+
+        async function loadZrSettings() {
+            try {
+                var result = await yunDb.from('site_settings')
+                    .select('key, value')
+                    .in('key', ['zr_api_key', 'zr_tenant_id', 'zr_use_api_rates']);
+                
+                if (result.data) {
+                    result.data.forEach(function(row) {
+                        if (row.key === 'zr_api_key') zrSettings.apiKey = row.value;
+                        if (row.key === 'zr_tenant_id') zrSettings.tenantId = row.value;
+                        if (row.key === 'zr_use_api_rates') zrSettings.useApiRates = row.value === 'true';
+                    });
+                }
+            } catch(e) {
+                console.warn('Failed to load ZR settings:', e);
+            }
+        }
+
+        // === VALIDATION ===
+        var NAME_REGEX = /^[a-zA-Z\u0600-\u06FF\u00C0-\u024F\s'\-]+$/;
+        var PHONE_REGEX = /^0[567][0-9]{8}$/;
+        var COOLDOWN_HOURS = 4;
+
+        function validateName(v, label) {
+            v = v.trim();
+            if (!v) return { ok: false, msg: label + ' is required' };
+            if (v.length < 2) return { ok: false, msg: label + ' must be at least 2 characters' };
+            if (!NAME_REGEX.test(v)) return { ok: false, msg: 'Only letters, spaces, hyphens and apostrophes' };
+            return { ok: true };
+        }
+        function validatePhone(v) {
+            v = v.replace(/\s/g, '');
+            if (!v) return { ok: false, msg: 'Phone number is required' };
+            if (!/^0[0-9]{0,9}$/.test(v)) return { ok: false, msg: 'Must start with 0 and contain only digits' };
+            if (v.length !== 10) return { ok: false, msg: 'Must be exactly 10 digits' };
+            if (!PHONE_REGEX.test(v)) return { ok: false, msg: 'Invalid phone number' };
+            return { ok: true };
+        }
+
+        function showError(inputEl, errorEl, msg) {
+            inputEl.classList.add('error');
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+        }
+        function clearError(inputEl, errorEl) {
+            inputEl.classList.remove('error');
+            errorEl.classList.remove('show');
+            errorEl.textContent = '';
+        }
+        function markValid(inputEl, errorEl) {
+            inputEl.classList.remove('error');
+            errorEl.classList.remove('show');
+        }
+
+        // === CUSTOM SELECT ===
+        window.toggleSelect = function(trigger) {
+            var parent = trigger.parentElement;
+            var dropdown = parent.querySelector('.custom-select-dropdown');
+            var isOpen = dropdown.classList.contains('open');
+
+            // Close all other selects
+            document.querySelectorAll('.custom-select-dropdown.open').forEach(function(d) {
+                d.classList.remove('open');
+                d.parentElement.querySelector('.custom-select-trigger').classList.remove('open');
+            });
+
+            if (!isOpen) {
+                dropdown.classList.add('open');
+                trigger.classList.add('open');
+            }
+        };
+
+        function closeAllSelects() {
+            document.querySelectorAll('.custom-select-dropdown.open').forEach(function(d) {
+                d.classList.remove('open');
+                d.parentElement.querySelector('.custom-select-trigger').classList.remove('open');
+            });
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-select')) closeAllSelects();
+        });
+
+        function populateWilayaSelect() {
+            var container = document.getElementById('wilayaOptions');
+            container.innerHTML = WILAYAS.map(function(w) {
+                return '<div class="custom-select-option" data-code="' + w.code + '" data-name="' + w.name + '">' + w.code + ' - ' + w.name + '</div>';
+            }).join('');
+            container.querySelectorAll('.custom-select-option').forEach(function(opt) {
+                opt.addEventListener('click', function() {
+                    var code = this.dataset.code;
+                    var name = this.dataset.name;
+                    selectedWilayaCode = code;
+                    selectedWilayaName = name;
+
+                    // Update trigger text
+                    var trigger = document.getElementById('wilayaSelect').querySelector('.custom-select-trigger');
+                    trigger.querySelector('.placeholder') ? trigger.innerHTML = '<span>' + code + ' - ' + name + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' : null;
+                    var span = trigger.querySelector('span');
+                    if (span) span.textContent = code + ' - ' + name;
+                    else { trigger.innerHTML = '<span>' + code + ' - ' + name + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+
+                    // Mark selected
+                    container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
+                    this.classList.add('selected');
+
+                    closeAllSelects();
+                    clearError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'));
+
+                    // Enable commune & populate with wilaya's communes
+                    var communeWrap = document.getElementById('communeSelect');
+                    communeWrap.style.pointerEvents = '';
+                    communeWrap.style.opacity = '';
+                    document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                    selectedCommune = '';
+                    populateCommuneOptions(COMMUNES[code] || []);
+
+                    // Fetch price and update
+                    fetchShippingPrice(code);
+                    updateSummary();
+                });
+            });
+        }
+
+        function populateCommuneOptions(communes) {
+            var container = document.getElementById('communeOptions');
+            container.innerHTML = communes.map(function(c) {
+                return '<div class="custom-select-option" data-name="' + c + '">' + c + '</div>';
+            }).join('');
+            container.querySelectorAll('.custom-select-option').forEach(function(opt) {
+                opt.addEventListener('click', function() {
+                    selectedCommune = this.dataset.name;
+                    var trigger = document.getElementById('communeSelect').querySelector('.custom-select-trigger');
+                    var span = trigger.querySelector('span');
+                    if (span) span.textContent = selectedCommune;
+                    else { trigger.innerHTML = '<span>' + selectedCommune + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+                    container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
+                    this.classList.add('selected');
+                    closeAllSelects();
+                    clearError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'));
+                });
+            });
+        }
+
+        // === SHIPPING PRICE ===
+        async function fetchShippingPrice(wilayaCode) {
+            var el = document.getElementById('summaryShipping');
+            el.textContent = 'Calculating...';
+            
+            if (zrSettings.useApiRates && zrSettings.apiKey && zrSettings.tenantId) {
+                try {
+                    var response = await fetch('/.netlify/functions/zr-rates', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            apiKey: zrSettings.apiKey,
+                            tenantId: zrSettings.tenantId,
+                            toWilaya: wilayaCode
+                        })
+                    });
+                    
+                    var apiResult = await response.json();
+                    
+                    if (apiResult.rates && apiResult.rates.length > 0) {
+                        var rate = apiResult.rates.find(function(r) {
+                            return selectedDeliveryType === 'home' 
+                                ? r.type === 'home_delivery' 
+                                : r.type === 'stop_desk';
+                        });
+                        
+                        if (rate) {
+                            wilayaPricesCache[wilayaCode] = {
+                                home_price: rate.type === 'home_delivery' ? rate.price : null,
+                                post_price: rate.type === 'stop_desk' ? rate.price : null
+                            };
+                            updateSummary();
+                            return;
+                        }
+                    }
+                } catch(e) {
+                    console.warn('API rates failed, falling back to static:', e);
+                }
+            }
+            
+            try {
+                var result = await yunDb.from('wilaya_pricing')
+                    .select('home_price, post_price')
+                    .eq('wilaya_code', wilayaCode)
+                    .single();
+                
+                if (result.data) {
+                    wilayaPricesCache[wilayaCode] = result.data;
+                    updateSummary();
+                }
+            } catch(e) {
+                console.warn('Shipping price fetch failed:', e);
+            }
+        }
+
+        function getShippingCost() {
+            if (!selectedWilayaCode || !wilayaPricesCache[selectedWilayaCode]) return null;
+            var p = wilayaPricesCache[selectedWilayaCode];
+            return selectedDeliveryType === 'home' ? p.home_price : p.post_price;
+        }
+
+        // === DELIVERY TYPE ===
+        window.selectDeliveryType = function(type) {
+            selectedDeliveryType = type;
+            document.getElementById('btnHome').classList.toggle('active', type === 'home');
+            document.getElementById('btnPickup').classList.toggle('active', type === 'post');
+            document.getElementById('homeAddressField').style.display = type === 'home' ? 'block' : 'none';
+            document.getElementById('communeLabel').textContent = type === 'home' ? 'Commune *' : 'Stop Desk *';
+            updateSummary();
+        };
+
+        window.selectDeliveryService = function(service) {
+            selectedDeliveryService = service;
+            document.getElementById('btnZr').classList.toggle('active', service === 'zrexpress');
+            updateSummary();
+        };
+
+        // === CART ===
+        var cart = JSON.parse(localStorage.getItem('yun_cart') || '[]');
+
+        function saveCart() { localStorage.setItem('yun_cart', JSON.stringify(cart)); updateCartUI(); }
+        function openCart() { document.getElementById('cart-drawer').classList.add('active'); document.getElementById('cart-overlay').classList.add('active'); document.body.style.overflow = 'hidden'; renderCartItems(); }
+        function closeCart() { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('cart-overlay').classList.remove('active'); document.body.style.overflow = ''; }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeCart(); });
+
+        function renderCartItems() {
+            var list = document.getElementById('cartItemsList'), empty = document.getElementById('cartEmpty');
+            if (!list) return;
+            if (cart.length === 0) { list.innerHTML = ''; if (empty) empty.style.display = 'flex'; return; }
+            if (empty) empty.style.display = 'none';
+            list.innerHTML = cart.map(function(item, i) {
+                var qty = item.qty || item.quantity || 1;
+                return '<div class="drawer-cart-item">' +
+                    '<img src="' + item.image + '" alt="' + item.name + '">' +
+                    '<div class="drawer-item-info">' +
+                        '<div class="drawer-item-category">' + (item.category||'') + '</div>' +
+                        '<div class="drawer-item-name">' + item.name + '</div>' +
+                        '<div class="drawer-item-meta">' + (item.color ? 'Color: ' + item.color : '') + (item.size ? ' / Size: ' + item.size : '') + '</div>' +
+                        '<div class="drawer-item-qty">' +
+                            '<button class="drawer-qty-btn" onclick="changeQty(' + i + ',-1)">−</button>' +
+                            '<span class="drawer-qty-num">' + qty + '</span>' +
+                            '<button class="drawer-qty-btn" onclick="changeQty(' + i + ',1)">+</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="drawer-item-right">' +
+                        '<button class="drawer-remove-btn" onclick="removeItem(' + i + ')">✕</button>' +
+                        '<span class="drawer-item-price">' + (item.price * qty).toLocaleString() + ' DA</span>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+            updateCartUI();
+        }
+        window.changeQty = function(i, d) { 
+            var item = cart[i];
+            var qty = item.qty || item.quantity || 1;
+            qty += d;
+            if (qty <= 0) { cart.splice(i, 1); } 
+            else { if (item.qty !== undefined) item.qty = qty; else item.quantity = qty; }
+            saveCart(); renderCartItems(); 
+        };
+        window.removeItem = function(i) { cart.splice(i, 1); saveCart(); renderCartItems(); };
+        function updateCartUI() {
+            var total = cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+            var count = cart.reduce(function(s, i) { return s + i.qty; }, 0);
+            var se = document.getElementById('drawerSubtotal'), te = document.getElementById('drawerTotal');
+            if (se) se.textContent = total.toLocaleString() + ' DA';
+            if (te) te.textContent = total.toLocaleString() + ' DA';
+            var badge = document.querySelector('.cart-count-badge');
+            if (badge) { badge.textContent = count; badge.classList.toggle('visible', count > 0); }
+            var bBadge = document.getElementById('bottomCartBadge');
+            if (bBadge) { bBadge.textContent = count; bBadge.style.display = count > 0 ? 'flex' : 'none'; }
+        }
+        function getCartSubtotal() { return cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0); }
+
+        // === ORDER SUMMARY ===
+        function updateSummary() {
+            var subtotal = getCartSubtotal();
+            var productsEl = document.getElementById('summaryProducts');
+            if (cart.length === 0) {
+                productsEl.innerHTML = '<p style="color:rgba(255,255,255,0.25);font-size:0.8rem;padding:16px 0">No items</p>';
+            } else {
+                productsEl.innerHTML = cart.map(function(item) {
+                    return '<div class="summary-product">' +
+                        '<img src="' + item.image + '" alt="' + item.name + '">' +
+                        '<div class="summary-product-info">' +
+                            '<div class="summary-product-name">' + item.name + '</div>' +
+                            '<div class="summary-product-meta">' + (item.size || '') + (item.color ? ' / ' + item.color : '') + ' × ' + item.qty + '</div>' +
+                        '</div>' +
+                        '<div class="summary-product-price">' + (item.price * item.qty).toLocaleString() + ' DA</div>' +
+                    '</div>';
+                }).join('');
+            }
+            document.getElementById('summarySubtotal').textContent = subtotal.toLocaleString() + ' DA';
+
+            var shipping = getShippingCost();
+            var shippingEl = document.getElementById('summaryShipping');
+            if (shipping !== null) {
+                shippingEl.textContent = shipping.toLocaleString() + ' DA';
+            } else if (selectedWilayaCode) {
+                shippingEl.textContent = 'Calculating...';
+            } else {
+                shippingEl.textContent = 'Select wilaya...';
+            }
+
+            var total = subtotal + (shipping || 0);
+            document.getElementById('summaryTotal').textContent = total.toLocaleString() + ' DA';
+
+            // Enable/disable button
+            var btn = document.getElementById('placeOrderBtn');
+            btn.disabled = cart.length === 0;
+        }
+
+        // === COOLDOWN ===
+        async function checkCooldown(phone) {
+            if (!yunDb) return { blocked: false };
+            try {
+                var cutoff = new Date(Date.now() - COOLDOWN_HOURS * 60 * 60 * 1000).toISOString();
+                var result = await yunDb.from('orders').select('id, created_at').eq('phone', phone).gte('created_at', cutoff).limit(1);
+                if (result.error) return { blocked: false };
+                if (result.data && result.data.length > 0) {
+                    var lastOrder = new Date(result.data[0].created_at);
+                    var expiresAt = new Date(lastOrder.getTime() + COOLDOWN_HOURS * 60 * 60 * 1000);
+                    var mins = Math.ceil((expiresAt - new Date()) / 60000);
+                    return { blocked: true, minutesLeft: mins };
+                }
+                return { blocked: false };
+            } catch(e) { return { blocked: false }; }
+        }
+
+        function showCooldown(mins) {
+            var banner = document.getElementById('cooldownBanner');
+            var text = document.getElementById('cooldownText');
+            var h = Math.floor(mins / 60), m = mins % 60;
+            var t = h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+            text.innerHTML = '<strong>Order limit reached.</strong> You can place another order in <strong>' + t + '</strong>. Only 1 order per phone every ' + COOLDOWN_HOURS + ' hours.';
+            banner.classList.add('show');
+            document.getElementById('placeOrderBtn').disabled = true;
+        }
+
+        // === PLACE ORDER ===
+        async function placeOrder() {
+            var btn = document.getElementById('placeOrderBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                var firstName = document.getElementById('firstName').value.trim();
+                var lastName = document.getElementById('lastName').value.trim();
+                var phone = document.getElementById('phone').value.trim();
+                var phone2 = document.getElementById('phone2').value.trim();
+                var homeAddress = document.getElementById('homeAddress').value.trim();
+                var notes = document.getElementById('notes').value.trim();
+
+                // Validate
+                var errors = [];
+                var fnR = validateName(firstName, 'First name');
+                if (!fnR.ok) { showError(document.getElementById('firstName'), document.getElementById('firstNameError'), fnR.msg); errors.push(fnR.msg); }
+                var lnR = validateName(lastName, 'Last name');
+                if (!lnR.ok) { showError(document.getElementById('lastName'), document.getElementById('lastNameError'), lnR.msg); errors.push(lnR.msg); }
+                var phR = validatePhone(phone);
+                if (!phR.ok) { showError(document.getElementById('phone'), document.getElementById('phoneError'), phR.msg); errors.push(phR.msg); }
+                if (phone2 && !validatePhone(phone2).ok) { errors.push('Invalid second phone'); }
+                if (!selectedWilayaCode) { showError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'), 'Please select a wilaya'); errors.push('Wilaya required'); }
+                if (!selectedCommune) { showError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'), 'Please select a commune'); errors.push('Commune required'); }
+                if (cart.length === 0) { alert('Your cart is empty'); errors.push('Empty cart'); }
+
+                if (errors.length > 0) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Cooldown — removed per request
+
+                // Price
+                var { data: pricing } = await yunDb.from('wilaya_pricing').select('home_price, post_price').eq('wilaya_code', selectedWilayaCode).single();
+                if (!pricing) { alert('Shipping not available'); btn.classList.remove('loading'); btn.disabled = false; return; }
+
+                var shippingCost = selectedDeliveryType === 'home' ? pricing.home_price : pricing.post_price;
+                var subtotal = getCartSubtotal();
+                var total = subtotal + shippingCost;
+                var eventId = 'purchase_' + Date.now();
+
+                // Stock check
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].variant_id) {
+                        try {
+                            var sc = await yunDb.from('product_variants').select('stock').eq('id', cart[i].variant_id).single();
+                            if (sc.data && sc.data.stock < cart[i].qty) {
+                                alert('Sorry, "' + cart[i].name + '" is out of stock.');
+                                btn.classList.remove('loading'); btn.disabled = false; return;
+                            }
+                        } catch(e) {}
+                    }
+                }
+
+                // Create order
+                var { data: order, error: orderError } = await yunDb.from('orders').insert({
+                    first_name: firstName, last_name: lastName, phone: phone,
+                    phone2: phone2 || null,
+                    wilaya_code: selectedWilayaCode, wilaya_name: selectedWilayaName,
+                    commune: selectedCommune, delivery_type: selectedDeliveryType,
+                    home_address: selectedDeliveryType === 'home' ? homeAddress : null,
+                    shipping_cost: shippingCost, subtotal: subtotal, total: total,
+                    notes: notes || null,
+                    status: 'pending', meta_event_id: eventId
+                }).select().single();
+
+                if (orderError) {
+                    console.error('Order error:', orderError);
+                    alert('Error placing order: ' + (orderError.message || orderError.details || orderError.code || JSON.stringify(orderError)));
+                    btn.classList.remove('loading'); btn.disabled = false; return;
+                }
+
+                // Order items
+                var orderItems = cart.map(function(item) {
+                    return {
+                        order_id: order.id, product_id: item.product_id || null,
+                        variant_id: item.variant_id || null, product_name: item.name,
+                        product_image_url: item.image, size: item.size || '', color: item.color || '',
+                        unit_price: item.price, quantity: item.qty, line_total: item.price * item.qty
+                    };
+                });
+                await yunDb.from('order_items').insert(orderItems);
+
+                // Decrease stock
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].variant_id) {
+                        try { await yunDb.rpc('decrease_stock_on_order', { p_variant_id: cart[i].variant_id, p_quantity: cart[i].qty, p_order_id: order.id }); } catch(e) {}
+                    }
+                }
+
+                localStorage.removeItem('yun_cart');
+                localStorage.setItem('yun_order_total', total);
+                localStorage.setItem('yun_last_order', JSON.stringify({
+                    order_number: order.order_number, subtotal: subtotal,
+                    shipping_cost: shippingCost, total: total,
+                    delivery_type: selectedDeliveryType, phone: phone,
+                    wilaya_name: selectedWilayaName, commune: selectedCommune
+                }));
+
+                window.location.href = 'thankyou.html?order=' + order.order_number;
+
+            } catch(e) {
+                console.error('Order error:', e);
+                alert('An error occurred. Please try again.');
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        // === INIT ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load checkout background from database
+            if (yunDb) {
+                yunDb.from('site_settings').select('value').eq('key', 'checkout_background').single()
+                    .then(function(r) {
+                        if (r.data && r.data.value) {
+                            document.body.style.backgroundImage = "url('" + r.data.value + "')";
+                        }
+                    }).catch(function() {});
+                loadZrSettings();
+            }
+
+            // Hamburger
+            var hamburger = document.querySelector('.hamburger');
+            var mobileMenu = document.getElementById('mobileMenu');
+            if (hamburger && mobileMenu) {
+                var closeBtn = document.querySelector('.mobile-menu-close');
+                var mobileLinks = mobileMenu.querySelectorAll('a');
+                function openMenu() { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; }
+                function closeMenu() { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; }
+                hamburger.addEventListener('click', openMenu);
+                if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+                mobileLinks.forEach(function(l) { l.addEventListener('click', closeMenu); });
+                mobileMenu.addEventListener('click', function(e) { if (e.target === mobileMenu) closeMenu(); });
+            }
+
+            // Cart icon
+            var cartIcon = document.querySelector('.cart-btn-wrap');
+            if (cartIcon) {
+                var badge = document.createElement('span');
+                badge.className = 'cart-count-badge';
+                badge.textContent = '0';
+                cartIcon.appendChild(badge);
+                cartIcon.addEventListener('click', function(e) { e.preventDefault(); openCart(); });
+            }
+            updateCartUI();
+
+            // Populate wilayas
+            populateWilayaSelect();
+
+            // Empty cart check
+            if (cart.length === 0) {
+                document.getElementById('checkoutContent').style.display = 'none';
+                document.getElementById('emptyCartNotice').style.display = 'block';
+                document.getElementById('cooldownBanner').style.display = 'none';
+            }
+
+            // Phone hints
+            document.getElementById('phone').addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
+                var hint = document.getElementById('phoneHint');
+                if (this.value.length > 0 && this.value.length < 10) {
+                    hint.textContent = 'Phone must be exactly 10 digits';
+                    hint.style.display = 'block';
+                } else {
+                    hint.style.display = 'none';
+                }
+            });
+
+            // Render summary
+            updateSummary();
+
+            // Place order
+            document.getElementById('placeOrderBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                placeOrder();
+            });
+
+        });
+
+        // === PAGE TRANSITION ===
+        (function() {
+            var pt = document.getElementById('page-transition');
+            if (!pt) return;
+            if (sessionStorage.getItem('yun_visited')) {
+                pt.style.transition = 'none';
+                pt.style.transform = 'translateY(0%)';
+                pt.style.display = 'flex';
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        pt.style.transition = 'transform 0.7s cubic-bezier(0.76, 0, 0.24, 1)';
+                        pt.style.transform = 'translateY(100%)';
+                        setTimeout(function() { pt.style.display = 'none'; }, 750);
+                    });
+                });
+            } else {
+                pt.style.display = 'none';
+            }
+            document.addEventListener('click', function(e) {
+                var link = e.target.closest('a[href]');
+                if (!link) return;
+                var href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel') || link.target === '_blank') return;
+                e.preventDefault();
+                pt.style.display = 'flex';
+                pt.style.transition = 'none';
+                pt.style.transform = 'translateY(100%)';
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        pt.style.transition = 'transform 0.7s cubic-bezier(0.76, 0, 0.24, 1)';
+                        pt.style.transform = 'translateY(0%)';
+                        setTimeout(function() { window.location.href = href; }, 750);
+                    });
+                });
+            });
+        })();
+
+        // Expose for cart drawer
+        window.openCart = openCart;
+        window.closeCart = closeCart;
+
+    })();
+    </script>
+    <script src="wepnest-protect.js"></script>
+</body>
+</html>
