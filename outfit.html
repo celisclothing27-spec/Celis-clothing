@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Celis clothing — Premium fashion streetwear. Free shipping across Algeria via Zr Express.">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Celis clothing">
+    <meta property="og:image" content="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Celis clothing">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png">
+    <title>Celis clothing — Outfit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://afbmxzrtdwqiawzsddtq.supabase.co" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Inter:wght@300;400;500;600&family=Space+Mono&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --text-primary: #ffffff; --text-secondary: rgba(255,255,255,0.55);
+            --accent: #e8e0d0; --font-body: 'Inter', sans-serif; --font-caption: 'Space Mono', monospace;
+            --font-heading: 'Barlow Condensed', sans-serif; --transition: 400ms ease;
+        }
+        html { scroll-behavior: smooth; font-family: var(--font-body); background: var(--bg); color: var(--text-primary); overflow-x: hidden; }
+        body { line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        img { max-width: 100%; display: block; }
+        a { text-decoration: none; color: inherit; }
+        button { border: none; background: none; cursor: pointer; font-family: inherit; outline: inherit; }
+        *:focus-visible { outline: 2px solid rgba(255,255,255,0.5); outline-offset: 3px; }
+
+        /* Navbar */
+        .navbar { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100; max-width: 720px; border-radius: 999px; background: rgba(10,10,10,0.55); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 4px 24px rgba(0,0,0,0.4); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+        .navbar-brand img { display: block; height: 36px; width: auto; }
+        .navbar-links { display: flex; gap: 32px; }
+        .navbar-links a { font-size: 0.85rem; color: rgba(255,255,255,0.75); transition: color var(--transition); }
+        .navbar-links a:hover { color: var(--text-primary); }
+        .navbar-icons { display: flex; align-items: center; gap: 16px; }
+        .navbar-icons button { color: var(--text-primary); display: flex; align-items: center; justify-content: center; }
+        .hamburger { display: none; }
+        .cart-btn-wrap { position: relative; }
+        .cart-count-badge { position: absolute; top: -4px; right: -6px; background: white; color: #0a0a0a; font-size: 0.55rem; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px; display: none; align-items: center; justify-content: center; font-family: var(--font-body); pointer-events: none; padding: 0 4px; }
+        .mobile-menu-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(10,10,10,0.97); backdrop-filter: blur(30px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+        .mobile-menu-overlay.open { display: flex; }
+        .mobile-menu-overlay a { font-size: 1.6rem; font-weight: 300; color: rgba(255,255,255,0.8); }
+        .mobile-menu-close { position: absolute; top: 16px; right: 20px; color: var(--text-primary); }
+
+        /* === OUTFIT PAGE LAYOUT === */
+        .outfit-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px clamp(16px, 4vw, 48px) 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+        .back-link {
+            grid-column: 1 / -1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: white; }
+
+        /* LEFT: Image */
+        .outfit-gallery {
+            position: sticky;
+            top: 100px;
+        }
+        .outfit-main-img {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            aspect-ratio: 3/4;
+        }
+        .outfit-main-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* RIGHT: Details */
+        .outfit-details {
+            padding-top: 8px;
+        }
+        .outfit-name {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-style: italic;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            text-transform: uppercase;
+            line-height: 1.05;
+            margin-bottom: 12px;
+        }
+        .outfit-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .outfit-price-sale {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+        .outfit-price-old {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.35);
+            text-decoration: line-through;
+        }
+
+        /* Product Sections */
+        .outfit-product-section {
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.02);
+        }
+        .outfit-product-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+        .outfit-product-img {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.04);
+        }
+        .outfit-product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .outfit-product-name {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+        .outfit-product-label {
+            font-family: var(--font-caption);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 4px;
+        }
+        .outfit-sizes-label {
+            font-family: var(--font-caption);
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .outfit-product-sizes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .size-btn {
+            min-width: 56px;
+            height: 44px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0 16px;
+            background: none;
+        }
+        .size-btn:hover { border-color: var(--text-primary); }
+        .size-btn.selected { background: white; color: #0a0a0a; border-color: white; }
+        .size-btn.out { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
+
+        /* Add to Cart */
+        .outfit-actions {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .add-outfit-btn {
+            flex: 1;
+            height: 52px;
+            background: white;
+            color: #0a0a0a;
+            border-radius: 10px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-style: italic;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+        .add-outfit-btn:hover { background: rgba(255,255,255,0.85); }
+        .add-outfit-btn:disabled { opacity: 0.35; pointer-events: none; }
+        .add-outfit-btn svg { width: 18px; height: 18px; }
+
+        /* Expandable sections */
+        .expandable {
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .expandable-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .expandable-header:hover { background: rgba(255,255,255,0.03); }
+        .expandable-title {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-style: italic;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .expandable-title svg { width: 16px; height: 16px; }
+        .expandable-arrow {
+            transition: transform 0.3s;
+            color: rgba(255,255,255,0.4);
+        }
+        .expandable.open .expandable-arrow { transform: rotate(180deg); }
+        .expandable-body {
+            display: none;
+            padding: 0 16px 16px;
+        }
+        .expandable.open .expandable-body { display: block; }
+        .expandable-body p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.8;
+        }
+        .expandable-body img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Size Guide Modal */
+        .sg-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
+        .sg-overlay.open { display: flex; }
+        .sg-modal { background: #111; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
+        .sg-close { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85rem; z-index: 1; }
+        .sg-close:hover { background: rgba(0,0,0,0.8); }
+        .sg-modal img { width: 100%; display: block; border-radius: 0 0 16px 16px; }
+
+        /* Bottom nav */
+        .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.92); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); }
+        .bottom-nav-inner { display: flex; align-items: center; justify-content: space-around; max-width: 400px; margin: 0 auto; }
+        .bn-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: rgba(255,255,255,0.5); font-size: 0.6rem; font-family: var(--font-caption); letter-spacing: 0.05em; transition: color 0.2s; text-decoration: none; position: relative; }
+        .bn-item.active, .bn-item:hover { color: white; }
+        .bn-item svg { width: 22px; height: 22px; }
+        .bn-badge { position: absolute; top: -4px; right: -8px; background: white; color: #0a0a0a; font-size: 0.5rem; font-weight: 700; min-width: 14px; height: 14px; border-radius: 7px; display: none; align-items: center; justify-content: center; padding: 0 3px; }
+
+        @media (max-width: 768px) {
+            .outfit-page {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 80px 16px 40px;
+            }
+            .outfit-gallery {
+                position: static;
+            }
+            .outfit-main-img {
+                border-radius: 12px;
+                aspect-ratio: 3/4;
+            }
+            .navbar { width: calc(100% - 40px); max-width: 360px; padding: 8px 16px; }
+            .navbar-links { display: none; }
+            .navbar-icons button:not(.hamburger) { display: none; }
+            .hamburger { display: flex; }
+            .bottom-nav { display: block; }
+            .outfit-name { font-size: 1.6rem; }
+        }
+        @media (max-width: 480px) {
+            .outfit-actions { flex-wrap: wrap; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+        /* Cart drawer */
+        #cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
+        #cart-overlay.active { opacity: 1; visibility: visible; }
+        #cart-drawer { position: fixed; top: 0; right: 0; width: 420px; max-width: 100vw; height: 100vh; background: #0f0f0f; border-left: 1px solid rgba(255,255,255,0.08); z-index: 9999; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.45s cubic-bezier(0.76,0,0.24,1); }
+        #cart-drawer.active { transform: translateX(0); }
+        .cd-header { display: flex; align-items: center; justify-content: space-between; padding: 28px 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+        .cd-title { font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 1.4rem; text-transform: uppercase; }
+        .cd-close { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; color: white; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+        .cd-items { flex: 1; overflow-y: auto; padding: 20px 28px; }
+        .cd-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 12px; }
+        .cd-empty-text { color: rgba(255,255,255,0.35); font-size: 0.9rem; }
+        .cd-empty-link { font-family: var(--font-caption); font-size: 0.7rem; color: white; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; }
+        .cd-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .cd-item img { width: 72px; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .cd-item-info { flex: 1; }
+        .cd-item-name { font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 4px; }
+        .cd-item-meta { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+        .cd-item-qty { display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; width: fit-content; }
+        .cd-qbtn { background: transparent; color: white; width: 28px; height: 28px; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .cd-qnum { width: 28px; text-align: center; font-size: 0.8rem; font-weight: 600; border-left: 1px solid rgba(255,255,255,0.12); border-right: 1px solid rgba(255,255,255,0.12); line-height: 28px; }
+        .cd-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+        .cd-item-price { font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 1rem; }
+        .cd-rm { background: transparent; border: none; color: rgba(255,255,255,0.25); font-size: 0.8rem; }
+        .cd-rm:hover { color: white; }
+        .cd-footer { padding: 20px 28px 32px; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; background: #0f0f0f; }
+        .cd-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cd-label { font-family: var(--font-caption); font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+        .cd-value { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+        .cd-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 14px 0; }
+        .cd-total-label { font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 1.1rem; text-transform: uppercase; }
+        .cd-total-value { font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 1.3rem; }
+        .cd-checkout { display: block; width: 100%; padding: 16px; background: white; color: #0a0a0a; text-align: center; border-radius: 10px; font-family: var(--font-heading); font-weight: 800; font-style: italic; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+        .cd-checkout:hover { background: rgba(255,255,255,0.88); }
+        .cd-continue { display: block; width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: rgba(255,255,255,0.5); font-family: var(--font-caption); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
+        .cd-continue:hover { border-color: rgba(255,255,255,0.3); color: white; }
+        @media (max-width: 480px) { #cart-drawer { width: 100vw; } }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
+    const yunDb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!yunDb) return;
+        yunDb.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle().then(function(res) {
+            var url = res.data && res.data.value ? res.data.value.trim() : '';
+            if (url) {
+                var img = document.querySelector('.navbar-brand img');
+                if (img) img.src = url;
+                var fav = document.querySelector('link[rel="icon"]');
+                if (fav) fav.href = url;
+            }
+        }).catch(function() {});
+    });
+    </script>
+    <script src="yun-cache.js"></script>
+    <script src="i18n.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand"><img src="https://res.cloudinary.com/dblanptpo/image/upload/q_auto/f_auto/v1781461884/IMG_20260531_223119_1_ebk1xo.png" alt="Celis clothing"></a>
+        <div class="navbar-links">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+        </div>
+        <div class="navbar-icons">
+            <div id="langSwitcher"></div>
+            <button aria-label="Cart" class="cart-btn-wrap cart-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </button>
+            <button class="hamburger" aria-label="Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </nav>
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <button class="mobile-menu-close" aria-label="Close"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+    </div>
+
+    <div class="outfit-page" id="outfitPage">
+        <a href="products.html" class="back-link">&larr; Back to Shop</a>
+        <div id="outfitContent">
+            <p style="color:rgba(255,255,255,0.3);padding:40px 0;text-align:center">Loading...</p>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a href="index.html" class="bn-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>HOME</span></a>
+            <a href="products.html" class="bn-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span>PRODUCTS</span></a>
+            <button class="bn-item" onclick="openCart()" style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>CART</span><span class="bn-badge" id="bnBadge">0</span></button>
+        </div>
+    </nav>
+
+    <!-- Cart Drawer -->
+    <div id="cart-overlay" onclick="closeCart()"></div>
+    <div id="cart-drawer">
+        <div class="cd-header"><h2 class="cd-title">CART</h2><button class="cd-close" onclick="closeCart()">&#10005;</button></div>
+        <div class="cd-items" id="cdItems">
+            <div class="cd-empty" id="cdEmpty"><p class="cd-empty-text">Your cart is empty</p><a href="products.html" class="cd-empty-link" onclick="closeCart()">EXPLORE PRODUCTS &rarr;</a></div>
+            <div id="cdList"></div>
+        </div>
+        <div class="cd-footer">
+            <div class="cd-row"><span class="cd-label">SUBTOTAL</span><span class="cd-value" id="cdSub">0 DA</span></div>
+            <div class="cd-row"><span class="cd-label">SHIPPING</span><span class="cd-value">Calculated at checkout</span></div>
+            <div class="cd-divider"></div>
+            <div class="cd-row"><span class="cd-total-label">TOTAL</span><span class="cd-total-value" id="cdTotal">0 DA</span></div>
+            <a href="checkout.html" class="cd-checkout">PROCEED TO CHECKOUT &rarr;</a>
+            <button class="cd-continue" onclick="closeCart()">&larr; CONTINUE SHOPPING</button>
+        </div>
+    </div>
+
+    <!-- Size Guide Modal -->
+    <div class="sg-overlay" id="sgOverlay" onclick="closeSG(event)">
+        <div class="sg-modal">
+            <button class="sg-close" onclick="closeSG()">&#10005;</button>
+            <img id="sgImage" src="" alt="Size Guide">
+        </div>
+    </div>
+
+    <script>
+    var cart = JSON.parse(localStorage.getItem('yun_cart') || '[]');
+    function saveCart() { localStorage.setItem('yun_cart', JSON.stringify(cart)); updateCartUI(); }
+    function openCart() { document.getElementById('cart-drawer').classList.add('active'); document.getElementById('cart-overlay').classList.add('active'); document.body.style.overflow = 'hidden'; renderCD(); }
+    function closeCart() { document.getElementById('cart-drawer').classList.remove('active'); document.getElementById('cart-overlay').classList.remove('active'); document.body.style.overflow = ''; }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeCart(); closeSG(); } });
+    function renderCD() {
+        var list = document.getElementById('cdList'), empty = document.getElementById('cdEmpty');
+        if (cart.length === 0) { list.innerHTML = ''; empty.style.display = 'flex'; return; }
+        empty.style.display = 'none';
+        list.innerHTML = cart.map(function(it, i) {
+            var imgs = '';
+            var meta = '';
+            if (it.outfit_group_id && it.products && it.products.length > 0) {
+                var prodImgs = it.products.map(function(p) {
+                    return '<img src="' + p.image + '" alt="' + p.name + '" style="width:32px;height:40px;object-fit:cover;border-radius:3px">';
+                }).join('');
+                imgs = '<div style="display:flex;gap:4px">' + prodImgs + '</div>';
+                meta = it.products.map(function(p) {
+                    return '<div style="font-size:0.7rem;color:rgba(255,255,255,0.5)">' + p.name + ': ' + p.size + '</div>';
+                }).join('');
+            } else {
+                imgs = '<img src="' + it.image + '" alt="' + it.name + '">';
+                meta = (it.color ? 'Color: ' + it.color : '') + (it.size ? ' / Size: ' + it.size : '');
+            }
+            return '<div class="cd-item">' + imgs + '<div class="cd-item-info"><div class="cd-item-name">' + it.name + '</div>' + meta + '<div class="cd-item-qty"><button class="cd-qbtn" onclick="chgQty(' + i + ',-1)">&minus;</button><span class="cd-qnum">' + it.qty + '</span><button class="cd-qbtn" onclick="chgQty(' + i + ',1)">+</button></div></div><div class="cd-item-right"><button class="cd-rm" onclick="rmItem(' + i + ')">&#10005;</button><span class="cd-item-price">' + (it.price * it.qty).toLocaleString() + ' DA</span></div></div>';
+        }).join('');
+        updateCartUI();
+    }
+    function chgQty(i, d) { cart[i].qty += d; if (cart[i].qty <= 0) cart.splice(i, 1); saveCart(); renderCD(); }
+    function rmItem(i) { cart.splice(i, 1); saveCart(); renderCD(); }
+    function updateCartUI() {
+        var total = cart.reduce(function(s,i){return s+i.price*i.qty},0);
+        var count = cart.reduce(function(s,i){return s+i.qty},0);
+        var se = document.getElementById('cdSub'), te = document.getElementById('cdTotal');
+        if (se) se.textContent = total.toLocaleString() + ' DA';
+        if (te) te.textContent = total.toLocaleString() + ' DA';
+        var b = document.querySelector('.cart-count-badge');
+        if (b) { b.textContent = count; b.style.display = count > 0 ? 'flex' : 'none'; }
+        var bn = document.getElementById('bnBadge');
+        if (bn) { bn.textContent = count; bn.style.display = count > 0 ? 'flex' : 'none'; }
+    }
+    function addToCart(item) {
+        var ex = cart.find(function(c){return c.id===item.id&&c.size===item.size&&c.color===item.color});
+        if (ex) ex.qty += (item.qty||1); else { var n = JSON.parse(JSON.stringify(item)); n.qty = item.qty||1; cart.push(n); }
+        saveCart(); openCart();
+    }
+
+    function openSG(url) {
+        document.getElementById('sgImage').src = url;
+        document.getElementById('sgOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSG(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('sgOverlay').classList.remove('open');
+        if (!document.getElementById('cart-drawer').classList.contains('active')) document.body.style.overflow = '';
+    }
+    function escapeHtml(t) { if (!t) return ''; return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+    function fmt(n) { return Number(n).toLocaleString() + ' DA'; }
+    function optImg(url, w) { if (!url || url.indexOf('cloudinary') === -1) return url; return url.replace('/image/upload/', '/image/upload/w_' + (w || 600) + ',q_auto,f_auto/'); }
+
+    var _selectedSizes = {};
+    var _outfitData = null;
+    var _outfitItems = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        YUN_I18N.init();
+        var lc = document.getElementById('langSwitcher');
+        if (lc) lc.innerHTML = YUN_I18N.createSwitcher();
+
+        var hamb = document.querySelector('.hamburger'), mm = document.getElementById('mobileMenu');
+        if (hamb) hamb.addEventListener('click', function(){ mm.classList.add('open'); document.body.style.overflow='hidden'; });
+        var cl = document.querySelector('.mobile-menu-close');
+        if (cl) cl.addEventListener('click', function(){ mm.classList.remove('open'); document.body.style.overflow=''; });
+        mm.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ mm.classList.remove('open'); document.body.style.overflow=''; }); });
+
+        var ci = document.querySelector('.cart-icon');
+        if (ci) { ci.style.position='relative'; var b=document.createElement('span'); b.className='cart-count-badge'; b.textContent='0'; b.style.display='none'; ci.appendChild(b); ci.addEventListener('click',function(e){e.preventDefault();openCart();}); }
+        updateCartUI();
+
+        var slug = new URLSearchParams(window.location.search).get('slug');
+        if (!slug) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found.</p>'; return; }
+        if (!yunDb) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Connection error.</p>'; return; }
+        loadOutfit(slug);
+    });
+
+    function loadOutfit(slug) {
+        YunCache.invalidate('outfit_' + slug);
+
+        function doLoad() {
+            return yunDb.from('outfits').select('*').eq('slug', slug).eq('is_active', true).single().then(function(res) {
+                if (res.error || !res.data) throw new Error('Not found');
+                var outfit = res.data;
+
+                return Promise.all([
+                    yunDb.from('outfit_images').select('cloudinary_url, is_primary').eq('outfit_id', outfit.id),
+                    yunDb.from('outfit_products').select('*').eq('outfit_id', outfit.id).order('sort_order')
+                ]).then(function(results) {
+                    var imgsRes = results[0];
+                    var products = results[1].data || [];
+
+                    var allImgs = (imgsRes.data || []).filter(function(img, i, arr) { return arr.findIndex(function(x) { return x.cloudinary_url === img.cloudinary_url; }) === i; });
+                    var mainImgObj = allImgs.find(function(img) { return img.is_primary; }) || allImgs[0];
+                    var mainImg = mainImgObj ? mainImgObj.cloudinary_url : '';
+                    var sgImg = allImgs.find(function(img) { return !img.is_primary; });
+                    var sizeGuideUrl = sgImg ? sgImg.cloudinary_url : null;
+
+                    if (!products.length) return [outfit, mainImg, [], sizeGuideUrl];
+
+                    var variantPromises = products.map(function(p) {
+                        return yunDb.from('outfit_variants').select('id, size, stock, price').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
+                            return {
+                                product: { name: p.name, base_price: p.price || outfit.base_price, sale_price: null },
+                                image: p.image_url || '',
+                                variants: vRes.data || []
+                            };
+                        });
+                    });
+                    return Promise.all(variantPromises).then(function(children) {
+                        return [outfit, mainImg, children, sizeGuideUrl];
+                    });
+                });
+            });
+        }
+
+        doLoad().then(function(r) {
+            _outfitData = r[0];
+            _outfitItems = r[2];
+            _sizeGuideUrl = r[3];
+            renderOutfit(r[0], r[1], r[2], r[3]);
+        }).catch(function(e) {
+            console.error('Outfit load error:', e);
+            document.getElementById('outfitContent').innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found.</p>';
+        });
+    }
+
+    function renderOutfit(outfit, mainImg, children, sizeGuideUrl) {
+        var cp = outfit.sale_price && outfit.sale_price < outfit.base_price ? outfit.sale_price : outfit.base_price;
+        var hasDiscount = outfit.sale_price && outfit.sale_price < outfit.base_price;
+        var hasDesc = outfit.description && outfit.description.trim().length > 0;
+
+        var leftHtml = '<div class="outfit-main-img"><img src="' + optImg(mainImg, 800) + '" alt="' + escapeHtml(outfit.name) + '"></div>';
+
+        var rightHtml = '';
+        rightHtml += '<h1 class="outfit-name">' + escapeHtml(outfit.name) + '</h1>';
+        rightHtml += '<div class="outfit-price-row">';
+        rightHtml += '<span class="outfit-price-sale">' + fmt(cp) + '</span>';
+        if (hasDiscount) rightHtml += '<span class="outfit-price-old">' + fmt(outfit.base_price) + '</span>';
+        rightHtml += '</div>';
+
+        var labels = ['A', 'B', 'C', 'D'];
+        children.forEach(function(child, idx) {
+            var pName = child.product.name || 'Product';
+            var label = labels[idx] || String.fromCharCode(65 + idx);
+
+            var sizeMap = {};
+            child.variants.forEach(function(v) {
+                if (!sizeMap[v.size]) sizeMap[v.size] = { size: v.size, stock: 0 };
+                sizeMap[v.size].stock += (v.stock || 0);
+            });
+            var sizes = Object.values(sizeMap);
+
+            rightHtml += '<div class="outfit-product-section">';
+            rightHtml += '<div class="outfit-product-header">';
+            rightHtml += '<div class="outfit-product-img"><img src="' + optImg(child.image, 150) + '" alt="' + escapeHtml(pName) + '"></div>';
+            rightHtml += '<div><div class="outfit-product-label">PRODUCT ' + label + '</div>';
+            rightHtml += '<div class="outfit-product-name">' + escapeHtml(pName) + '</div></div>';
+            rightHtml += '</div>';
+            rightHtml += '<div class="outfit-sizes-label">SIZE</div>';
+            rightHtml += '<div class="outfit-product-sizes" data-product-idx="' + idx + '">';
+            sizes.forEach(function(sz) {
+                var cls = sz.stock <= 0 ? 'size-btn out' : 'size-btn';
+                rightHtml += '<button class="' + cls + '" data-size="' + sz.size + '" data-stock="' + sz.stock + '">' + sz.size + '</button>';
+            });
+            rightHtml += '</div>';
+            rightHtml += '</div>';
+        });
+
+        rightHtml += '<div class="outfit-actions">';
+        rightHtml += '<button class="add-outfit-btn" id="addOutfitBtn" disabled style="width:100%">';
+        rightHtml += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
+        rightHtml += 'ADD TO CART';
+        rightHtml += '</button>';
+        rightHtml += '</div>';
+
+        if (hasDesc) {
+            rightHtml += '<div class="expandable" id="descSection">';
+            rightHtml += '<div class="expandable-header" onclick="toggleExpand(\'descSection\')">';
+            rightHtml += '<span class="expandable-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> DESCRIPTION</span>';
+            rightHtml += '<span class="expandable-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>';
+            rightHtml += '</div>';
+            rightHtml += '<div class="expandable-body"><p>' + outfit.description.replace(/\n/g, '<br>') + '</p></div>';
+            rightHtml += '</div>';
+        }
+
+        if (sizeGuideUrl) {
+            rightHtml += '<div class="expandable" id="sgSection">';
+            rightHtml += '<div class="expandable-header" onclick="toggleExpand(\'sgSection\')">';
+            rightHtml += '<span class="expandable-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h4l2-4 4 8 2-4h4"/></svg> SIZE GUIDE</span>';
+            rightHtml += '<span class="expandable-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>';
+            rightHtml += '</div>';
+            rightHtml += '<div class="expandable-body"><p>Size measurements may vary by 1-2 cm.</p>';
+            rightHtml += '<img src="' + optImg(sizeGuideUrl, 600) + '" alt="Size Guide" style="cursor:pointer" onclick="openSG(\'' + optImg(sizeGuideUrl, 800) + '\')">';
+            rightHtml += '</div>';
+            rightHtml += '</div>';
+        }
+
+        var pg = document.getElementById('outfitPage');
+        pg.innerHTML = '';
+        var backLink = document.createElement('a');
+        backLink.href = 'products.html';
+        backLink.className = 'back-link';
+        backLink.innerHTML = '&larr; Back to Shop';
+        pg.appendChild(backLink);
+
+        var gallery = document.createElement('div');
+        gallery.className = 'outfit-gallery';
+        gallery.innerHTML = leftHtml;
+        pg.appendChild(gallery);
+
+        var details = document.createElement('div');
+        details.className = 'outfit-details';
+        details.innerHTML = rightHtml;
+        pg.appendChild(details);
+
+        details.querySelectorAll('.outfit-product-sizes').forEach(function(container) {
+            container.addEventListener('click', function(e) {
+                var btn = e.target.closest('.size-btn');
+                if (!btn || btn.classList.contains('out')) return;
+                var pIdx = container.getAttribute('data-product-idx');
+                container.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
+                btn.classList.add('selected');
+                _selectedSizes[pIdx] = btn.getAttribute('data-size');
+                updateAddBtn();
+            });
+        });
+
+        details.querySelector('#addOutfitBtn').addEventListener('click', addOutfitToCart);
+    }
+
+    function toggleExpand(id) {
+        document.getElementById(id).classList.toggle('open');
+    }
+
+    function updateAddBtn() {
+        var btn = document.getElementById('addOutfitBtn');
+        if (!btn) return;
+        var allSelected = _outfitItems.length > 0 && _outfitItems.every(function(_, i) { return _selectedSizes[i]; });
+        btn.disabled = !allSelected;
+    }
+
+    function addOutfitToCart() {
+        if (!_outfitData || !_outfitItems.length) return;
+        var allSelected = _outfitItems.every(function(_, i) { return _selectedSizes[i]; });
+        if (!allSelected) return;
+
+        var sizeParts = [];
+        var products = [];
+        _outfitItems.forEach(function(child, idx) {
+            var label = String.fromCharCode(65 + idx);
+            var size = _selectedSizes[idx];
+            sizeParts.push(label + ':' + size);
+            products.push({
+                name: child.product.name,
+                size: size,
+                image: child.image,
+                price: child.product.sale_price && child.product.sale_price < child.product.base_price ? child.product.sale_price : child.product.base_price
+            });
+        });
+
+        var groupId = _outfitData.slug + '_' + Date.now();
+        var mainImg = document.querySelector('.outfit-main-img img');
+        var cp = _outfitData.sale_price && _outfitData.sale_price < _outfitData.base_price ? _outfitData.sale_price : _outfitData.base_price;
+
+        addToCart({
+            id: _outfitData.slug,
+            slug: _outfitData.slug,
+            name: _outfitData.name,
+            price: cp,
+            oldPrice: _outfitData.base_price,
+            size: sizeParts.join(' + '),
+            color: 'default',
+            qty: 1,
+            image: mainImg ? mainImg.src : '',
+            outfit_group_id: groupId,
+            products: products
+        });
+
+        var btn = document.getElementById('addOutfitBtn');
+        var original = btn.innerHTML;
+        btn.innerHTML = '&#10003; ADDED!';
+        btn.style.background = '#2e7d32';
+        btn.style.color = 'white';
+        setTimeout(function() {
+            btn.innerHTML = original;
+            btn.style.background = '';
+            btn.style.color = '';
+        }, 1500);
+    }
+    </script>
+    <script src="wepnest-protect.js"></script>
+</body>
+</html>

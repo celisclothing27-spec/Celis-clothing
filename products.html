@@ -221,6 +221,20 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
     const yunDb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!yunDb) return;
+        yunDb.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle().then(function(res) {
+            var url = res.data && res.data.value ? res.data.value.trim() : '';
+            if (url) {
+                var img = document.querySelector('.navbar-brand img');
+                if (img) img.src = url;
+                var fav = document.querySelector('link[rel="icon"]');
+                if (fav) fav.href = url;
+            }
+        }).catch(function() {});
+    });
+    </script>
     <script src="yun-cache.js"></script>
     <script src="i18n.js"></script>
 </head>
@@ -504,7 +518,6 @@
           });
         })();
     </script>
-</script>
 <script>
 YunCache.fetch('cats_active', 300000, function() {
     return yunDb.from('categories').select('name, slug').eq('is_active', true).order('name');
@@ -565,7 +578,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             } else {
                 priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
             }
-            return '<a href="product.html?slug=' + encodeURIComponent(p.slug) + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '">' +
+            var linkUrl = p.category === 'outfit' ? 'outfit.html?slug=' + encodeURIComponent(p.slug) : 'product.html?slug=' + encodeURIComponent(p.slug);
+            return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '">' +
                 '<div class="product-img-wrap">' +
                     '<img src="' + escapeHtml(optImg(img, 400)) + '" alt="' + escapeHtml((p.name || '').toUpperCase()) + '" loading="lazy" decoding="async" width="400" height="533">' +
                     
@@ -583,18 +597,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // METHOD 1: Try products_with_stock view (cached)
+    var loadedProducts = false;
     try {
         var res = await YunCache.fetch('products_all', 60000, function() {
-            return yunDb.from('products_with_stock').select('id, name, slug, category, base_price, sale_price, primary_image, total_stock').order('name');
+            return yunDb.from('products_with_stock').select('id, name, slug, category, base_price, sale_price, primary_image, total_stock').eq('is_active', true).neq('category', 'outfit_child').order('name');
         });
         if (res.error) throw res.error;
-        if (res.data && res.data.length > 0) { renderProducts(res.data); return; }
+        if (res.data && res.data.length > 0) { renderProducts(res.data); loadedProducts = true; }
     } catch(e) { console.log('View failed, trying raw tables:', e.message); }
 
+    if (!loadedProducts) {
     // METHOD 2: Fallback — query products + images (cached, specific columns)
     try {
         var res2 = await YunCache.fetch('products_all', 60000, function() {
-            return yunDb.from('products').select('id, name, slug, category, base_price, sale_price, product_images(cloudinary_url, is_primary)').eq('is_active', true).order('name');
+            return yunDb.from('products').select('id, name, slug, category, base_price, sale_price, product_images(cloudinary_url, is_primary)').eq('is_active', true).neq('category', 'outfit_child').order('name');
         });
         if (res2.error) throw res2.error;
         var products = (res2.data || []).map(function(p) {
@@ -611,6 +627,52 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch(e2) {
         console.error('Raw query also failed:', e2);
         grid.innerHTML = '<div class="loading" style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,255,255,0.3);font-family:\'Space Mono\',monospace;font-size:0.7rem">Failed to load products. Check console for errors.</div>';
+    }
+    } // end if (!loadedProducts)
+
+    // Load outfits from new outfits table
+    try {
+        var outfitRes = await yunDb.from('outfits').select('*').eq('is_active', true).order('created_at', { ascending: false });
+        if (outfitRes.data && outfitRes.data.length > 0) {
+            var outfitIds = outfitRes.data.map(function(o) { return o.id; });
+            var { data: outfitImgs } = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
+            var imgMap = {};
+            if (outfitImgs) outfitImgs.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
+
+            function optImg2(url, w) {
+                if (!url || url.indexOf('cloudinary') === -1) return url;
+                return url.replace('/image/upload/', '/image/upload/w_' + (w||400) + ',q_auto,f_auto/');
+            }
+
+            outfitRes.data.forEach(function(o) {
+                var img = imgMap[o.id] || '';
+                var sale = o.sale_price && o.sale_price < o.base_price ? o.sale_price : null;
+                var priceHTML;
+                if (sale) {
+                    priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="price-old">' + new Intl.NumberFormat('en-DZ').format(o.base_price) + ' DA</span>';
+                } else {
+                    priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(o.base_price) + ' DA</span>';
+                }
+                var card = document.createElement('a');
+                card.href = 'outfit.html?slug=' + encodeURIComponent(o.slug);
+                card.className = 'product-card';
+                card.setAttribute('data-category', 'outfit');
+                card.setAttribute('data-product-id', o.slug);
+                card.innerHTML = '<div class="product-img-wrap">' +
+                    '<img src="' + escapeHtml(optImg2(img, 400)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async" width="400" height="533">' +
+                    '<div class="card-hover-overlay"><button class="quick-view-btn">QUICK VIEW</button></div>' +
+                '</div>' +
+                '<div class="product-info">' +
+                    '<span class="product-category">OUTFIT</span>' +
+                    '<h3 class="product-name">' + escapeHtml(o.name.toUpperCase()) + '</h3>' +
+                    '<div class="product-price">' + priceHTML + '</div>' +
+                '</div>';
+                grid.insertBefore(card, grid.firstChild);
+            });
+            if (window.__initProductCards) window.__initProductCards();
+        }
+    } catch(e) {
+        console.log('Outfits load skipped:', e.message);
     }
 });
 </script>

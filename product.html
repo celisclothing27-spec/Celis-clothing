@@ -215,6 +215,20 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
     const yunDb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!yunDb) return;
+        yunDb.from('site_settings').select('value').eq('key', 'logo_url').maybeSingle().then(function(res) {
+            var url = res.data && res.data.value ? res.data.value.trim() : '';
+            if (url) {
+                var img = document.querySelector('.navbar-brand img');
+                if (img) img.src = url;
+                var fav = document.querySelector('link[rel="icon"]');
+                if (fav) fav.href = url;
+            }
+        }).catch(function() {});
+    });
+    </script>
     <script src="yun-cache.js"></script>
     <script src="i18n.js"></script>
 </head>
@@ -498,6 +512,8 @@
         document.getElementById('addToCartBtn').addEventListener('click', function(){
             var prod = window._product;
             if (!prod) return;
+
+            // Normal product add to cart
             var v = _selVariant;
             var color = v ? v.color : 'Default';
             var size = v ? (v.size || '') : '';

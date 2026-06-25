@@ -277,17 +277,12 @@
         /* ===== FOG DIVIDER ===== */
         .fog-divider {
             width: 100%;
-            height: 160px;
-            margin-top: -160px;
+            height: 120px;
+            margin-top: -120px;
             position: relative;
             z-index: 5;
             pointer-events: none;
-            background:
-                radial-gradient(ellipse 100% 100% at 20% 100%, rgba(15,15,15,0.95) 0%, transparent 60%),
-                radial-gradient(ellipse 80% 90% at 75% 100%, rgba(10,10,10,0.9) 0%, transparent 55%),
-                radial-gradient(ellipse 120% 80% at 50% 100%, rgba(8,8,8,1) 0%, transparent 70%),
-                linear-gradient(to bottom, transparent 0%, #0a0a0a 90%);
-            filter: blur(6px);
+            background: linear-gradient(to bottom, transparent 0%, #0a0a0a 100%);
         }
 
         /* ===== PRODUCTS ===== */
@@ -580,7 +575,6 @@
                 min-height: 250px;
             }
         }
-        /* ===== FEATURED OUTFITS ===== */
         /* ===== VIEW PRODUCTS BUTTON ===== */
         .view-products-wrap {
             display: flex;
@@ -856,8 +850,6 @@
         </div>
     </section>
 
-    <!-- ===== FEATURED OUTFITS ===== -->
-
     <div class="view-products-wrap">
         <a href="products.html" class="btn-view-products">
             <span data-i18n="view_products">VIEW COLLECTION →</span>
@@ -1036,11 +1028,9 @@
                     ty = (e.pageY / window.innerHeight - 0.5) * 2;
                 });
                 function animateHero() {
-                    hx += (tx - hx) * 0.06;
-                    hy += (ty - hy) * 0.06;
-                    var rotX = hy * 1.5;
-                    var rotY = -hx * 1.5;
-                    heroWrap.style.transform = 'translate(calc(-50% + ' + (-hx * 35) + 'px), calc(' + (-hy * 25) + 'px)) scale(1.15) perspective(1000px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg)';
+                    hx += (tx - hx) * 0.08;
+                    hy += (ty - hy) * 0.08;
+                    heroWrap.style.transform = 'translate(calc(-50% + ' + (-hx * 20) + 'px), calc(' + (-hy * 15) + 'px)) scale(1.15)';
                     requestAnimationFrame(animateHero);
                 }
                 animateHero();
@@ -1172,6 +1162,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (favicon) favicon.href = logoUrl;
     }
   }).catch(function() {});
+
 });
 </script>
 <script>
@@ -1184,6 +1175,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!grid) return;
     if (res.error) { console.error('Categories error:', res.error); grid.style.display = 'none'; return; }
     var cats = (res.data || []).filter(function(c) { return c.is_active !== false; });
+
     if (cats.length === 0) { grid.style.display = 'none'; return; }
     function optImg(url, w) {
       if (!url || url.indexOf('cloudinary') === -1) return url;

@@ -180,15 +180,26 @@
             }
             var html='';
             var subtotal=0;
-            cart.forEach(function(item,i){
+
+            cart.forEach(function(item, i) {
                 var qty=item.qty||item.quantity||1;var itemTotal=item.price*qty;
                 subtotal+=itemTotal;
+                var isOutfit=item.outfit_group_id||item.products;
+                var metaHtml='';
+                if(isOutfit&&item.products){
+                    metaHtml='<p class="cart-item-meta" style="margin-bottom:4px">Outfit — '+item.size+'</p>';
+                    item.products.forEach(function(p){
+                        metaHtml+='<p class="cart-item-meta" style="font-size:0.65rem;opacity:0.6">• '+p.name+' ('+p.size+')</p>';
+                    });
+                }else{
+                    metaHtml='<p class="cart-item-meta">Color: '+item.color+' / Size: '+item.size+'</p>';
+                }
                 html+='<div class="cart-item" data-index="'+i+'" data-id="'+item.id+'" data-size="'+item.size+'" data-color="'+item.color+'">'+
                     '<img class="cart-item-img" src="'+item.image+'" alt="'+item.name+'">'+
                     '<div class="cart-item-details">'+
-                        '<span class="cart-item-category">'+item.category+'</span>'+
+                        '<span class="cart-item-category">'+(isOutfit?'OUTFIT':item.category)+'</span>'+
                         '<h3 class="cart-item-name">'+item.name+'</h3>'+
-                        '<p class="cart-item-meta">Color: '+item.color+' / Size: '+item.size+'</p>'+
+                        metaHtml+
                         '<div class="cart-item-qty">'+
                             '<button class="qty-btn" data-action="minus">−</button>'+
                             '<span class="qty-num">'+(item.qty||item.quantity||1)+'</span>'+
@@ -201,6 +212,7 @@
                     '</div>'+
                 '</div>';
             });
+
             container.innerHTML=html;
             document.getElementById('summarySubtotal').textContent=formatPrice(subtotal);
             document.getElementById('summaryTotal').textContent=formatPrice(subtotal);
