@@ -169,7 +169,7 @@
 
         /* Page transition */
         #page-transition { position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        .pt-brand { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: #c5d98b; letter-spacing: 0.4em; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .pt-brand { height: 64px; width: auto; object-fit: contain; opacity: 0.8; }
 
         /* Cart drawer */
         #cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; }
@@ -219,7 +219,7 @@
     <script src="i18n.js"></script>
 </head>
 <body>
-    <div id="page-transition"><span class="pt-brand">Celis clothing</span></div>
+    <div id="page-transition"><img class="pt-brand" src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing"></div>
 
     <nav class="navbar">
         <a href="index.html" class="navbar-brand"><img src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing" style="height:36px;width:auto;object-fit:contain"></a>
@@ -271,6 +271,7 @@
                 <span id="offerText" style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-style:italic;font-size:1rem;color:#c5d98b;text-transform:uppercase"></span>
             </div>
             <div id="offerDesc" style="font-size:0.78rem;color:rgba(255,255,255,0.5)"></div>
+            <button id="replayOnboardBtn" onclick="replayOnboard()" style="display:none;margin-top:10px;width:100%;padding:10px;background:transparent;border:1px solid rgba(197,217,139,0.25);border-radius:999px;color:rgba(197,217,139,0.6);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-style:italic;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#c5d98b';this.style.color='#c5d98b'" onmouseout="this.style.borderColor='rgba(197,217,139,0.25)';this.style.color='rgba(197,217,139,0.6)'">&#9432; How to Order</button>
         </div>
 
         <!-- Offer Modal -->
@@ -999,5 +1000,111 @@
 })();
 </script>
     <script src="wepnest-protect.js"></script>
+
+    <!-- ONBOARDING OVERLAY -->
+    <div id="onboardOverlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);align-items:center;justify-content:center;padding:24px">
+        <div style="max-width:420px;width:100%;text-align:center;position:relative" id="onboardContent"></div>
+    </div>
+    <style>
+        .onboard-dot { width:8px; height:8px; border-radius:50%; background:rgba(197,217,139,0.2); transition:all 0.3s; }
+        .onboard-dot.active { background:#c5d98b; width:24px; border-radius:4px; }
+    </style>
+    <script>
+    var _obIsAr = /ar/i.test(navigator.language || '');
+    var _obStrings = {
+        step1Title: _obIsAr ? 'عرض خاص!' : 'Special Offer!',
+        step1Desc: _obIsAr ? 'هذا المنتج عليه عرض مميز. أضفه للسلة ووفّر على السعر الكلي.' : 'This product has a special deal. Add it to your cart and save on the total price.',
+        step1Btn: _obIsAr ? 'كيف تطلب' : 'How to Order',
+        step2Title: _obIsAr ? 'أضف للسلة' : 'Add to Cart',
+        step2Desc: _obIsAr ? 'اختار القmeasure واللون، ثم اضغط الزر باش تزيدو للسلة.' : 'Choose your size and color, then tap the button below to add it to your cart.',
+        step2Qty: _obIsAr ? 'الكمية' : 'QTY',
+        step2Btn: _obIsAr ? 'فهمت!' : 'Got it!',
+        step3Title: _obIsAr ? 'جاهز!' : 'Ready!',
+        step3Desc: _obIsAr ? 'فتح السلة، راجع طلبك، ثم أكمل الطلب. الدفع عند الاستلام!' : 'Open your cart, review your order, and checkout. Pay cash on delivery!',
+        step3Start: _obIsAr ? 'ابدأ التسوق' : 'Start Shopping',
+        step3Skip: _obIsAr ? 'تخطى الشرح' : 'Skip Tutorial'
+    };
+    function _obRender(step) {
+        var s = _obStrings, d = step || 0;
+        var steps = [
+            '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>' +
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step1Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:32px">' + s.step1Desc + '</p>' +
+            '<button onclick="onboardNext()" style="width:100%;padding:16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:999px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">' + s.step1Btn + '</button>',
+            '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>' +
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step2Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:8px">' + s.step2Desc + '</p>' +
+            '<div style="background:rgba(197,217,139,0.08);border:1px solid rgba(197,217,139,0.2);border-radius:12px;padding:16px;margin:16px 0 24px"><div style="display:flex;align-items:center;gap:12px;justify-content:center"><span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;color:#c5d98b">' + s.step2Qty + '</span><div style="display:flex;align-items:center;border:1px solid rgba(197,217,139,0.3);border-radius:8px"><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem">&minus;</span><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:0.9rem;border-left:1px solid rgba(197,217,139,0.2);border-right:1px solid rgba(197,217,139,0.2)">1</span><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem">+</span></div></div></div>' +
+            '<button onclick="onboardNext()" style="width:100%;padding:16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:999px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">' + s.step2Btn + '</button>',
+            '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>' +
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step3Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:32px">' + s.step3Desc + '</p>' +
+            '<button onclick="onboardClose()" style="width:100%;padding:16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:999px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">' + s.step3Start + '</button>' +
+            '<button onclick="onboardClose()" style="width:100%;padding:12px;margin-top:10px;background:none;border:1px solid rgba(197,217,139,0.25);color:rgba(197,217,139,0.5);border-radius:999px;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">' + s.step3Skip + '</button>'
+        ];
+        var dots = '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:32px"><span class="onboard-dot' + (d===0?' active':'') + '" data-step="0"></span><span class="onboard-dot' + (d===1?' active':'') + '" data-step="1"></span><span class="onboard-dot' + (d===2?' active':'') + '" data-step="2"></span></div>';
+        document.getElementById('onboardContent').innerHTML = dots + steps[d];
+    }
+    (function() {
+        var KEY = 'celis_onboard_done';
+        if (localStorage.getItem(KEY)) return;
+        var checkInterval = setInterval(function() {
+            var offerBanner = document.getElementById('offerBanner');
+            if (!offerBanner) return;
+            if (offerBanner.style.display !== 'none' && window._offer) {
+                clearInterval(checkInterval);
+                setTimeout(function() {
+                    _obRender(0);
+                    document.getElementById('onboardOverlay').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }, 800);
+            }
+            setTimeout(function() { clearInterval(checkInterval); }, 8000);
+        }, 500);
+    })();
+    var onboardStep = 0;
+    function onboardNext() {
+        onboardStep++;
+        _obRender(onboardStep);
+    }
+    function onboardClose() {
+        var overlay = document.getElementById('onboardOverlay');
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.4s';
+        setTimeout(function() { overlay.style.display = 'none'; }, 400);
+        document.body.style.overflow = '';
+        localStorage.setItem('celis_onboard_done', '1');
+        onboardStep = 0;
+        showReplayBtn();
+    }
+    function showReplayBtn() {
+        var btn = document.getElementById('replayOnboardBtn');
+        if (btn) btn.style.display = 'block';
+        var isAr = /ar/i.test(navigator.language || '');
+        if (btn) btn.innerHTML = isAr ? '&#9432; كيف تطلب' : '&#9432; How to Order';
+    }
+    function replayOnboard() {
+        onboardStep = 0;
+        _obRender(0);
+        var overlay = document.getElementById('onboardOverlay');
+        overlay.style.opacity = '1';
+        overlay.style.display = 'flex';
+        overlay.style.transition = 'opacity 0.3s';
+        document.body.style.overflow = 'hidden';
+    }
+    // If already done tutorial + has offer, show the replay button
+    (function() {
+        if (!localStorage.getItem('celis_onboard_done')) return;
+        var checkInterval = setInterval(function() {
+            var offerBanner = document.getElementById('offerBanner');
+            if (!offerBanner) return;
+            if (offerBanner.style.display !== 'none' && window._offer) {
+                clearInterval(checkInterval);
+                showReplayBtn();
+            }
+            setTimeout(function() { clearInterval(checkInterval); }, 8000);
+        }, 500);
+    })();
+    </script>
 </body>
 </html>

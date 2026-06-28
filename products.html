@@ -61,8 +61,10 @@
         .mobile-menu-close { position: absolute; top: 16px; right: 20px; color: var(--text); }
 
         /* PAGE TRANSITION */
-        #page-transition { position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        .pt-brand { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--text); letter-spacing: 0.4em; opacity: 0; transition: opacity 0.3s; }
+        #page-transition { position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; display: none; align-items: center; justify-content: center; flex-direction: column; pointer-events: none; }
+        .pt-brand { height: 64px; width: auto; object-fit: contain; opacity: 0.8; }
+        .pt-spinner { width: 32px; height: 32px; border: 3px solid rgba(197,217,139,0.15); border-top-color: #c5d98b; border-radius: 50%; margin-top: 24px; animation: ptSpin 0.8s linear infinite; }
+        @keyframes ptSpin { to { transform: rotate(360deg); } }
 
         /* BANNER */
         .page-banner { min-height: 260px; background: linear-gradient(135deg, #111, #0a0a0a); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 40px; }
@@ -70,30 +72,28 @@
         .banner-title { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(2.5rem, 5vw, 4rem); text-transform: uppercase; letter-spacing: 0.01em; }
 
         /* BEST SELLERS */
-        .bs-section { position: relative; background: #0a0a0a; padding: 60px 0 50px; overflow: hidden; }
-        .bs-section h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 2.4rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text); text-align: center; margin: 0 0 40px; }
-        .bs-wrap { position: relative; overflow: hidden; }
-        .bs-track { display: flex; align-items: center; gap: 24px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; padding: 20px 0 30px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-        .bs-track::-webkit-scrollbar { display: none; }
-        .bs-card { flex: 0 0 380px; scroll-snap-align: center; scroll-snap-stop: always; cursor: pointer; transition: filter 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1); filter: blur(8px) brightness(0.35); opacity: 0.4; transform: scale(0.85); }
-        .bs-card.active { filter: blur(0) brightness(1); opacity: 1; transform: scale(1); z-index: 2; }
-        .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; border-radius: 18px; background: #151515; position: relative; }
-        .bs-card.active .bs-img { border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.7); }
+        .bs-section { background: #0a0a0a; padding: 60px 0 40px; }
+        .bs-section h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase; color: #c5d98b; text-align: center; margin: 0 0 36px; }
+        .bs-wrap { position: relative; max-width: 800px; margin: 0 auto; padding: 0 70px; }
+        .bs-track { display: flex; gap: 20px; overflow: hidden; }
+        .bs-card { flex: 0 0 calc(50% - 10px); cursor: pointer; border-radius: 16px; overflow: hidden; background: #111; border: 1px solid rgba(197,217,139,0.1); transition: transform 0.3s; }
+        .bs-card:hover { transform: translateY(-4px); }
+        .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; }
         .bs-card .bs-img img { width: 100%; height: 100%; object-fit: cover; }
-        .bs-card .bs-info { text-align: center; padding: 16px 8px 0; opacity: 0; transition: opacity 0.6s; }
-        .bs-card.active .bs-info { opacity: 1; padding: 20px 8px 0; }
-        .bs-card .bs-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; color: var(--text-dim); }
-        .bs-card.active .bs-name { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
-        .bs-card .bs-price { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.9rem; color: var(--text); }
-        .bs-card .bs-old { font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; margin-left: 6px; }
-        .bs-card.active .bs-price { font-size: 1.1rem; }
-        .bs-select-btn { display: none; width: 100%; margin-top: 16px; padding: 14px 20px; background: #fff; color: #0a0a0a; border: none; border-radius: 999px; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-        .bs-card.active .bs-select-btn { display: block; }
-        .bs-select-btn:hover { background: rgba(255,255,255,0.85); }
-        .bs-arrow { position: absolute; top: 45%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: all 0.25s; backdrop-filter: blur(8px); }
-        .bs-arrow:hover { background: rgba(255,255,255,0.15); transform: translateY(-50%) scale(1.1); }
-        .bs-arrow-left { left: 20px; }
-        .bs-arrow-right { right: 20px; }
+        .bs-card .bs-info { padding: 14px 14px 18px; text-align: center; }
+        .bs-card .bs-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; color: #c5d98b; }
+        .bs-prices { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 12px; }
+        .bs-card .bs-price { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.1rem; color: #c5d98b; }
+        .bs-card .bs-old { font-size: 0.8rem; color: rgba(197,217,139,0.35); text-decoration: line-through; }
+        .bs-select-btn { display: block; width: 100%; padding: 12px; background: transparent; color: #c5d98b; border: 1px solid rgba(197,217,139,0.3); border-radius: 999px; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .bs-select-btn:hover { background: #c5d98b; color: #0a0a0a; }
+        .bs-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(197,217,139,0.08); border: 1px solid rgba(197,217,139,0.2); color: #c5d98b; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: all 0.2s; }
+        .bs-arrow:hover { background: rgba(197,217,139,0.2); }
+        .bs-arrow-left { left: 0; }
+        .bs-arrow-right { right: 0; }
+        .bs-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+        .bs-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(197,217,139,0.2); border: none; cursor: pointer; transition: all 0.3s; padding: 0; }
+        .bs-dot.active { background: #c5d98b; width: 20px; border-radius: 4px; }
 
         /* SEARCH + FILTERS */
         .search-filter-wrap { padding: 32px clamp(20px, 5vw, 80px) 0; display: flex; flex-direction: column; gap: 20px; max-width: 1400px; margin: 0 auto; }
@@ -191,27 +191,23 @@
             .hamburger { display: flex; }
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 24px 16px 80px; }
             .product-card.wide-card { grid-column: span 2; }
-            .bs-section { padding: 50px 0 40px; }
-            .bs-section h2 { font-size: 1.6rem; margin-bottom: 32px; }
-            .bs-track { gap: 16px; }
-            .bs-card { flex: 0 0 260px; filter: blur(5px) brightness(0.35); opacity: 0.45; transform: scale(0.9); }
-            .bs-card.active { filter: blur(0) brightness(1); opacity: 1; transform: scale(1); }
-            .bs-card .bs-name { font-size: 0.75rem; }
-            .bs-card.active .bs-name { font-size: 0.95rem; }
-            .bs-card .bs-price { font-size: 0.8rem; }
-            .bs-card.active .bs-price { font-size: 0.95rem; }
-            .bs-select-btn { padding: 10px 14px; font-size: 0.75rem; }
-            .bs-arrow { width: 40px; height: 40px; }
-            .bs-arrow-left { left: 10px; }
-            .bs-arrow-right { right: 10px; }
+            .bs-section { padding: 40px 0 30px; }
+            .bs-section h2 { font-size: 1.5rem; margin-bottom: 24px; }
+            .bs-track { gap: 14px; padding: 10px 60px 16px; }
+            .bs-card { flex: 0 0 240px; }
+            .bs-card .bs-name { font-size: 0.85rem; }
+            .bs-card .bs-price { font-size: 0.85rem; }
+            .bs-select-btn { padding: 10px; font-size: 0.7rem; }
+            .bs-arrow { width: 38px; height: 38px; }
+            .bs-arrow-left { left: 8px; }
+            .bs-arrow-right { right: 8px; }
             .bottom-nav { display: block; }
             .search-filter-wrap { padding: 24px 16px 0; }
             .sort-select { width: 100%; }
         }
         @media (max-width: 480px) {
-            .bs-card { flex: 0 0 200px; filter: blur(5px) brightness(0.35); opacity: 0.45; }
-            .bs-card.active { filter: blur(0) brightness(1); opacity: 1; }
-            .bs-arrow { width: 34px; height: 34px; }
+            .bs-card { flex: 0 0 200px; }
+            .bs-arrow { width: 32px; height: 32px; }
             #cart-drawer { width: 100vw; }
         }
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
@@ -227,7 +223,7 @@
 </head>
 <body>
 
-    <div id="page-transition"><span class="pt-brand">Celis clothing</span></div>
+    <div id="page-transition"><img class="pt-brand" src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing"><div class="pt-spinner"></div></div>
 
     <!-- NAVBAR -->
     <nav class="navbar">
@@ -278,14 +274,15 @@
     <section class="bs-section" id="bestsellersSection" style="display:none">
         <h2>BEST SELLERS</h2>
         <div class="bs-wrap">
-            <button class="bs-arrow bs-arrow-left" onclick="scrollBS(-1)" aria-label="Previous">
+            <button class="bs-arrow bs-arrow-left" onclick="bsNav(-1)" aria-label="Previous">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div class="bs-track" id="bestsellersGrid"></div>
-            <button class="bs-arrow bs-arrow-right" onclick="scrollBS(1)" aria-label="Next">
+            <button class="bs-arrow bs-arrow-right" onclick="bsNav(1)" aria-label="Next">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
+        <div class="bs-dots" id="bsDots"></div>
     </section>
 
     <!-- PRODUCTS GRID -->
@@ -485,119 +482,79 @@
     });
 
     // === BEST SELLERS CAROUSEL ===
-    var bsAutoTimer = null;
-    var bsPaused = false;
-    var bsCurrentIndex = 0;
+    var bsIndex = 0;
+    var bsAllCards = [];
 
     function renderBSCards(items, imgs, bsGrid, bsSection) {
         var imgMap = {};
         imgs.forEach(function(im) { if (!imgMap[im.product_id]) imgMap[im.product_id] = []; imgMap[im.product_id].push(im); });
-        window._bsItems = items;
-        window._bsImgMap = imgMap;
         var html = items.map(function(p) {
             var pImgs = imgMap[p.id] || [];
             var primary = pImgs.find(function(i) { return i.is_primary; });
             var imgUrl = primary ? primary.cloudinary_url : (pImgs[0] ? pImgs[0].cloudinary_url : '');
             var base = Number(p.base_price) || 0;
             var sale = p.sale_price != null ? Number(p.sale_price) : null;
-            var priceHtml = '<span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale && sale < base ? sale : base) + ' DA</span>';
-            if (sale && sale < base) priceHtml += '<span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
+            var pricesHtml = '';
+            if (sale && sale < base) {
+                pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+            } else {
+                pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+            }
             var linkUrl = 'product.html?slug=' + encodeURIComponent(p.slug);
             return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
                 '<div class="bs-img"><img src="' + escapeHtml(optImg(imgUrl, 500)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
-                '<div class="bs-info"><div class="bs-name">' + escapeHtml((p.name||'').toUpperCase()) + '</div><div>' + priceHtml + '</div>' +
+                '<div class="bs-info"><div class="bs-name">' + escapeHtml((p.name||'').toUpperCase()) + '</div>' + pricesHtml +
                 '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
         }).join('');
-        // Triple duplicate for smooth infinite loop
-        bsGrid.innerHTML = html + html + html;
+        bsGrid.innerHTML = html;
+        bsAllCards = bsGrid.querySelectorAll('.bs-card');
+        bsIndex = 0;
+        renderBSDots();
+        updateBSView();
         bsSection.style.display = 'block';
-        bsCurrentIndex = items.length; // start at middle set
-        bsSnapToCard(bsCurrentIndex);
-        startBSAutoScroll();
+        startBSAutoSlide();
     }
 
-    function bsSnapToCard(index) {
-        var track = document.getElementById('bestsellersGrid');
-        if (!track) return;
-        var cards = track.querySelectorAll('.bs-card');
-        if (index < 0 || index >= cards.length) return;
-        var card = cards[index];
-        var trackRect = track.getBoundingClientRect();
-        var cardRect = card.getBoundingClientRect();
-        var scrollTarget = track.scrollLeft + (cardRect.left - trackRect.left) - (trackRect.width / 2) + (cardRect.width / 2);
-        track.scrollTo({ left: scrollTarget, behavior: 'smooth' });
-        bsCurrentIndex = index;
-        setTimeout(updateBSCenter, 50);
+    function renderBSDots() {
+        var dotsEl = document.getElementById('bsDots');
+        if (!dotsEl) return;
+        var pages = Math.ceil(bsAllCards.length / 2);
+        var html = '';
+        for (var i = 0; i < pages; i++) {
+            html += '<button class="bs-dot' + (i === bsIndex ? ' active' : '') + '" onclick="bsGoTo(' + i + ')"></button>';
+        }
+        dotsEl.innerHTML = html;
     }
 
-    function updateBSCenter() {
-        var track = document.getElementById('bestsellersGrid');
-        if (!track) return;
-        var cards = track.querySelectorAll('.bs-card');
-        if (cards.length === 0) return;
-        var trackRect = track.getBoundingClientRect();
-        var center = trackRect.left + trackRect.width / 2;
-        var closest = null, closestDist = Infinity;
-        cards.forEach(function(c) {
-            var r = c.getBoundingClientRect();
-            var dist = Math.abs(r.left + r.width / 2 - center);
-            if (dist < closestDist) { closestDist = dist; closest = c; }
+    function updateBSView() {
+        bsAllCards.forEach(function(card, i) {
+            var page = Math.floor(i / 2);
+            card.style.display = page === bsIndex ? 'block' : 'none';
         });
-        cards.forEach(function(c) { c.classList.remove('active'); });
-        if (closest) {
-            closest.classList.add('active');
-            // Track which card is active for arrow navigation
-            for (var i = 0; i < cards.length; i++) {
-                if (cards[i] === closest) { bsCurrentIndex = i; break; }
-            }
-        }
-        // Infinite loop: if we scrolled past first set, jump to matching card in middle set
-        var totalCards = cards.length;
-        var perSet = Math.floor(totalCards / 3);
-        if (bsCurrentIndex < perSet) {
-            track.scrollLeft += perSet * (cards[0].offsetWidth + 24);
-            updateBSCenter();
-        } else if (bsCurrentIndex >= perSet * 2) {
-            track.scrollLeft -= perSet * (cards[0].offsetWidth + 24);
-            updateBSCenter();
-        }
+        var dots = document.querySelectorAll('.bs-dot');
+        dots.forEach(function(d, i) {
+            d.classList.toggle('active', i === bsIndex);
+        });
     }
 
-    function scrollBS(dir) {
-        bsPaused = true;
-        var track = document.getElementById('bestsellersGrid');
-        if (!track) return;
-        var cards = track.querySelectorAll('.bs-card');
-        var perSet = Math.floor(cards.length / 3);
-        var newIndex = bsCurrentIndex + dir;
-        // Wrap around within middle set
-        if (newIndex < perSet) newIndex = perSet * 2 - 1;
-        if (newIndex >= perSet * 2) newIndex = perSet;
-        bsSnapToCard(newIndex);
-        clearTimeout(bsPauseTimer);
-        bsPauseTimer = setTimeout(function() { bsPaused = false; }, 4000);
+    function bsNav(dir) {
+        var pages = Math.ceil(bsAllCards.length / 2);
+        bsIndex = (bsIndex + dir + pages) % pages;
+        updateBSView();
     }
 
-    function startBSAutoScroll() {
-        var track = document.getElementById('bestsellersGrid');
-        if (!track) return;
-        cancelBSAutoScroll();
-        var speed = 0.8;
-        function tick() {
-            if (bsPaused || document.hidden) { bsAutoTimer = requestAnimationFrame(tick); return; }
-            track.scrollLeft += speed;
-            updateBSCenter();
-            bsAutoTimer = requestAnimationFrame(tick);
-        }
-        bsAutoTimer = requestAnimationFrame(tick);
-        track.addEventListener('mouseenter', function() { bsPaused = true; });
-        track.addEventListener('mouseleave', function() { bsPaused = false; });
-        track.addEventListener('touchstart', function() { bsPaused = true; }, { passive: true });
-        track.addEventListener('touchend', function() { setTimeout(function() { bsPaused = false; }, 3000); }, { passive: true });
+    function bsGoTo(idx) {
+        bsIndex = idx;
+        updateBSView();
     }
 
-    function cancelBSAutoScroll() {
-        if (bsAutoTimer) { cancelAnimationFrame(bsAutoTimer); bsAutoTimer = null; }
+    var bsSlideTimer = null;
+    function startBSAutoSlide() {
+        clearInterval(bsSlideTimer);
+        bsSlideTimer = setInterval(function() {
+            if (document.hidden) return;
+            bsNav(1);
+        }, 5000);
     }
 
     // Load Best Sellers from Supabase
@@ -642,15 +599,22 @@
                     var imgUrl = primary ? primary.cloudinary_url : (oImgs[0] ? oImgs[0].cloudinary_url : '');
                     var base = Number(o.base_price) || 0;
                     var sale = o.sale_price != null ? Number(o.sale_price) : null;
-                    var priceHtml = '<span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale && sale < base ? sale : base) + ' DA</span>';
-                    if (sale && sale < base) priceHtml += '<span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
+                    var pricesHtml = '';
+                    if (sale && sale < base) {
+                        pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+                    } else {
+                        pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+                    }
                     var linkUrl = 'outfit.html?slug=' + encodeURIComponent(o.slug);
                     return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
                         '<div class="bs-img"><img src="' + escapeHtml(optImg(imgUrl, 400)) + '" alt="' + escapeHtml((o.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
-                        '<div class="bs-info"><div class="bs-name">' + escapeHtml((o.name||'').toUpperCase()) + '</div><div>' + priceHtml + '</div>' +
+                        '<div class="bs-info"><div class="bs-name">' + escapeHtml((o.name||'').toUpperCase()) + '</div>' + pricesHtml +
                         '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
                 }).join('');
-                bsGrid.innerHTML += html;
+                bsGrid.insertAdjacentHTML('beforeend', html);
+                bsAllCards = bsGrid.querySelectorAll('.bs-card');
+                renderBSDots();
+                updateBSView();
                 var bsSection = document.getElementById('bestsellersSection');
                 if (bsSection) bsSection.style.display = 'block';
             }).catch(function() {});
@@ -661,18 +625,28 @@
     (function() {
         var pt = document.getElementById('page-transition');
         if (!pt) return;
+        // On back/forward navigation
         window.addEventListener('pageshow', function() { if (pt) { pt.style.display = 'none'; pt.style.transition = 'none'; pt.style.transform = 'translateY(100%)'; } });
         if (sessionStorage.getItem('yun_visited')) {
+            // Show black screen, hide when content is ready
             pt.style.transition = 'none';
             pt.style.transform = 'translateY(0%)';
             pt.style.display = 'flex';
-            requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    pt.style.transition = 'transform 0.7s cubic-bezier(0.76, 0, 0.24, 1)';
-                    pt.style.transform = 'translateY(100%)';
-                    setTimeout(function() { pt.style.display = 'none'; }, 750);
-                });
+            pt.style.opacity = '1';
+            // Hide after products load (listen for first product card or timeout 3s)
+            function hidePT() {
+                if (pt.style.display === 'none') return;
+                pt.style.transition = 'opacity 0.5s';
+                pt.style.opacity = '0';
+                setTimeout(function() { pt.style.display = 'none'; }, 500);
+            }
+            var observer = new MutationObserver(function() {
+                var grid = document.getElementById('productsGrid');
+                if (grid && grid.querySelector('.product-card')) { observer.disconnect(); hidePT(); }
             });
+            var grid = document.getElementById('productsGrid');
+            if (grid) observer.observe(grid, { childList: true });
+            setTimeout(hidePT, 3500); // max 3s fallback
         } else {
             pt.style.display = 'none';
         }
@@ -685,13 +659,9 @@
             pt.style.display = 'flex';
             pt.style.transition = 'none';
             pt.style.transform = 'translateY(0%)';
-            requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    pt.style.transition = 'transform 0.7s cubic-bezier(0.76, 0, 0.24, 1)';
-                    pt.style.transform = 'translateY(0%)';
-                    setTimeout(function() { window.location.href = href; }, 750);
-                });
-            });
+            pt.style.opacity = '1';
+            sessionStorage.setItem('yun_visited', '1');
+            setTimeout(function() { window.location.href = href; }, 300);
         });
     })();
 

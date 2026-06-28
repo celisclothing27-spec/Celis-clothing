@@ -266,12 +266,12 @@ var YUN_I18N = {
       curtain = document.createElement('div');
       curtain.id = 'lang-curtain';
       curtain.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:999999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease';
-      curtain.innerHTML = '<span style="font-family:Cormorant Garamond,serif;font-size:3rem;font-weight:300;color:white;letter-spacing:0.4em;opacity:0;transition:opacity 0.3s ease">Celis clothing</span>';
+      curtain.innerHTML = '<img src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing" style="height:64px;width:auto;object-fit:contain;opacity:0;transition:opacity 0.3s ease">';
       document.body.appendChild(curtain);
     }
     curtain.style.pointerEvents = 'all';
     curtain.style.opacity = '1';
-    curtain.querySelector('span').style.opacity = '1';
+    curtain.querySelector('img').style.opacity = '1';
     setTimeout(function() {
       localStorage.setItem('yun_lang', lang);
       window.location.reload();
