@@ -74,20 +74,48 @@
         /* BEST SELLERS */
         .bs-section { background: #0a0a0a; padding: 60px 0 40px; }
         .bs-section h2 { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 2rem; letter-spacing: 0.15em; text-transform: uppercase; color: #c5d98b; text-align: center; margin: 0 0 36px; }
-        .bs-wrap { position: relative; max-width: 900px; margin: 0 auto; padding: 0 60px; }
-        .bs-track { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .bs-card { cursor: pointer; border-radius: 16px; overflow: hidden; background: #111; border: 1px solid rgba(197,217,139,0.1); transition: transform 0.3s, box-shadow 0.3s; }
-        .bs-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(197,217,139,0.1); }
+        .bs-wrap { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+        .bs-track { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; padding: 8px 4px 16px; }
+        .bs-track::-webkit-scrollbar { display: none; }
+        .bs-wrap::before, .bs-wrap::after { content:''; position:absolute; top:0; bottom:0; width:80px; z-index:2; pointer-events:none; }
+        .bs-wrap::before { left:52px; background:linear-gradient(to right, #0a0a0a 0%, transparent 100%); }
+        .bs-wrap::after { right:52px; background:linear-gradient(to left, #0a0a0a 0%, transparent 100%); }
+        .bs-card { flex: 0 0 220px; cursor: pointer; border-radius: 14px; overflow: hidden; background: #111; border: 1px solid rgba(197,217,139,0.1); transition: transform 0.3s; }
+        .bs-card:hover { transform: translateY(-4px); }
         .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; }
         .bs-card .bs-img img { width: 100%; height: 100%; object-fit: cover; }
-        .bs-card .bs-info { padding: 14px 14px 18px; text-align: center; }
-        .bs-card .bs-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; color: #c5d98b; }
-        .bs-prices { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 12px; }
-        .bs-card .bs-price { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.1rem; color: #c5d98b; }
-        .bs-card .bs-old { font-size: 0.8rem; color: rgba(197,217,139,0.35); text-decoration: line-through; }
-        .bs-select-btn { display: block; width: 100%; padding: 12px; background: transparent; color: #c5d98b; border: 1px solid rgba(197,217,139,0.3); border-radius: 999px; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .bs-card .bs-info { padding: 12px 12px 16px; text-align: center; }
+        .bs-card .bs-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; color: #c5d98b; }
+        .bs-prices { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin-bottom: 10px; }
+        .bs-card .bs-price { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1rem; color: #c5d98b; }
+        .bs-card .bs-old { font-size: 0.75rem; color: rgba(197,217,139,0.35); text-decoration: line-through; }
+        .bs-select-btn { display: block; width: 100%; padding: 10px; background: transparent; color: #c5d98b; border: 1px solid rgba(197,217,139,0.3); border-radius: 999px; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
         .bs-select-btn:hover { background: #c5d98b; color: #0a0a0a; }
-        @media (max-width: 600px) { .bs-track { grid-template-columns: repeat(2, 1fr); gap: 12px; } .bs-card .bs-name { font-size: 0.85rem; } .bs-card .bs-price { font-size: 0.95rem; } .bs-select-btn { padding: 10px; font-size: 0.7rem; } }
+        .bs-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(197,217,139,0.08); border: 1px solid rgba(197,217,139,0.2); color: #c5d98b; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5; transition: all 0.2s; }
+        .bs-arrow:hover { background: rgba(197,217,139,0.25); }
+        .bs-arrow-left { left: 8px; }
+        .bs-arrow-right { right: 8px; }
+        @media (max-width: 768px) {
+            .bs-section { padding: 40px 0 30px; }
+            .bs-section h2 { font-size: 1.5rem; margin-bottom: 24px; }
+            .bs-wrap { padding: 0 48px; }
+            .bs-wrap::before { left:40px; width:50px; }
+            .bs-wrap::after { right:40px; width:50px; }
+            .bs-track { gap: 12px; }
+            .bs-card { flex: 0 0 180px; }
+            .bs-card .bs-name { font-size: 0.8rem; }
+            .bs-card .bs-price { font-size: 0.85rem; }
+            .bs-select-btn { padding: 8px; font-size: 0.65rem; }
+            .bs-arrow { width: 36px; height: 36px; }
+            .bs-arrow-left { left: 4px; }
+            .bs-arrow-right { right: 4px; }
+        }
+        @media (max-width: 480px) {
+            .bs-wrap { padding: 0 40px; }
+            .bs-wrap::before { left:32px; width:40px; }
+            .bs-wrap::after { right:32px; width:40px; }
+            .bs-card { flex: 0 0 160px; }
+        }
 
         /* SEARCH + FILTERS */
         .search-filter-wrap { padding: 32px clamp(20px, 5vw, 80px) 0; display: flex; flex-direction: column; gap: 20px; max-width: 1400px; margin: 0 auto; }
@@ -264,7 +292,13 @@
     <section class="bs-section" id="bestsellersSection" style="display:none">
         <h2>BEST SELLERS</h2>
         <div class="bs-wrap">
+            <button class="bs-arrow bs-arrow-left" onclick="bsScroll(-1)" aria-label="Previous">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
             <div class="bs-track" id="bestsellersGrid"></div>
+            <button class="bs-arrow bs-arrow-right" onclick="bsScroll(1)" aria-label="Next">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
         </div>
     </section>
 
@@ -488,6 +522,13 @@
         }).join('');
         bsGrid.innerHTML = html;
         bsSection.style.display = 'block';
+    }
+    function bsScroll(dir) {
+        var track = document.getElementById('bestsellersGrid');
+        if (!track) return;
+        var card = track.querySelector('.bs-card');
+        var scrollAmt = card ? (card.offsetWidth + 16) * 2 : 400;
+        track.scrollBy({ left: dir * scrollAmt, behavior: 'smooth' });
     }
 
     // Load Best Sellers from Supabase
