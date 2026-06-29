@@ -1010,6 +1010,8 @@
         .onboard-dot.active { background:#c5d98b; width:24px; border-radius:4px; }
         .ob-lang-toggle { position:absolute;top:0;right:0;background:rgba(197,217,139,0.1);border:1px solid rgba(197,217,139,0.25);border-radius:999px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:0.7rem;color:#c5d98b;cursor:pointer;letter-spacing:0.05em;transition:all 0.2s;z-index:10 }
         .ob-lang-toggle:hover { background:rgba(197,217,139,0.2); }
+        @keyframes obPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.3);opacity:0.7} }
+        .ob-pulse { animation: obPulse 1.5s ease-in-out infinite; }
     </style>
     <script>
     var _obIsAr = /ar/i.test(navigator.language || '');
@@ -1022,12 +1024,11 @@
     }
     function _obGetStrings() {
         return {
-            step1Title: _obIsAr ? 'عرض خاص!' : 'Special Offer!',
-            step1Desc: _obIsAr ? 'هذا المنتج عليه عرض مميز. أضفه للسلة ووفّر على السعر الكلي.' : 'This product has a special deal. Add it to your cart and save on the total price.',
-            step1Btn: _obIsAr ? 'كيف تطلب' : 'How to Order',
-            step2Title: _obIsAr ? 'أضف للسلة' : 'Add to Cart',
-            step2Desc: _obIsAr ? 'اختار القماس واللون، ثم اضغط الزر باش تزيدو للسلة.' : 'Choose your size and color, then tap the button below to add it to your cart.',
-            step2Qty: _obIsAr ? 'الكمية' : 'QTY',
+            step1Title: _obIsAr ? 'كيف تحصل على العرض' : 'Get the Offer',
+            step1Desc: _obIsAr ? 'للحصول على الخصم، اضغط على زائد <strong style="color:#c5d98b">+</strong> في الكمية حتى تصبح <strong style="color:#c5d98b">2</strong>' : 'To get the discount, press the <strong style="color:#c5d98b">+</strong> button on quantity to make it <strong style="color:#c5d98b">2</strong>',
+            step1Btn: _obIsAr ? 'التالي' : 'Next',
+            step2Title: _obIsAr ? 'اختار المقاس واللون' : 'Choose Size & Color',
+            step2Desc: _obIsAr ? 'اختار المقاس واللون اللي تبيه، ثم اضغط على زر الإضافة للسلة' : 'Pick your preferred size and color, then tap Add to Cart',
             step2Btn: _obIsAr ? 'فهمت!' : 'Got it!',
             step3Title: _obIsAr ? 'جاهز!' : 'Ready!',
             step3Desc: _obIsAr ? 'فتح السلة، راجع طلبك، ثم أكمل الطلب. الدفع عند الاستلام!' : 'Open your cart, review your order, and checkout. Pay cash on delivery!',
@@ -1037,27 +1038,79 @@
     }
     function _obRender(step) {
         var s = _obGetStrings(), d = step || 0;
-        var icon1 = '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>';
-        var icon2 = '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>';
-        var icon3 = '<div style="width:64px;height:64px;border-radius:50%;background:rgba(197,217,139,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 24px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5d98b" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>';
         var btnStyle = 'width:100%;padding:16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:999px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer';
+        var boxBg = 'background:rgba(197,217,139,0.06);border:1px solid rgba(197,217,139,0.15);border-radius:16px;padding:20px;margin:20px 0';
+
+        // Step 1: Quantity +1 for offer
+        var qtyVisual = '<div style="' + boxBg + '">' +
+            '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">' + (_obIsAr ? 'الكمية' : 'QUANTITY') + '</div>' +
+            '<div style="display:flex;align-items:center;justify-content:center;gap:0;border:1px solid rgba(197,217,139,0.3);border-radius:10px;overflow:hidden;width:fit-content;margin:0 auto">' +
+                '<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1.2rem;background:rgba(197,217,139,0.05)">&minus;</span>' +
+                '<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem;border-left:1px solid rgba(197,217,139,0.2);border-right:1px solid rgba(197,217,139,0.2)">1</span>' +
+                '<span class="ob-pulse" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#0a0a0a;font-size:1.2rem;background:#c5d98b;font-weight:bold">+</span>' +
+            '</div>' +
+            '<div style="margin-top:12px;font-size:0.8rem;color:rgba(197,217,139,0.5)">' + (_obIsAr ? 'اضغط على' : 'Press') + ' <span style="color:#c5d98b;font-weight:bold">+</span> ' + (_obIsAr ? 'باش تصبح 2' : 'to make it 2') + '</div>' +
+        '</div>';
+
+        // Step 2: Size & Color selection
+        var sizeColorVisual = '<div style="' + boxBg + '">' +
+            '<div style="display:flex;flex-direction:column;gap:16px">' +
+                // Colors
+                '<div style="text-align:center">' +
+                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + (_obIsAr ? 'اللون' : 'COLOR') + '</div>' +
+                    '<div style="display:flex;gap:10px;justify-content:center">' +
+                        '<div style="width:40px;height:40px;border-radius:8px;background:#1a1a1a;border:2px solid #c5d98b"></div>' +
+                        '<div style="width:40px;height:40px;border-radius:8px;background:#f5f5dc;border:2px solid rgba(197,217,139,0.3)"></div>' +
+                        '<div style="width:40px;height:40px;border-radius:8px;background:#2d2d2d;border:2px solid rgba(197,217,139,0.3)"></div>' +
+                    '</div>' +
+                '</div>' +
+                // Sizes
+                '<div style="text-align:center">' +
+                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + (_obIsAr ? 'المقاس' : 'SIZE') + '</div>' +
+                    '<div style="display:flex;gap:8px;justify-content:center">' +
+                        '<div style="width:44px;height:36px;border:1px solid rgba(197,217,139,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:rgba(197,217,139,0.5)">S</div>' +
+                        '<div style="width:44px;height:36px;border:2px solid #c5d98b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:#c5d98b;background:rgba(197,217,139,0.1)">M</div>' +
+                        '<div style="width:44px;height:36px;border:1px solid rgba(197,217,139,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:rgba(197,217,139,0.5)">L</div>' +
+                        '<div style="width:44px;height:36px;border:1px solid rgba(197,217,139,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:rgba(197,217,139,0.5)">XL</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div style="margin-top:14px;padding:10px;background:#c5d98b;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase">' + (_obIsAr ? 'أضف للسلة' : 'ADD TO CART') + '</div>' +
+        '</div>';
+
+        // Step 3: Checkout
+        var checkoutVisual = '<div style="' + boxBg + '">' +
+            '<div style="display:flex;flex-direction:column;gap:12px">' +
+                '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(197,217,139,0.08);border-radius:10px">' +
+                    '<div style="width:36px;height:36px;border-radius:8px;background:#222;flex-shrink:0"></div>' +
+                    '<div style="flex:1;text-align:left"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;color:#c5d98b">2x ' + (_obIsAr ? 'منتج' : 'Product') + '</div><div style="font-size:0.7rem;color:rgba(197,217,139,0.4)">' + (_obIsAr ? 'مقاس M' : 'Size M') + '</div></div>' +
+                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;color:#c5d98b">5,000 DA</div>' +
+                '</div>' +
+                '<div style="height:1px;background:rgba(197,217,139,0.1)"></div>' +
+                '<div style="display:flex;justify-content:space-between;padding:0 4px">' +
+                    '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;color:#c5d98b">' + (_obIsAr ? 'المجموع' : 'TOTAL') + '</span>' +
+                    '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;color:#c5d98b">5,000 DA</span>' +
+                '</div>' +
+                '<div style="padding:12px;background:#fff;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;text-align:center">' + (_obIsAr ? 'الدفع عند الاستلام' : 'CASH ON DELIVERY') + '</div>' +
+            '</div>' +
+        '</div>';
+
         var steps = [
-            icon1 +
-            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step1Title + '</h2>' +
-            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:32px">' + s.step1Desc + '</p>' +
-            '<button onclick="onboardNext()" style="' + btnStyle + '">' + s.step1Btn + '</button>',
-            icon2 +
-            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step2Title + '</h2>' +
-            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:8px">' + s.step2Desc + '</p>' +
-            '<div style="background:rgba(197,217,139,0.08);border:1px solid rgba(197,217,139,0.2);border-radius:12px;padding:16px;margin:16px 0 24px"><div style="display:flex;align-items:center;gap:12px;justify-content:center"><span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;color:#c5d98b">' + s.step2Qty + '</span><div style="display:flex;align-items:center;border:1px solid rgba(197,217,139,0.3);border-radius:8px"><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem">&minus;</span><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:0.9rem;border-left:1px solid rgba(197,217,139,0.2);border-right:1px solid rgba(197,217,139,0.2)">1</span><span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem">+</span></div></div></div>' +
-            '<button onclick="onboardNext()" style="' + btnStyle + '">' + s.step2Btn + '</button>',
-            icon3 +
-            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.6rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step3Title + '</h2>' +
-            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:32px">' + s.step3Desc + '</p>' +
-            '<button onclick="onboardClose()" style="' + btnStyle + '">' + s.step3Start + '</button>' +
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.5rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step1Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:4px">' + s.step1Desc + '</p>' +
+            qtyVisual +
+            '<button onclick="onboardNext()" style="' + btnStyle + ';margin-top:8px">' + s.step1Btn + '</button>',
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.5rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step2Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:4px">' + s.step2Desc + '</p>' +
+            sizeColorVisual +
+            '<button onclick="onboardNext()" style="' + btnStyle + ';margin-top:8px">' + s.step2Btn + '</button>',
+            '<h2 style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:1.5rem;color:#c5d98b;text-transform:uppercase;margin-bottom:12px;letter-spacing:0.04em">' + s.step3Title + '</h2>' +
+            '<p style="font-size:0.9rem;color:rgba(197,217,139,0.6);line-height:1.6;margin-bottom:4px">' + s.step3Desc + '</p>' +
+            checkoutVisual +
+            '<button onclick="onboardClose()" style="' + btnStyle + ';margin-top:8px">' + s.step3Start + '</button>' +
             '<button onclick="onboardClose()" style="width:100%;padding:12px;margin-top:10px;background:none;border:1px solid rgba(197,217,139,0.25);color:rgba(197,217,139,0.5);border-radius:999px;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:\'Barlow Condensed\',sans-serif">' + s.step3Skip + '</button>'
         ];
-        var dots = '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:32px"><span class="onboard-dot' + (d===0?' active':'') + '" data-step="0"></span><span class="onboard-dot' + (d===1?' active':'') + '" data-step="1"></span><span class="onboard-dot' + (d===2?' active':'') + '" data-step="2"></span></div>';
+        var dots = '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px"><span class="onboard-dot' + (d===0?' active':'') + '" data-step="0"></span><span class="onboard-dot' + (d===1?' active':'') + '" data-step="1"></span><span class="onboard-dot' + (d===2?' active':'') + '" data-step="2"></span></div>';
         document.getElementById('onboardContent').innerHTML = _obLangBtn() + dots + steps[d];
     }
     (function() {
