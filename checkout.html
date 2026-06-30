@@ -716,14 +716,12 @@
             
             if (zrSettings.useApiRates && zrSettings.apiKey && zrSettings.tenantId) {
                 try {
-                    var response = await fetch('/.netlify/functions/zr-rates', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            apiKey: zrSettings.apiKey,
-                            tenantId: zrSettings.tenantId,
-                            toWilaya: wilayaCode
-                        })
+                    var response = await fetch('https://api.zrexpress.app/api/v1/rates?from_wilaya=16&to_wilaya=' + wilayaCode, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Api-Key': zrSettings.apiKey,
+                            'X-Tenant': zrSettings.tenantId
+                        }
                     });
                     
                     var apiResult = await response.json();
@@ -1039,8 +1037,7 @@
                                 variant_id: null, product_name: item.name + ' — ' + p.name,
                                 product_image_url: p.image || item.image, size: p.size || '', color: '',
                                 unit_price: p.price || item.price, quantity: 1,
-                                line_total: p.price || item.price,
-                                notes: null
+                                line_total: p.price || item.price
                             });
                         });
                     } else {
@@ -1049,12 +1046,15 @@
                             variant_id: item.variant_id || null, product_name: item.name,
                             product_image_url: item.image, size: item.size || '', color: item.color || '',
                             unit_price: item.price, quantity: item.qty || item.quantity || 1,
-                            line_total: item.price * (item.qty || item.quantity || 1),
-                            notes: null
+                            line_total: item.price * (item.qty || item.quantity || 1)
                         });
                     }
                 });
-                await yunDb.from('order_items').insert(orderItems);
+                var { error: itemsError } = await yunDb.from('order_items').insert(orderItems);
+                if (itemsError) {
+                    console.error('Order items error:', itemsError);
+                    alert('Order was created but items failed to save. Please contact support with order #' + order.order_number);
+                }
 
 
                 localStorage.removeItem('yun_cart');

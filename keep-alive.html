@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Keep Alive</title></head>
+<body>
+<script>
+fetch('https://afbmxzrtdwqiawzsddtq.supabase.co/rest/v1/products?select=id&limit=1', {
+  headers: {
+    'apikey': 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3',
+    'Authorization': 'Bearer sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3'
+  }
+}).then(r => r.json()).then(d => {
+  document.body.textContent = '✓ Supabase alive — ' + new Date().toISOString();
+}).catch(e => {
+  document.body.textContent = 'Error: ' + e.message;
+});
+</script>
+</body>
+</html>
