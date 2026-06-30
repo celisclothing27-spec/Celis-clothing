@@ -499,30 +499,6 @@
     });
 
     // === BEST SELLERS ===
-    function renderBSCards(items, imgs, bsGrid, bsSection) {
-        var imgMap = {};
-        imgs.forEach(function(im) { if (!imgMap[im.product_id]) imgMap[im.product_id] = []; imgMap[im.product_id].push(im); });
-        var html = items.map(function(p) {
-            var pImgs = imgMap[p.id] || [];
-            var primary = pImgs.find(function(i) { return i.is_primary; });
-            var imgUrl = primary ? primary.cloudinary_url : (pImgs[0] ? pImgs[0].cloudinary_url : '');
-            var base = Number(p.base_price) || 0;
-            var sale = p.sale_price != null ? Number(p.sale_price) : null;
-            var pricesHtml = '';
-            if (sale && sale < base) {
-                pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
-            } else {
-                pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
-            }
-            var linkUrl = 'product.html?slug=' + encodeURIComponent(p.slug);
-            return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
-                '<div class="bs-img"><img src="' + escapeHtml(optImg(imgUrl, 500)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
-                '<div class="bs-info"><div class="bs-name">' + escapeHtml((p.name||'').toUpperCase()) + '</div>' + pricesHtml +
-                '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
-        }).join('');
-        bsGrid.innerHTML = html;
-        bsSection.style.display = 'block';
-    }
     function bsScroll(dir) {
         var track = document.getElementById('bestsellersGrid');
         if (!track) return;
@@ -531,64 +507,87 @@
         track.scrollBy({ left: dir * scrollAmt, behavior: 'smooth' });
     }
 
-    // Load Best Sellers from Supabase
+    function bsBuildCard(item, type) {
+        var base = Number(item.base_price) || 0;
+        var sale = item.sale_price != null ? Number(item.sale_price) : null;
+        var pricesHtml = '';
+        if (sale && sale < base) {
+            pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+        } else {
+            pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
+        }
+        var linkUrl = (type === 'outfit' ? 'outfit.html' : 'product.html') + '?slug=' + encodeURIComponent(item.slug);
+        return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
+            '<div class="bs-img"><img src="' + escapeHtml(optImg(item._imgUrl || '', 500)) + '" alt="' + escapeHtml((item.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
+            '<div class="bs-info"><div class="bs-name">' + escapeHtml((item.name||'').toUpperCase()) + '</div>' + pricesHtml +
+            '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
+    }
+
+    // Load Best Sellers — products + outfits in parallel, render ONCE
     if (yunDb) {
-        // Try with is_bestseller filter first, fallback to all if column missing
-        yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name').then(function(bsRes) {
+        var _bsProducts = yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
+            .then(function(r) { return (r.error ? null : r.data) || []; })
+            .catch(function() { return []; });
+        var _bsFallback = yunDb.from('products').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name')
+            .then(function(r) { return (r.error ? [] : (r.data || []).slice(0, 6)); })
+            .catch(function() { return []; });
+        var _bsOutfits = yunDb.from('outfits').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name')
+            .then(function(r) { return (r.error ? [] : r.data || []); })
+            .catch(function() { return []; });
+
+        Promise.all([_bsProducts, _bsFallback, _bsOutfits]).then(function(results) {
             var bsGrid = document.getElementById('bestsellersGrid');
             var bsSection = document.getElementById('bestsellersSection');
-            if (bsRes.error || !bsGrid) {
-                // Column might not exist — fallback: show first 6 products
-                yunDb.from('products').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name').then(function(fallback) {
-                    if (fallback.error || !fallback.data || fallback.data.length === 0) { if (bsSection) bsSection.style.display = 'none'; return; }
-                    var items = fallback.data.slice(0, 6);
-                    var ids = items.map(function(p) { return p.id; });
-                    yunDb.from('product_images').select('product_id, cloudinary_url, is_primary').in('product_id', ids).then(function(imgRes) {
-                        renderBSCards(items, imgRes.data || [], bsGrid, bsSection);
-                    }).catch(function() { if (bsSection) bsSection.style.display = 'none'; });
-                }).catch(function() { if (bsSection) bsSection.style.display = 'none'; });
-                return;
-            }
-            var items = bsRes.data || [];
-            if (items.length === 0) { if (bsSection) bsSection.style.display = 'none'; return; }
-            var ids = items.map(function(p) { return p.id; });
-            yunDb.from('product_images').select('product_id, cloudinary_url, is_primary').in('product_id', ids).then(function(imgRes) {
-                renderBSCards(items, imgRes.data || [], bsGrid, bsSection);
-            }).catch(function() { if (bsSection) bsSection.style.display = 'none'; });
-        }).catch(function() {});
-        // Outfits in bestsellers
-        yunDb.from('outfits').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name').then(function(bsRes) {
-            if (bsRes.error || !bsRes.data || bsRes.data.length === 0) return;
-            var items = bsRes.data;
-            var bsGrid = document.getElementById('bestsellersGrid');
             if (!bsGrid) return;
-            var ids = items.map(function(o) { return o.id; });
-            yunDb.from('outfit_images').select('outfit_id, cloudinary_url, is_primary').in('outfit_id', ids).then(function(imgRes) {
-                var imgs = imgRes.data || [];
+
+            var products = results[0];
+            var fallback = results[1];
+            var outfits = results[2];
+            var items = products.length > 0 ? products : fallback;
+
+            if (items.length === 0 && outfits.length === 0) { bsSection.style.display = 'none'; return; }
+
+            var allItems = items.map(function(p) { p._type = 'product'; return p; })
+                .concat(outfits.map(function(o) { o._type = 'outfit'; return o; }));
+
+            var productIds = items.map(function(p) { return p.id; });
+            var outfitIds = outfits.map(function(o) { return o.id; });
+
+            var imgPromises = [];
+            if (productIds.length > 0) {
+                imgPromises.push(
+                    yunDb.from('product_images').select('product_id, cloudinary_url, is_primary').in('product_id', productIds)
+                        .then(function(r) { return (r.data || []).map(function(im) { im._type = 'product'; return im; }); })
+                        .catch(function() { return []; })
+                );
+            } else { imgPromises.push(Promise.resolve([])); }
+            if (outfitIds.length > 0) {
+                imgPromises.push(
+                    yunDb.from('outfit_images').select('outfit_id, cloudinary_url, is_primary').in('outfit_id', outfitIds)
+                        .then(function(r) { return (r.data || []).map(function(im) { im._type = 'outfit'; return im; }); })
+                        .catch(function() { return []; })
+                );
+            } else { imgPromises.push(Promise.resolve([])); }
+
+            Promise.all(imgPromises).then(function(imgResults) {
+                var productImgs = imgResults[0];
+                var outfitImgs = imgResults[1];
                 var imgMap = {};
-                imgs.forEach(function(im) { if (!imgMap[im.outfit_id]) imgMap[im.outfit_id] = []; imgMap[im.outfit_id].push(im); });
-                var html = items.map(function(o) {
-                    var oImgs = imgMap[o.id] || [];
-                    var primary = oImgs.find(function(i) { return i.is_primary; });
-                    var imgUrl = primary ? primary.cloudinary_url : (oImgs[0] ? oImgs[0].cloudinary_url : '');
-                    var base = Number(o.base_price) || 0;
-                    var sale = o.sale_price != null ? Number(o.sale_price) : null;
-                    var pricesHtml = '';
-                    if (sale && sale < base) {
-                        pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="bs-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
-                    } else {
-                        pricesHtml = '<div class="bs-prices"><span class="bs-price">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span></div>';
-                    }
-                    var linkUrl = 'outfit.html?slug=' + encodeURIComponent(o.slug);
-                    return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
-                        '<div class="bs-img"><img src="' + escapeHtml(optImg(imgUrl, 400)) + '" alt="' + escapeHtml((o.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
-                        '<div class="bs-info"><div class="bs-name">' + escapeHtml((o.name||'').toUpperCase()) + '</div>' + pricesHtml +
-                        '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
-                }).join('');
-                bsGrid.insertAdjacentHTML('beforeend', html);
-                var bsSection = document.getElementById('bestsellersSection');
-                if (bsSection) bsSection.style.display = 'block';
-            }).catch(function() {});
+                productImgs.forEach(function(im) { if (!imgMap['p_' + im.product_id]) imgMap['p_' + im.product_id] = []; imgMap['p_' + im.product_id].push(im); });
+                outfitImgs.forEach(function(im) { if (!imgMap['o_' + im.outfit_id]) imgMap['o_' + im.outfit_id] = []; imgMap['o_' + im.outfit_id].push(im); });
+
+                allItems.forEach(function(item) {
+                    var prefix = item._type === 'outfit' ? 'o_' : 'p_';
+                    var key = prefix + item.id;
+                    var pImgs = imgMap[key] || [];
+                    var primary = pImgs.find(function(i) { return i.is_primary; });
+                    item._imgUrl = primary ? primary.cloudinary_url : (pImgs[0] ? pImgs[0].cloudinary_url : '');
+                });
+
+                var html = allItems.map(function(item) { return bsBuildCard(item, item._type); }).join('');
+                bsGrid.innerHTML = html;
+                bsSection.style.display = 'block';
+            }).catch(function() { bsSection.style.display = 'none'; });
         }).catch(function() {});
     }
 

@@ -1014,7 +1014,7 @@
         .ob-pulse { animation: obPulse 1.5s ease-in-out infinite; }
     </style>
     <script>
-    var _obIsAr = /ar/i.test(navigator.language || '');
+    var _obIsAr = true;
     var _obLangBtn = function() {
         return '<button class="ob-lang-toggle" onclick="obToggleLang()">' + (_obIsAr ? 'EN' : 'AR') + '</button>';
     };
@@ -1024,16 +1024,21 @@
     }
     function _obGetStrings() {
         return {
-            step1Title: _obIsAr ? 'كيف تحصل على العرض' : 'Get the Offer',
-            step1Desc: _obIsAr ? 'للحصول على الخصم، اضغط على زائد <strong style="color:#c5d98b">+</strong> في الكمية حتى تصبح <strong style="color:#c5d98b">2</strong>' : 'To get the discount, press the <strong style="color:#c5d98b">+</strong> button on quantity to make it <strong style="color:#c5d98b">2</strong>',
+            step1Title: _obIsAr ? 'كي تحصل على العرض' : 'Get the Offer',
+            step1Desc: _obIsAr ? 'باش تاخذ الخصم، دوس على زائد <strong style="color:#c5d98b">+</strong> في الكمية حتى تولي <strong style="color:#c5d98b">2</strong>' : 'To get the discount, press the <strong style="color:#c5d98b">+</strong> button on quantity to make it <strong style="color:#c5d98b">2</strong>',
             step1Btn: _obIsAr ? 'التالي' : 'Next',
             step2Title: _obIsAr ? 'اختار المقاس واللون' : 'Choose Size & Color',
-            step2Desc: _obIsAr ? 'اختار المقاس واللون اللي تبيه، ثم اضغط على زر الإضافة للسلة' : 'Pick your preferred size and color, then tap Add to Cart',
+            step2Desc: _obIsAr ? 'اختار المقاس واللون لي عجبك، ثم دوس على زر أضف للسلة' : 'Pick your preferred size and color, then tap Add to Cart',
             step2Btn: _obIsAr ? 'فهمت!' : 'Got it!',
+            step2LabelColor: _obIsAr ? 'اللون' : 'COLOR',
+            step2LabelSize: _obIsAr ? 'المقاس' : 'SIZE',
+            step2AddToCart: _obIsAr ? 'أضف للسلة' : 'ADD TO CART',
             step3Title: _obIsAr ? 'جاهز!' : 'Ready!',
-            step3Desc: _obIsAr ? 'فتح السلة، راجع طلبك، ثم أكمل الطلب. الدفع عند الاستلام!' : 'Open your cart, review your order, and checkout. Pay cash on delivery!',
+            step3Desc: _obIsAr ? 'فتح السلة، راجع طلبك، ثم كمّل. الدفع عند الاستلام!' : 'Open your cart, review your order, and checkout. Pay cash on delivery!',
             step3Start: _obIsAr ? 'ابدأ التسوق' : 'Start Shopping',
-            step3Skip: _obIsAr ? 'تخطى الشرح' : 'Skip Tutorial'
+            step3Skip: _obIsAr ? 'تخطى الشرح' : 'Skip Tutorial',
+            step3Total: _obIsAr ? 'المجموع' : 'TOTAL',
+            step3COD: _obIsAr ? 'الدفع عند الاستلام' : 'CASH ON DELIVERY'
         };
     }
     function _obRender(step) {
@@ -1049,7 +1054,7 @@
                 '<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem;border-left:1px solid rgba(197,217,139,0.2);border-right:1px solid rgba(197,217,139,0.2)">1</span>' +
                 '<span class="ob-pulse" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#0a0a0a;font-size:1.2rem;background:#c5d98b;font-weight:bold">+</span>' +
             '</div>' +
-            '<div style="margin-top:12px;font-size:0.8rem;color:rgba(197,217,139,0.5)">' + (_obIsAr ? 'اضغط على' : 'Press') + ' <span style="color:#c5d98b;font-weight:bold">+</span> ' + (_obIsAr ? 'باش تصبح 2' : 'to make it 2') + '</div>' +
+            '<div style="margin-top:12px;font-size:0.8rem;color:rgba(197,217,139,0.5)">' + (_obIsAr ? 'دوس على' : 'Press') + ' <span style="color:#c5d98b;font-weight:bold">+</span> ' + (_obIsAr ? 'باش تولي 2' : 'to make it 2') + '</div>' +
         '</div>';
 
         // Step 2: Size & Color selection
@@ -1057,7 +1062,7 @@
             '<div style="display:flex;flex-direction:column;gap:16px">' +
                 // Colors
                 '<div style="text-align:center">' +
-                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + (_obIsAr ? 'اللون' : 'COLOR') + '</div>' +
+                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + s.step2LabelColor + '</div>' +
                     '<div style="display:flex;gap:10px;justify-content:center">' +
                         '<div style="width:40px;height:40px;border-radius:8px;background:#1a1a1a;border:2px solid #c5d98b"></div>' +
                         '<div style="width:40px;height:40px;border-radius:8px;background:#f5f5dc;border:2px solid rgba(197,217,139,0.3)"></div>' +
@@ -1066,7 +1071,7 @@
                 '</div>' +
                 // Sizes
                 '<div style="text-align:center">' +
-                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + (_obIsAr ? 'المقاس' : 'SIZE') + '</div>' +
+                    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + s.step2LabelSize + '</div>' +
                     '<div style="display:flex;gap:8px;justify-content:center">' +
                         '<div style="width:44px;height:36px;border:1px solid rgba(197,217,139,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:rgba(197,217,139,0.5)">S</div>' +
                         '<div style="width:44px;height:36px;border:2px solid #c5d98b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;color:#c5d98b;background:rgba(197,217,139,0.1)">M</div>' +
@@ -1075,7 +1080,7 @@
                     '</div>' +
                 '</div>' +
             '</div>' +
-            '<div style="margin-top:14px;padding:10px;background:#c5d98b;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase">' + (_obIsAr ? 'أضف للسلة' : 'ADD TO CART') + '</div>' +
+            '<div style="margin-top:14px;padding:10px;background:#c5d98b;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase">' + s.step2AddToCart + '</div>' +
         '</div>';
 
         // Step 3: Checkout
@@ -1088,10 +1093,10 @@
                 '</div>' +
                 '<div style="height:1px;background:rgba(197,217,139,0.1)"></div>' +
                 '<div style="display:flex;justify-content:space-between;padding:0 4px">' +
-                    '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;color:#c5d98b">' + (_obIsAr ? 'المجموع' : 'TOTAL') + '</span>' +
+                    '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;color:#c5d98b">' + s.step3Total + '</span>' +
                     '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;color:#c5d98b">5,000 DA</span>' +
                 '</div>' +
-                '<div style="padding:12px;background:#fff;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;text-align:center">' + (_obIsAr ? 'الدفع عند الاستلام' : 'CASH ON DELIVERY') + '</div>' +
+                '<div style="padding:12px;background:#fff;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;letter-spacing:0.06em;text-transform:uppercase;text-align:center">' + s.step3COD + '</div>' +
             '</div>' +
         '</div>';
 
