@@ -1015,6 +1015,34 @@
     </style>
     <script>
     var _obIsAr = true;
+    var _obSaved = {};
+    var _obLoaded = false;
+    var _obDefaults = {
+        ar: {
+            s1t:'باش تحصل على عرض', s1d:'باش تاخذ الخصم، دوس على زائد <strong style="color:#c5d98b">+</strong> في الكمية حتى تولي <strong style="color:#c5d98b">2</strong>', s1b:'التالي',
+            s2t:'اختار المقاس واللون', s2d:'اختار المقاس واللون لي عجبك، ثم دوس على زر أضف للسلة', s2b:'فهمت!',
+            s2lc:'اللون', s2ls:'المقاس', s2atc:'أضف للسلة',
+            s3t:'جاهز!', s3d:'فتح السلة، راجع طلبك، ثم كمّل. الدفع عند الاستلام!', s3start:'ابدأ التسوق', s3skip:'تخطى الشرح',
+            s3total:'المجموع', s3cod:'الدفع عند الاستلام',
+            qty:'الكمية', press:'دوس على', make2:'باش تولي 2',
+            product:'منتج', sizem:'مقاس M', replay:'كيف تطلب'
+        },
+        en: {
+            s1t:'Get the Offer', s1d:'To get the discount, press the <strong style="color:#c5d98b">+</strong> button on quantity to make it <strong style="color:#c5d98b">2</strong>', s1b:'Next',
+            s2t:'Choose Size & Color', s2d:'Pick your preferred size and color, then tap Add to Cart', s2b:'Got it!',
+            s2lc:'COLOR', s2ls:'SIZE', s2atc:'ADD TO CART',
+            s3t:'Ready!', s3d:'Open your cart, review your order, and checkout. Pay cash on delivery!', s3start:'Start Shopping', s3skip:'Skip Tutorial',
+            s3total:'TOTAL', s3cod:'CASH ON DELIVERY',
+            qty:'QUANTITY', press:'Press', make2:'to make it 2',
+            product:'Product', sizem:'Size M', replay:'How to Order'
+        }
+    };
+    function _obT(key) {
+        var lang = _obIsAr ? 'ar' : 'en';
+        var saved = _obSaved[lang] || {};
+        var defs = _obDefaults[lang];
+        return saved[key] !== undefined ? saved[key] : defs[key];
+    }
     var _obLangBtn = function() {
         return '<button class="ob-lang-toggle" onclick="obToggleLang()">' + (_obIsAr ? 'EN' : 'AR') + '</button>';
     };
@@ -1024,21 +1052,11 @@
     }
     function _obGetStrings() {
         return {
-            step1Title: _obIsAr ? 'كي تحصل على العرض' : 'Get the Offer',
-            step1Desc: _obIsAr ? 'باش تاخذ الخصم، دوس على زائد <strong style="color:#c5d98b">+</strong> في الكمية حتى تولي <strong style="color:#c5d98b">2</strong>' : 'To get the discount, press the <strong style="color:#c5d98b">+</strong> button on quantity to make it <strong style="color:#c5d98b">2</strong>',
-            step1Btn: _obIsAr ? 'التالي' : 'Next',
-            step2Title: _obIsAr ? 'اختار المقاس واللون' : 'Choose Size & Color',
-            step2Desc: _obIsAr ? 'اختار المقاس واللون لي عجبك، ثم دوس على زر أضف للسلة' : 'Pick your preferred size and color, then tap Add to Cart',
-            step2Btn: _obIsAr ? 'فهمت!' : 'Got it!',
-            step2LabelColor: _obIsAr ? 'اللون' : 'COLOR',
-            step2LabelSize: _obIsAr ? 'المقاس' : 'SIZE',
-            step2AddToCart: _obIsAr ? 'أضف للسلة' : 'ADD TO CART',
-            step3Title: _obIsAr ? 'جاهز!' : 'Ready!',
-            step3Desc: _obIsAr ? 'فتح السلة، راجع طلبك، ثم كمّل. الدفع عند الاستلام!' : 'Open your cart, review your order, and checkout. Pay cash on delivery!',
-            step3Start: _obIsAr ? 'ابدأ التسوق' : 'Start Shopping',
-            step3Skip: _obIsAr ? 'تخطى الشرح' : 'Skip Tutorial',
-            step3Total: _obIsAr ? 'المجموع' : 'TOTAL',
-            step3COD: _obIsAr ? 'الدفع عند الاستلام' : 'CASH ON DELIVERY'
+            step1Title: _obT('s1t'), step1Desc: _obT('s1d'), step1Btn: _obT('s1b'),
+            step2Title: _obT('s2t'), step2Desc: _obT('s2d'), step2Btn: _obT('s2b'),
+            step2LabelColor: _obT('s2lc'), step2LabelSize: _obT('s2ls'), step2AddToCart: _obT('s2atc'),
+            step3Title: _obT('s3t'), step3Desc: _obT('s3d'), step3Start: _obT('s3start'),
+            step3Skip: _obT('s3skip'), step3Total: _obT('s3total'), step3COD: _obT('s3cod')
         };
     }
     function _obRender(step) {
@@ -1046,30 +1064,26 @@
         var btnStyle = 'width:100%;padding:16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:999px;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.95rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer';
         var boxBg = 'background:rgba(197,217,139,0.06);border:1px solid rgba(197,217,139,0.15);border-radius:16px;padding:20px;margin:20px 0';
 
-        // Step 1: Quantity +1 for offer
         var qtyVisual = '<div style="' + boxBg + '">' +
-            '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">' + (_obIsAr ? 'الكمية' : 'QUANTITY') + '</div>' +
+            '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">' + _obT('qty') + '</div>' +
             '<div style="display:flex;align-items:center;justify-content:center;gap:0;border:1px solid rgba(197,217,139,0.3);border-radius:10px;overflow:hidden;width:fit-content;margin:0 auto">' +
                 '<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1.2rem;background:rgba(197,217,139,0.05)">&minus;</span>' +
                 '<span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#c5d98b;font-size:1rem;border-left:1px solid rgba(197,217,139,0.2);border-right:1px solid rgba(197,217,139,0.2)">1</span>' +
                 '<span class="ob-pulse" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;color:#0a0a0a;font-size:1.2rem;background:#c5d98b;font-weight:bold">+</span>' +
             '</div>' +
-            '<div style="margin-top:12px;font-size:0.8rem;color:rgba(197,217,139,0.5)">' + (_obIsAr ? 'دوس على' : 'Press') + ' <span style="color:#c5d98b;font-weight:bold">+</span> ' + (_obIsAr ? 'باش تولي 2' : 'to make it 2') + '</div>' +
+            '<div style="margin-top:12px;font-size:0.8rem;color:rgba(197,217,139,0.5)">' + _obT('press') + ' <span style="color:#c5d98b;font-weight:bold">+</span> ' + _obT('make2') + '</div>' +
         '</div>';
 
-        // Step 2: Size & Color selection
         var sizeColorVisual = '<div style="' + boxBg + '">' +
             '<div style="display:flex;flex-direction:column;gap:16px">' +
-                // Colors
                 '<div style="text-align:center">' +
                     '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + s.step2LabelColor + '</div>' +
-                    '<div style="display:flex;gap:10px;justify-content:center">' +
-                        '<div style="width:40px;height:40px;border-radius:8px;background:#1a1a1a;border:2px solid #c5d98b"></div>' +
-                        '<div style="width:40px;height:40px;border-radius:8px;background:#f5f5dc;border:2px solid rgba(197,217,139,0.3)"></div>' +
-                        '<div style="width:40px;height:40px;border-radius:8px;background:#2d2d2d;border:2px solid rgba(197,217,139,0.3)"></div>' +
+                    '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">' +
+                        '<div style="min-width:52px;height:40px;border:2px solid #c5d98b;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#c5d98b;background:rgba(197,217,139,0.1);padding:0 12px">' + (_obIsAr ? 'كحلي' : 'Black') + '</div>' +
+                        '<div style="min-width:52px;height:40px;border:1px solid rgba(197,217,139,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:rgba(197,217,139,0.5);padding:0 12px">' + (_obIsAr ? 'بيج' : 'Beige') + '</div>' +
+                        '<div style="min-width:52px;height:40px;border:1px solid rgba(197,217,139,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:rgba(197,217,139,0.5);padding:0 12px">' + (_obIsAr ? 'رمادي' : 'Gray') + '</div>' +
                     '</div>' +
                 '</div>' +
-                // Sizes
                 '<div style="text-align:center">' +
                     '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.75rem;color:rgba(197,217,139,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">' + s.step2LabelSize + '</div>' +
                     '<div style="display:flex;gap:8px;justify-content:center">' +
@@ -1083,12 +1097,11 @@
             '<div style="margin-top:14px;padding:10px;background:#c5d98b;border-radius:999px;color:#0a0a0a;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase">' + s.step2AddToCart + '</div>' +
         '</div>';
 
-        // Step 3: Checkout
         var checkoutVisual = '<div style="' + boxBg + '">' +
             '<div style="display:flex;flex-direction:column;gap:12px">' +
                 '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(197,217,139,0.08);border-radius:10px">' +
                     '<div style="width:36px;height:36px;border-radius:8px;background:#222;flex-shrink:0"></div>' +
-                    '<div style="flex:1;text-align:left"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;color:#c5d98b">2x ' + (_obIsAr ? 'منتج' : 'Product') + '</div><div style="font-size:0.7rem;color:rgba(197,217,139,0.4)">' + (_obIsAr ? 'مقاس M' : 'Size M') + '</div></div>' +
+                    '<div style="flex:1;text-align:left"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.8rem;color:#c5d98b">2x ' + _obT('product') + '</div><div style="font-size:0.7rem;color:rgba(197,217,139,0.4)">' + _obT('sizem') + '</div></div>' +
                     '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-style:italic;font-size:0.85rem;color:#c5d98b">5,000 DA</div>' +
                 '</div>' +
                 '<div style="height:1px;background:rgba(197,217,139,0.1)"></div>' +
@@ -1118,6 +1131,17 @@
         var dots = '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px"><span class="onboard-dot' + (d===0?' active':'') + '" data-step="0"></span><span class="onboard-dot' + (d===1?' active':'') + '" data-step="1"></span><span class="onboard-dot' + (d===2?' active':'') + '" data-step="2"></span></div>';
         document.getElementById('onboardContent').innerHTML = _obLangBtn() + dots + steps[d];
     }
+    function _obLoadSaved(cb) {
+        if (_obLoaded) { cb(); return; }
+        if (!yunDb) { _obLoaded = true; cb(); return; }
+        yunDb.from('site_settings').select('value').eq('key', 'onboard_strings').maybeSingle().then(function(r) {
+            if (r.data && r.data.value) {
+                try { _obSaved = JSON.parse(r.data.value); } catch(e) {}
+            }
+            _obLoaded = true;
+            cb();
+        }).catch(function() { _obLoaded = true; cb(); });
+    }
     (function() {
         var KEY = 'celis_onboard_done';
         if (localStorage.getItem(KEY)) return;
@@ -1126,11 +1150,13 @@
             if (!offerBanner) return;
             if (offerBanner.style.display !== 'none' && window._offer) {
                 clearInterval(checkInterval);
-                setTimeout(function() {
-                    _obRender(0);
-                    document.getElementById('onboardOverlay').style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }, 800);
+                _obLoadSaved(function() {
+                    setTimeout(function() {
+                        _obRender(0);
+                        document.getElementById('onboardOverlay').style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }, 800);
+                });
             }
             setTimeout(function() { clearInterval(checkInterval); }, 8000);
         }, 500);
@@ -1154,19 +1180,20 @@
         var btn = document.getElementById('replayOnboardBtn');
         if (btn) {
             btn.style.display = 'block';
-            btn.innerHTML = _obIsAr ? '&#9432; كيف تطلب' : '&#9432; How to Order';
+            btn.innerHTML = _obT('replay');
         }
     }
     function replayOnboard() {
-        onboardStep = 0;
-        _obRender(0);
-        var overlay = document.getElementById('onboardOverlay');
-        overlay.style.opacity = '1';
-        overlay.style.display = 'flex';
-        overlay.style.transition = 'opacity 0.3s';
-        document.body.style.overflow = 'hidden';
+        _obLoadSaved(function() {
+            onboardStep = 0;
+            _obRender(0);
+            var overlay = document.getElementById('onboardOverlay');
+            overlay.style.opacity = '1';
+            overlay.style.display = 'flex';
+            overlay.style.transition = 'opacity 0.3s';
+            document.body.style.overflow = 'hidden';
+        });
     }
-    // If already done tutorial + has offer, show the replay button
     (function() {
         if (!localStorage.getItem('celis_onboard_done')) return;
         var checkInterval = setInterval(function() {
@@ -1174,7 +1201,7 @@
             if (!offerBanner) return;
             if (offerBanner.style.display !== 'none' && window._offer) {
                 clearInterval(checkInterval);
-                showReplayBtn();
+                _obLoadSaved(function() { showReplayBtn(); });
             }
             setTimeout(function() { clearInterval(checkInterval); }, 8000);
         }, 500);
