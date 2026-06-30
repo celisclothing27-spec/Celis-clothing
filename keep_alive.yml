@@ -1,0 +1,17 @@
+name: Keep Alive — Supabase Ping
+
+on:
+  schedule:
+    - cron: '0 */8 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase directly
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            "https://afbmxzrtdwqiawzsddtq.supabase.co/rest/v1/products?select=id&limit=1" \
+            -H "apikey: sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3" \
+            -H "Authorization: Bearer sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3"
