@@ -82,8 +82,8 @@
         .bs-wrap::after { right:52px; background:linear-gradient(to left, #0a0a0a 0%, transparent 100%); }
         .bs-card { flex: 0 0 220px; cursor: pointer; border-radius: 14px; overflow: hidden; background: #111; border: 1px solid rgba(197,217,139,0.1); transition: transform 0.3s; }
         .bs-card:hover { transform: translateY(-4px); }
-        .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; }
-        .bs-card .bs-img img { width: 100%; height: 100%; object-fit: cover; }
+        .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #111; }
+        .bs-card .bs-img img { width: 100%; height: 100%; object-fit: contain; }
         .bs-card .bs-info { padding: 12px 12px 16px; text-align: center; }
         .bs-card .bs-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; color: #c5d98b; }
         .bs-prices { display: flex; align-items: baseline; justify-content: center; gap: 6px; margin-bottom: 10px; }
@@ -138,8 +138,8 @@
         .product-card:hover { transform: translateY(-4px); }
         .product-card.wide-card { grid-column: span 2; }
         .product-card.wide-card .product-img-wrap { aspect-ratio: 16/9; }
-        .product-img-wrap { position: relative; aspect-ratio: 3/4; overflow: hidden; background: var(--card-bg); border-radius: 14px; }
-        .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .product-img-wrap { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #111; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .product-img-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s; }
         .product-card:hover .product-img-wrap img { transform: scale(1.05); }
         .card-hover-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; border-radius: 14px; }
         .product-card:hover .card-hover-overlay { opacity: 1; }
@@ -526,7 +526,7 @@
         }
         var linkUrl = (type === 'outfit' ? 'outfit.html' : 'product.html') + '?slug=' + encodeURIComponent(item.slug);
         return '<div class="bs-card" onclick="window.location.href=\'' + linkUrl + '\'">' +
-            '<div class="bs-img"><img src="' + escapeHtml(optImg(item._imgUrl || '', 500)) + '" alt="' + escapeHtml((item.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
+            '<div class="bs-img"><img src="' + escapeHtml(optImg(item._imgUrl || '', 600)) + '" alt="' + escapeHtml((item.name||'').toUpperCase()) + '" loading="lazy" decoding="async"></div>' +
             '<div class="bs-info"><div class="bs-name">' + escapeHtml((item.name||'').toUpperCase()) + '</div>' + pricesHtml +
             '<button class="bs-select-btn" onclick="event.stopPropagation();window.location.href=\'' + linkUrl + '\'">SELECT OPTIONS</button></div></div>';
     }
@@ -536,22 +536,18 @@
         var _bsProducts = yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
             .then(function(r) { return (r.error ? null : r.data) || []; })
             .catch(function() { return []; });
-        var _bsFallback = yunDb.from('products').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name')
-            .then(function(r) { return (r.error ? [] : (r.data || []).slice(0, 6)); })
-            .catch(function() { return []; });
         var _bsOutfits = yunDb.from('outfits').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name')
             .then(function(r) { return (r.error ? [] : r.data || []); })
             .catch(function() { return []; });
 
-        Promise.all([_bsProducts, _bsFallback, _bsOutfits]).then(function(results) {
+        Promise.all([_bsProducts, _bsOutfits]).then(function(results) {
             var bsGrid = document.getElementById('bestsellersGrid');
             var bsSection = document.getElementById('bestsellersSection');
             if (!bsGrid) return;
 
             var products = results[0];
-            var fallback = results[1];
-            var outfits = results[2];
-            var items = products.length > 0 ? products : fallback;
+            var outfits = results[1];
+            var items = products.length > 0 ? products : [];
 
             if (items.length === 0 && outfits.length === 0) { bsSection.style.display = 'none'; return; }
 
@@ -699,7 +695,7 @@
                 var offerBadge = (!p.is_bestseller && p.offer_enabled) ? '<span class="offer-badge">OFFER</span>' : '';
                 return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '" data-created-at="' + escapeHtml(p.created_at || '') + '">' +
                     '<div class="product-img-wrap">' +
-                        '<img src="' + escapeHtml(optImg(img, 600)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.2){this.closest(\'.product-card\').classList.add(\'wide-card\')}">' +
+                        '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.2){this.closest(\'.product-card\').classList.add(\'wide-card\')}">' +
                         bsBadge + offerBadge +
                         '<div class="card-hover-overlay"><button class="quick-view-btn">QUICK VIEW</button></div>' +
                     '</div>' +
@@ -756,7 +752,7 @@
                     card.setAttribute('data-category', 'outfit');
                     card.setAttribute('data-product-id', o.slug);
                     card.innerHTML = '<div class="product-img-wrap">' +
-                        '<img src="' + escapeHtml(optImg(img, 400)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async">' +
+                        '<img src="' + escapeHtml(optImg(img, 600)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async">' +
                         '<div class="card-hover-overlay"><button class="quick-view-btn">QUICK VIEW</button></div>' +
                     '</div>' +
                     '<div class="product-info">' +
