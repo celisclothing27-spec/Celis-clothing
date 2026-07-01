@@ -134,10 +134,18 @@
 
         /* PRODUCTS GRID */
         .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 32px clamp(20px, 5vw, 80px) 80px; max-width: 1400px; margin: 0 auto; }
-        .product-card { display: block; text-decoration: none; color: var(--text); background: none; border-radius: 14px; overflow: hidden; transition: transform 0.3s; }
+        .product-card { display: block; text-decoration: none; color: var(--text); background: rgba(255,255,255,0.04); border-radius: 14px; overflow: hidden; transition: transform 0.3s; border: 1px solid rgba(255,255,255,0.06); }
         .product-card:hover { transform: translateY(-4px); }
-        .product-card.wide-card { grid-column: span 2; }
-        .product-card.wide-card .product-img-wrap { aspect-ratio: 16/9; }
+        .product-card.wide-card { grid-column: span 2; display: flex; flex-direction: column; }
+        .product-card.wide-card .product-img-wrap { aspect-ratio: 4/3; flex-shrink: 0; }
+        .product-card.wide-card .product-info { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; gap: 16px; }
+        .product-card.wide-card .product-name { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(1rem, 1.8vw, 1.3rem); text-transform: uppercase; letter-spacing: 0.04em; margin: 0; color: var(--text); text-align: left; flex: 1; }
+        .product-card.wide-card .product-price { display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; text-align: right; }
+        .product-card.wide-card .price-current { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: clamp(1rem, 1.8vw, 1.3rem); color: var(--accent); }
+        .product-card.wide-card .price-old { font-size: 0.85rem; color: rgba(255,255,255,0.3); text-decoration: line-through; }
+        .product-card.wide-card .card-select-btn { display: block; width: 100%; padding: 12px 20px; margin-top: 12px; background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .product-card.wide-card .card-select-btn:hover { background: var(--accent); color: #0a0a0a; border-color: var(--accent); }
+        .product-card.wide-card .card-hover-overlay { border-radius: 14px; }
         .product-img-wrap { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #111; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
         .product-img-wrap img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s; }
         .product-card:hover .product-img-wrap img { transform: scale(1.05); }
@@ -147,8 +155,9 @@
         .product-info { padding: 12px 4px 16px; text-align: center; }
         .product-category { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px; }
         .product-name { font-family: var(--font-body); font-weight: 500; font-size: 0.85rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; margin: 0 0 6px; }
+        .product-price { display: flex; align-items: baseline; justify-content: center; gap: 6px; }
         .price-current { font-weight: 500; font-size: 0.85rem; color: var(--text); }
-        .price-old { font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; margin-left: 6px; }
+        .price-old { font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; }
         .bestseller-badge { position: absolute; top: 12px; left: 12px; background: #fff; color: #0a0a0a; font-weight: 600; font-size: 0.55rem; letter-spacing: 0.12em; padding: 4px 12px; border-radius: 999px; z-index: 2; pointer-events: none; text-transform: uppercase; }
         .offer-badge { position: absolute; top: 12px; right: 12px; background: var(--accent); color: #0a0a0a; font-weight: 600; font-size: 0.55rem; letter-spacing: 0.12em; padding: 4px 12px; border-radius: 999px; z-index: 2; pointer-events: none; text-transform: uppercase; }
 
@@ -213,6 +222,11 @@
             .hamburger { display: flex; }
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 24px 16px 80px; }
             .product-card.wide-card { grid-column: span 2; }
+            .product-card.wide-card .product-info { padding: 12px 14px; }
+            .product-card.wide-card .product-name { font-size: 0.95rem; }
+            .product-card.wide-card .price-current { font-size: 0.95rem; }
+            .product-card.wide-card .price-old { font-size: 0.75rem; }
+            .product-card.wide-card .card-select-btn { font-size: 0.65rem; padding: 10px 14px; margin-top: 8px; }
             .bestseller-badge, .offer-badge { font-size: 0.45rem; padding: 3px 8px; top: 8px; }
             .bestseller-badge { left: 8px; }
             .offer-badge { right: 8px; }
@@ -230,6 +244,8 @@
         @media (max-width: 480px) {
             .bs-track { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             #cart-drawer { width: 100vw; }
+            .product-card.wide-card .product-name { font-size: 0.85rem; }
+            .product-card.wide-card .product-info { padding: 10px 12px; gap: 10px; }
         }
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
     </style>
@@ -460,7 +476,11 @@
             var cat = card.getAttribute('data-category') || '';
             var matchSearch = name.toLowerCase().includes(query);
             var matchFilter = activeFilter === 'all' || cat === activeFilter;
-            card.style.display = matchSearch && matchFilter ? 'block' : 'none';
+            if (matchSearch && matchFilter) {
+                card.style.removeProperty('display');
+            } else {
+                card.style.display = 'none';
+            }
         });
     }
     document.addEventListener('DOMContentLoaded', function() {
@@ -695,12 +715,11 @@
                 var offerBadge = (!p.is_bestseller && p.offer_enabled) ? '<span class="offer-badge">OFFER</span>' : '';
                 return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '" data-created-at="' + escapeHtml(p.created_at || '') + '">' +
                     '<div class="product-img-wrap">' +
-                        '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.2){this.closest(\'.product-card\').classList.add(\'wide-card\')}">' +
+                        '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async">' +
                         bsBadge + offerBadge +
                         '<div class="card-hover-overlay"><button class="quick-view-btn">QUICK VIEW</button></div>' +
                     '</div>' +
                     '<div class="product-info">' +
-                        '<span class="product-category">' + escapeHtml(catName) + '</span>' +
                         '<h3 class="product-name">' + escapeHtml((p.name||'').toUpperCase()) + '</h3>' +
                         '<div class="product-price">' + priceHTML + '</div>' +
                     '</div>' +
@@ -739,27 +758,28 @@
                 if (outfitImgs) outfitImgs.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
                 outfitRes.data.forEach(function(o) {
                     var img = imgMap[o.id] || '';
-                    var sale = o.sale_price && o.sale_price < o.base_price ? o.sale_price : null;
+                    var base = Number(o.base_price) || 0;
+                    var sale = o.sale_price && o.sale_price < o.base_price ? Number(o.sale_price) : null;
                     var priceHTML;
                     if (sale) {
-                        priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="price-old">' + new Intl.NumberFormat('en-DZ').format(o.base_price) + ' DA</span>';
+                        priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(sale) + ' DA</span><span class="price-old">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
                     } else {
-                        priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(o.base_price) + ' DA</span>';
+                        priceHTML = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
                     }
                     var card = document.createElement('a');
                     card.href = 'outfit.html?slug=' + encodeURIComponent(o.slug);
-                    card.className = 'product-card';
+                    card.className = 'product-card wide-card';
                     card.setAttribute('data-category', 'outfit');
                     card.setAttribute('data-product-id', o.slug);
                     card.innerHTML = '<div class="product-img-wrap">' +
-                        '<img src="' + escapeHtml(optImg(img, 600)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async">' +
-                        '<div class="card-hover-overlay"><button class="quick-view-btn">QUICK VIEW</button></div>' +
+                        '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async">' +
+                        '<div class="card-hover-overlay"><button class="quick-view-btn">PLACE ORDER</button></div>' +
                     '</div>' +
                     '<div class="product-info">' +
-                        '<span class="product-category">OUTFIT</span>' +
                         '<h3 class="product-name">' + escapeHtml(o.name.toUpperCase()) + '</h3>' +
                         '<div class="product-price">' + priceHTML + '</div>' +
-                    '</div>';
+                    '</div>' +
+                    '<div style="padding:0 20px 16px"><button class="card-select-btn" onclick="event.preventDefault();event.stopPropagation();window.location.href=\'' + card.href + '\'">PLACE ORDER</button></div>';
                     grid.insertBefore(card, grid.firstChild);
                 });
             }

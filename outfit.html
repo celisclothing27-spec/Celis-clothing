@@ -527,7 +527,7 @@
         function doLoad() {
             return YunCache.fetch('outfit_' + slug, 120000, function() {
                 return yunDb.from('outfits').select('*').eq('slug', slug).eq('is_active', true).single().then(function(res) {
-                    if (res.error || !res.data) throw new Error('Not found');
+                    if (res.error || !res.data) throw new Error('Outfit not found');
                     var outfit = res.data;
 
                     return Promise.all([
@@ -535,7 +535,14 @@
                         yunDb.from('outfit_products').select('*').eq('outfit_id', outfit.id).order('sort_order')
                     ]).then(function(results) {
                         var imgsRes = results[0];
-                        var products = results[1].data || [];
+                        var prodsRes = results[1];
+
+                        if (prodsRes.error) {
+                            console.error('outfit_products error:', prodsRes.error);
+                        }
+
+                        var products = prodsRes.data || [];
+                        console.log('[Outfit] outfit_id:', outfit.id, 'products:', products.length, products);
 
                         var allImgs = (imgsRes.data || []).filter(function(img, i, arr) { return arr.findIndex(function(x) { return x.cloudinary_url === img.cloudinary_url; }) === i; });
                         var mainImgObj = allImgs.find(function(img) { return img.is_primary; }) || allImgs[0];
@@ -543,22 +550,30 @@
                         var sgImg = allImgs.find(function(img) { return !img.is_primary; });
                         var sizeGuideUrl = sgImg ? sgImg.cloudinary_url : null;
 
-                        if (!products.length) return [outfit, mainImg, [], sizeGuideUrl];
+                        if (!products.length) {
+                            console.warn('[Outfit] No outfit_products found for outfit_id:', outfit.id);
+                            return [outfit, mainImg, [], sizeGuideUrl];
+                        }
 
                         var variantPromises = products.map(function(p) {
                             return yunDb.from('outfit_variants').select('*').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
+                                if (vRes.error) {
+                                    console.error('[Outfit] outfit_variants error for product', p.id, ':', vRes.error);
+                                }
+                                console.log('[Outfit] variants for', p.name, '(id:', p.id, '):', (vRes.data || []).length, vRes.data);
                                 return {
                                     product: { name: p.name, base_price: p.price || outfit.base_price, sale_price: null },
                                     image: p.image_url || '',
                                     variants: vRes.data || []
-                            };
+                                };
+                            });
+                        });
+
+                        return Promise.all(variantPromises).then(function(children) {
+                            return [outfit, mainImg, children, sizeGuideUrl];
                         });
                     });
-                    return Promise.all(variantPromises).then(function(children) {
-                        return [outfit, mainImg, children, sizeGuideUrl];
-                    });
                 });
-            });
             });
         }
 
@@ -569,7 +584,7 @@
             renderOutfit(r[0], r[1], r[2], r[3]);
         }).catch(function(e) {
             console.error('Outfit load error:', e);
-            document.getElementById('outfitContent').innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found.</p>';
+            document.getElementById('outfitContent').innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found. (' + e.message + ')</p>';
         });
     }
 
