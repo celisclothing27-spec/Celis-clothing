@@ -563,8 +563,11 @@
         var selectedWilayaCode = '';
         var selectedWilayaName = '';
         var selectedCommune = '';
+        var selectedHubId = '';
+        var selectedHubName = '';
         var wilayaPricesCache = {};
         var zrSettings = { apiKey: null, tenantId: null, useApiRates: false };
+        var zrHubsCache = null;
 
         async function loadZrSettings() {
             try {
@@ -582,6 +585,21 @@
             } catch(e) {
                 console.warn('Failed to load ZR settings:', e);
             }
+        }
+
+        // === ZR EXPRESS HUBS ===
+
+        async function fetchZrHubs() {
+            if (zrHubsCache) return zrHubsCache;
+            try {
+                var { data } = await yunDb.from('site_settings').select('value').eq('key', 'zr_hubs').single();
+                if (data && data.value) {
+                    var parsed = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+                    zrHubsCache = Array.isArray(parsed) ? parsed : [];
+                    return zrHubsCache;
+                }
+            } catch(e) { console.warn('ZR hubs fetch from DB failed:', e); }
+            return [];
         }
 
         // === VALIDATION ===
@@ -674,13 +692,21 @@
                     closeAllSelects();
                     clearError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'));
 
-                    // Enable commune & populate with wilaya's communes
+                    // Enable commune & populate with wilaya's communes or hubs
                     var communeWrap = document.getElementById('communeSelect');
                     communeWrap.style.pointerEvents = '';
                     communeWrap.style.opacity = '';
-                    document.getElementById('communePlaceholder').textContent = 'Select Commune';
                     selectedCommune = '';
-                    populateCommuneOptions(COMMUNES[code] || []);
+                    selectedHubId = '';
+                    selectedHubName = '';
+
+                    if (selectedDeliveryType === 'post') {
+                        document.getElementById('communePlaceholder').textContent = 'Loading hubs...';
+                        populateHubsForWilaya(code, name);
+                    } else {
+                        document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                        populateCommuneOptions(COMMUNES[code] || []);
+                    }
 
                     // Fetch price and update
                     fetchShippingPrice(code);
@@ -707,6 +733,64 @@
                     clearError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'));
                 });
             });
+        }
+
+        async function populateHubsForWilaya(wilayaCode, wilayaName) {
+            var container = document.getElementById('communeOptions');
+            container.innerHTML = '<div class="custom-select-option" style="opacity:0.5">Loading hubs...</div>';
+            try {
+                var hubs = await fetchZrHubs();
+                var wName = wilayaName.toLowerCase().trim();
+                // Known name aliases (wilaya name -> hub city names)
+                var ALIASES = {
+                    'algiers': ['alger'],
+                    'el oued': ['el-oued', 'el oued'],
+                    "m'sila": ['msila', "m'sila"],
+                    'sidi bel abbes': ['sidi bel abbes', 'sidi-bel-abbes'],
+                    ' bordj bou arreridj': ['bordj bou arreridj']
+                };
+                var aliases = ALIASES[wName] || [];
+                var wilayaHubs = hubs.filter(function(h) {
+                    var hubCity = (h.city || '').toLowerCase().trim();
+                    var hubDistrict = (h.district || '').toLowerCase().trim();
+                    // Exact or substring match
+                    if (hubCity.includes(wName) || wName.includes(hubCity)) return true;
+                    if (hubDistrict.includes(wName) || wName.includes(hubDistrict)) return true;
+                    // Alias match
+                    for (var i = 0; i < aliases.length; i++) {
+                        if (hubCity.includes(aliases[i]) || hubDistrict.includes(aliases[i])) return true;
+                    }
+                    return false;
+                });
+                if (wilayaHubs.length === 0) {
+                    container.innerHTML = '<div class="custom-select-option" style="opacity:0.5">No hubs available — use Home Delivery</div>';
+                    return;
+                }
+                container.innerHTML = wilayaHubs.map(function(h) {
+                    var addr = h.street || h.district || '';
+                    var label = h.name + (addr ? ' — ' + addr : '');
+                    return '<div class="custom-select-option" data-hub-id="' + h.id + '" data-hub-name="' + (h.name || '') + '" data-hub-addr="' + (addr || '') + '">' + label + '</div>';
+                }).join('');
+                container.querySelectorAll('.custom-select-option[data-hub-id]').forEach(function(opt) {
+                    opt.addEventListener('click', function() {
+                        selectedHubId = this.dataset.hubId;
+                        selectedHubName = this.dataset.hubName;
+                        selectedCommune = this.dataset.hubName + (this.dataset.hubAddr ? ', ' + this.dataset.hubAddr : '');
+                        var trigger = document.getElementById('communeSelect').querySelector('.custom-select-trigger');
+                        var span = trigger.querySelector('span');
+                        var displayText = selectedHubName + (this.dataset.hubAddr ? ' — ' + this.dataset.hubAddr : '');
+                        if (span) span.textContent = displayText;
+                        else { trigger.innerHTML = '<span>' + displayText + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+                        container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
+                        this.classList.add('selected');
+                        closeAllSelects();
+                        clearError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'));
+                    });
+                });
+            } catch(e) {
+                container.innerHTML = '<div class="custom-select-option" style="opacity:0.5">Failed to load hubs</div>';
+                console.error('Hubs load error:', e);
+            }
         }
 
         // === SHIPPING PRICE ===
@@ -774,7 +858,19 @@
             document.getElementById('btnHome').classList.toggle('active', type === 'home');
             document.getElementById('btnPickup').classList.toggle('active', type === 'post');
             document.getElementById('homeAddressField').style.display = type === 'home' ? 'block' : 'none';
-            document.getElementById('communeLabel').textContent = type === 'home' ? 'Commune *' : 'Stop Desk *';
+            document.getElementById('communeLabel').textContent = type === 'home' ? 'Commune *' : 'Stop Desk (Hub) *';
+            // Re-populate commune dropdown based on delivery type
+            if (selectedWilayaCode) {
+                if (type === 'post') {
+                    populateHubsForWilaya(selectedWilayaCode, selectedWilayaName);
+                } else {
+                    document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                    populateCommuneOptions(COMMUNES[selectedWilayaCode] || []);
+                }
+            }
+            selectedCommune = '';
+            selectedHubId = '';
+            selectedHubName = '';
             updateSummary();
         };
 
@@ -976,7 +1072,11 @@
                 if (!phR.ok) { showError(document.getElementById('phone'), document.getElementById('phoneError'), phR.msg); errors.push(phR.msg); }
                 if (phone2 && !validatePhone(phone2).ok) { errors.push('Invalid second phone'); }
                 if (!selectedWilayaCode) { showError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'), 'Please select a wilaya'); errors.push('Wilaya required'); }
-                if (!selectedCommune) { showError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'), 'Please select a commune'); errors.push('Commune required'); }
+                if (!selectedCommune) {
+                    var msg = selectedDeliveryType === 'post' ? 'Please select a hub' : 'Please select a commune';
+                    showError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'), msg);
+                    errors.push(msg);
+                }
                 if (cart.length === 0) { alert('Your cart is empty'); errors.push('Empty cart'); }
 
                 if (errors.length > 0) {
@@ -1010,6 +1110,11 @@
                 }
 
                 // Create order
+                var orderNotes = notes || null;
+                if (selectedDeliveryType === 'post' && selectedHubId) {
+                    var hubNote = 'ZR Hub: ' + selectedHubName + ' (ID: ' + selectedHubId + ')';
+                    orderNotes = orderNotes ? orderNotes + '\n' + hubNote : hubNote;
+                }
                 var { data: order, error: orderError } = await yunDb.from('orders').insert({
                     first_name: firstName, last_name: lastName, phone: phone,
                     phone2: phone2 || null,
@@ -1017,7 +1122,7 @@
                     commune: selectedCommune, delivery_type: selectedDeliveryType,
                     home_address: selectedDeliveryType === 'home' ? homeAddress : null,
                     shipping_cost: shippingCost, subtotal: subtotal, total: total,
-                    notes: notes || null,
+                    notes: orderNotes,
                     status: 'pending', meta_event_id: eventId
                 }).select().single();
 
@@ -1055,7 +1160,6 @@
                     console.error('Order items error:', itemsError);
                     alert('Order was created but items failed to save. Please contact support with order #' + order.order_number);
                 }
-
 
                 localStorage.removeItem('yun_cart');
                 localStorage.setItem('yun_order_total', total);

@@ -213,6 +213,9 @@
             .hamburger { display: flex; }
             .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 24px 16px 80px; }
             .product-card.wide-card { grid-column: span 2; }
+            .bestseller-badge, .offer-badge { font-size: 0.45rem; padding: 3px 8px; top: 8px; }
+            .bestseller-badge { left: 8px; }
+            .offer-badge { right: 8px; }
             .bs-section { padding: 40px 0 30px; }
             .bs-section h2 { font-size: 1.5rem; margin-bottom: 24px; }
             .bs-wrap { padding: 0 16px; }
@@ -688,7 +691,7 @@
                 }
                 var linkUrl = p.category === 'outfit' ? 'outfit.html?slug=' + encodeURIComponent(p.slug) : 'product.html?slug=' + encodeURIComponent(p.slug);
                 var bsBadge = p.is_bestseller ? '<span class="bestseller-badge">BEST SELLER</span>' : '';
-                var offerBadge = p.offer_enabled ? '<span class="offer-badge">OFFER</span>' : '';
+                var offerBadge = (!p.is_bestseller && p.offer_enabled) ? '<span class="offer-badge">OFFER</span>' : '';
                 return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '">' +
                     '<div class="product-img-wrap">' +
                         '<img src="' + escapeHtml(optImg(img, 600)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.2){this.closest(\'.product-card\').classList.add(\'wide-card\')}">' +
