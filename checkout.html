@@ -802,13 +802,9 @@
             
             if (zrSettings.useApiRates && zrSettings.apiKey && zrSettings.tenantId) {
                 try {
-                    var response = await fetch('https://api.zrexpress.app/api/v1/rates?from_wilaya=16&to_wilaya=' + wilayaCode, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Api-Key': zrSettings.apiKey,
-                            'X-Tenant': zrSettings.tenantId
-                        }
-                    });
+                    var proxyUrl = '/.netlify/functions/zr-api';
+                    var proxyBody = { apiKey: zrSettings.apiKey, tenantId: zrSettings.tenantId, path: '/rates?from_wilaya=16&to_wilaya=' + wilayaCode, method: 'GET' };
+                    var response = await fetch(proxyUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyBody) });
                     
                     var apiResult = await response.json();
                     
@@ -1138,6 +1134,20 @@
                     notes: orderNotes,
                     status: 'pending', meta_event_id: eventId
                 }).select().single();
+
+                if (orderError && orderError.code === '42703') {
+                    console.warn('Missing columns, retrying without phone2/notes');
+                    var retry = await yunDb.from('orders').insert({
+                        first_name: firstName, last_name: lastName, phone: phone,
+                        wilaya_code: selectedWilayaCode, wilaya_name: selectedWilayaName,
+                        commune: selectedCommune, delivery_type: selectedDeliveryType,
+                        home_address: selectedDeliveryType === 'home' ? homeAddress : null,
+                        shipping_cost: shippingCost, subtotal: subtotal, total: total,
+                        status: 'pending', meta_event_id: eventId
+                    }).select().single();
+                    order = retry.data;
+                    orderError = retry.error;
+                }
 
                 if (orderError) {
                     console.error('Order error:', orderError);

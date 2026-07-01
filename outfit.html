@@ -349,6 +349,10 @@
         .cd-continue { display: block; width: 100%; padding: 12px; background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: rgba(197,217,139,0.5); font-family: var(--font-caption); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; }
         .cd-continue:hover { border-color: rgba(197,217,139,0.3); color: #c5d98b; }
         @media (max-width: 480px) { #cart-drawer { width: 100vw; } }
+        .outfit-product-colors { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .outfit-product-colors .color-swatch { padding: 6px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; background: transparent; color: rgba(255,255,255,0.6); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .outfit-product-colors .color-swatch:hover { border-color: rgba(197,217,139,0.4); color: #c5d98b; }
+        .outfit-product-colors .color-swatch.selected { background: #c5d98b; color: #0a0a0a; border-color: #c5d98b; font-weight: 600; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -486,6 +490,7 @@
     function optImg(url, w) { if (!url || url.indexOf('cloudinary') === -1) return url; return url.replace('/image/upload/', '/image/upload/w_' + (w || 600) + ',q_auto,f_auto/'); }
 
     var _selectedSizes = {};
+    var _selectedColors = {};
     var _outfitData = null;
     var _outfitItems = [];
 
@@ -514,31 +519,32 @@
         YunCache.invalidate('outfit_' + slug);
 
         function doLoad() {
-            return yunDb.from('outfits').select('*').eq('slug', slug).eq('is_active', true).single().then(function(res) {
-                if (res.error || !res.data) throw new Error('Not found');
-                var outfit = res.data;
+            return YunCache.fetch('outfit_' + slug, 120000, function() {
+                return yunDb.from('outfits').select('*').eq('slug', slug).eq('is_active', true).single().then(function(res) {
+                    if (res.error || !res.data) throw new Error('Not found');
+                    var outfit = res.data;
 
-                return Promise.all([
-                    yunDb.from('outfit_images').select('cloudinary_url, is_primary').eq('outfit_id', outfit.id),
-                    yunDb.from('outfit_products').select('*').eq('outfit_id', outfit.id).order('sort_order')
-                ]).then(function(results) {
-                    var imgsRes = results[0];
-                    var products = results[1].data || [];
+                    return Promise.all([
+                        yunDb.from('outfit_images').select('cloudinary_url, is_primary').eq('outfit_id', outfit.id),
+                        yunDb.from('outfit_products').select('*').eq('outfit_id', outfit.id).order('sort_order')
+                    ]).then(function(results) {
+                        var imgsRes = results[0];
+                        var products = results[1].data || [];
 
-                    var allImgs = (imgsRes.data || []).filter(function(img, i, arr) { return arr.findIndex(function(x) { return x.cloudinary_url === img.cloudinary_url; }) === i; });
-                    var mainImgObj = allImgs.find(function(img) { return img.is_primary; }) || allImgs[0];
-                    var mainImg = mainImgObj ? mainImgObj.cloudinary_url : '';
-                    var sgImg = allImgs.find(function(img) { return !img.is_primary; });
-                    var sizeGuideUrl = sgImg ? sgImg.cloudinary_url : null;
+                        var allImgs = (imgsRes.data || []).filter(function(img, i, arr) { return arr.findIndex(function(x) { return x.cloudinary_url === img.cloudinary_url; }) === i; });
+                        var mainImgObj = allImgs.find(function(img) { return img.is_primary; }) || allImgs[0];
+                        var mainImg = mainImgObj ? mainImgObj.cloudinary_url : '';
+                        var sgImg = allImgs.find(function(img) { return !img.is_primary; });
+                        var sizeGuideUrl = sgImg ? sgImg.cloudinary_url : null;
 
-                    if (!products.length) return [outfit, mainImg, [], sizeGuideUrl];
+                        if (!products.length) return [outfit, mainImg, [], sizeGuideUrl];
 
-                    var variantPromises = products.map(function(p) {
-                        return yunDb.from('outfit_variants').select('id, size, stock, price').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
-                            return {
-                                product: { name: p.name, base_price: p.price || outfit.base_price, sale_price: null },
-                                image: p.image_url || '',
-                                variants: vRes.data || []
+                        var variantPromises = products.map(function(p) {
+                            return yunDb.from('outfit_variants').select('id, size, stock, price, color').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
+                                return {
+                                    product: { name: p.name, base_price: p.price || outfit.base_price, sale_price: null },
+                                    image: p.image_url || '',
+                                    variants: vRes.data || []
                             };
                         });
                     });
@@ -546,6 +552,7 @@
                         return [outfit, mainImg, children, sizeGuideUrl];
                     });
                 });
+            });
             });
         }
 
@@ -579,8 +586,24 @@
             var pName = child.product.name || 'Product';
             var label = labels[idx] || String.fromCharCode(65 + idx);
 
-            var sizeMap = {};
+            // Build color map from variants
+            var colorMap = {};
             child.variants.forEach(function(v) {
+                var c = (v.color && v.color !== 'default') ? v.color : 'Default';
+                if (!colorMap[c]) colorMap[c] = [];
+                colorMap[c].push(v);
+            });
+            var colors = Object.keys(colorMap);
+            var hasMultipleColors = colors.length > 1;
+
+            // If single color, auto-select it
+            if (!hasMultipleColors && colors.length === 1) {
+                _selectedColors[idx] = colors[0];
+            }
+
+            var currentColor = _selectedColors[idx] || colors[0] || 'Default';
+            var sizeMap = {};
+            (colorMap[currentColor] || child.variants).forEach(function(v) {
                 if (!sizeMap[v.size]) sizeMap[v.size] = { size: v.size, stock: 0 };
                 sizeMap[v.size].stock += (v.stock || 0);
             });
@@ -590,8 +613,20 @@
             rightHtml += '<div class="outfit-product-header">';
             rightHtml += '<div class="outfit-product-img"><img src="' + optImg(child.image, 150) + '" alt="' + escapeHtml(pName) + '"></div>';
             rightHtml += '<div><div class="outfit-product-label">PRODUCT ' + label + '</div>';
-            rightHtml += '<div class="outfit-product-name">' + escapeHtml(pName) + '</div></div>';
+            rightHtml += '<div class="outfit-product-name">' + escapeHtml(pName) + ' — ' + fmt(child.product.base_price) + '</div></div>';
             rightHtml += '</div>';
+
+            // Color selector (only if multiple colors)
+            if (hasMultipleColors) {
+                rightHtml += '<div class="outfit-sizes-label">COLOR</div>';
+                rightHtml += '<div class="outfit-product-colors" data-product-idx="' + idx + '">';
+                colors.forEach(function(c) {
+                    var cls = 'color-swatch' + (c === currentColor ? ' selected' : '');
+                    rightHtml += '<button class="' + cls + '" data-color="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>';
+                });
+                rightHtml += '</div>';
+            }
+
             rightHtml += '<div class="outfit-sizes-label">SIZE</div>';
             rightHtml += '<div class="outfit-product-sizes" data-product-idx="' + idx + '">';
             sizes.forEach(function(sz) {
@@ -661,6 +696,50 @@
             });
         });
 
+        // Color click handler
+        details.querySelectorAll('.outfit-product-colors').forEach(function(container) {
+            container.addEventListener('click', function(e) {
+                var btn = e.target.closest('.color-swatch');
+                if (!btn) return;
+                var pIdx = container.getAttribute('data-product-idx');
+                container.querySelectorAll('.color-swatch').forEach(function(s) { s.classList.remove('selected'); });
+                btn.classList.add('selected');
+                var colorName = btn.getAttribute('data-color');
+                _selectedColors[pIdx] = colorName;
+                // Clear size selection for this child and re-render sizes
+                delete _selectedSizes[pIdx];
+                var child = _outfitItems[pIdx];
+                if (child) {
+                    var colorMap = {};
+                    child.variants.forEach(function(v) {
+                        var c = (v.color && v.color !== 'default') ? v.color : 'Default';
+                        if (!colorMap[c]) colorMap[c] = [];
+                        colorMap[c].push(v);
+                    });
+                    var sizeMap = {};
+                    (colorMap[colorName] || []).forEach(function(v) {
+                        if (!sizeMap[v.size]) sizeMap[v.size] = { size: v.size, stock: 0 };
+                        sizeMap[v.size].stock += (v.stock || 0);
+                    });
+                    var sizes = Object.values(sizeMap);
+                    var sizeContainer = details.querySelector('.outfit-product-sizes[data-product-idx="' + pIdx + '"]');
+                    if (sizeContainer) {
+                        sizeContainer.innerHTML = '';
+                        sizes.forEach(function(sz) {
+                            var cls = sz.stock <= 0 ? 'size-btn out' : 'size-btn';
+                            var b = document.createElement('button');
+                            b.className = cls;
+                            b.setAttribute('data-size', sz.size);
+                            b.setAttribute('data-stock', sz.stock);
+                            b.textContent = sz.size;
+                            sizeContainer.appendChild(b);
+                        });
+                    }
+                }
+                updateAddBtn();
+            });
+        });
+
         details.querySelector('#addOutfitBtn').addEventListener('click', addOutfitToCart);
     }
 
@@ -685,10 +764,12 @@
         _outfitItems.forEach(function(child, idx) {
             var label = String.fromCharCode(65 + idx);
             var size = _selectedSizes[idx];
+            var color = _selectedColors[idx] || 'default';
             sizeParts.push(label + ':' + size);
             products.push({
                 name: child.product.name,
                 size: size,
+                color: color,
                 image: child.image,
                 price: child.product.sale_price && child.product.sale_price < child.product.base_price ? child.product.sale_price : child.product.base_price
             });
