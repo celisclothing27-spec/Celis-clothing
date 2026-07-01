@@ -250,8 +250,8 @@
     <nav class="navbar">
         <a href="index.html" class="navbar-brand"><img src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing"></a>
         <div class="navbar-links">
-            <a href="index.html">Home</a>
-            <a href="products.html" class="active">Products</a>
+            <a href="index.html" data-i18n="nav_home">Home</a>
+            <a href="products.html" class="active" data-i18n="nav_products">Products</a>
         </div>
         <div class="navbar-icons">
             <div id="langSwitcher"></div>
@@ -262,8 +262,8 @@
     <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobileMenu">
         <button class="mobile-menu-close" aria-label="Close"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
+        <a href="index.html" data-i18n="nav_home">Home</a>
+        <a href="products.html" data-i18n="nav_products">Products</a>
     </div>
 
     <!-- BANNER -->
@@ -354,11 +354,11 @@
         <div class="bottom-nav-inner">
             <a href="index.html" class="bottom-nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>HOME</span>
+                <span data-i18n="nav_home">HOME</span>
             </a>
             <a href="products.html" class="bottom-nav-item active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <span>PRODUCTS</span>
+                <span data-i18n="nav_products">PRODUCTS</span>
             </a>
             <button class="bottom-nav-item" onclick="openCart()" style="position:relative">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
