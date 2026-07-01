@@ -484,10 +484,15 @@
             var visible = cards.filter(function(c) { return c.style.display !== 'none'; });
             var hidden = cards.filter(function(c) { return c.style.display === 'none'; });
             visible.sort(function(a, b) {
-                var pA = parseInt((a.querySelector('.price-current') || {}).textContent || '0').replace(/\D/g, '') || 0;
-                var pB = parseInt((b.querySelector('.price-current') || {}).textContent || '0').replace(/\D/g, '') || 0;
+                var pA = parseInt(((a.querySelector('.price-current') || {}).textContent || '0').replace(/\D/g, '')) || 0;
+                var pB = parseInt(((b.querySelector('.price-current') || {}).textContent || '0').replace(/\D/g, '')) || 0;
                 if (sortSelect.value === 'price-asc') return pA - pB;
                 if (sortSelect.value === 'price-desc') return pB - pA;
+                if (sortSelect.value === 'newest') {
+                    var dateA = a.dataset.createdAt || '';
+                    var dateB = b.dataset.createdAt || '';
+                    return dateB.localeCompare(dateA);
+                }
                 return 0;
             });
             visible.concat(hidden).forEach(function(c) { grid.appendChild(c); });
@@ -692,7 +697,7 @@
                 var linkUrl = p.category === 'outfit' ? 'outfit.html?slug=' + encodeURIComponent(p.slug) : 'product.html?slug=' + encodeURIComponent(p.slug);
                 var bsBadge = p.is_bestseller ? '<span class="bestseller-badge">BEST SELLER</span>' : '';
                 var offerBadge = (!p.is_bestseller && p.offer_enabled) ? '<span class="offer-badge">OFFER</span>' : '';
-                return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '">' +
+                return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '" data-created-at="' + escapeHtml(p.created_at || '') + '">' +
                     '<div class="product-img-wrap">' +
                         '<img src="' + escapeHtml(optImg(img, 600)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async" onload="if(this.naturalWidth>this.naturalHeight*1.2){this.closest(\'.product-card\').classList.add(\'wide-card\')}">' +
                         bsBadge + offerBadge +

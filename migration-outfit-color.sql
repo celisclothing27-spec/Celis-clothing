@@ -1,0 +1,1 @@
+ALTER TABLE outfit_variants ADD COLUMN IF NOT EXISTS color TEXT DEFAULT '';

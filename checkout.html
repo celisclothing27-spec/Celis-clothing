@@ -69,6 +69,8 @@
         .form-input:focus { border-color: rgba(197,217,139,0.3); background: rgba(255,255,255,0.07); }
         .form-input::placeholder { color: rgba(197,217,139,0.3); }
         .form-input.error { border-color: rgba(255,80,80,0.5); }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-4px)} 40%,80%{transform:translateX(4px)} }
+        .form-input.error, .custom-select-trigger.error { animation: shake 0.3s ease; border-color: rgba(255,80,80,0.7); box-shadow: 0 0 8px rgba(255,80,80,0.3); }
         textarea.form-input { resize: vertical; min-height: 60px; }
         .form-error { font-size: 0.7rem; color: rgba(255,80,80,0.85); margin-top: 6px; display: none; }
         .form-error.show { display: block; }
@@ -747,7 +749,7 @@
                     'el oued': ['el-oued', 'el oued'],
                     "m'sila": ['msila', "m'sila"],
                     'sidi bel abbes': ['sidi bel abbes', 'sidi-bel-abbes'],
-                    ' bordj bou arreridj': ['bordj bou arreridj']
+                    'bordj bou arreridj': ['bordj bou arreridj']
                 };
                 var aliases = ALIASES[wName] || [];
                 var wilayaHubs = hubs.filter(function(h) {
@@ -1064,24 +1066,35 @@
 
                 // Validate
                 var errors = [];
+                var firstErrorEl = null;
                 var fnR = validateName(firstName, 'First name');
-                if (!fnR.ok) { showError(document.getElementById('firstName'), document.getElementById('firstNameError'), fnR.msg); errors.push(fnR.msg); }
+                if (!fnR.ok) { showError(document.getElementById('firstName'), document.getElementById('firstNameError'), fnR.msg); errors.push(fnR.msg); if (!firstErrorEl) firstErrorEl = document.getElementById('firstName'); }
                 var lnR = validateName(lastName, 'Last name');
-                if (!lnR.ok) { showError(document.getElementById('lastName'), document.getElementById('lastNameError'), lnR.msg); errors.push(lnR.msg); }
+                if (!lnR.ok) { showError(document.getElementById('lastName'), document.getElementById('lastNameError'), lnR.msg); errors.push(lnR.msg); if (!firstErrorEl) firstErrorEl = document.getElementById('lastName'); }
                 var phR = validatePhone(phone);
-                if (!phR.ok) { showError(document.getElementById('phone'), document.getElementById('phoneError'), phR.msg); errors.push(phR.msg); }
-                if (phone2 && !validatePhone(phone2).ok) { errors.push('Invalid second phone'); }
-                if (!selectedWilayaCode) { showError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'), 'Please select a wilaya'); errors.push('Wilaya required'); }
+                if (!phR.ok) { showError(document.getElementById('phone'), document.getElementById('phoneError'), phR.msg); errors.push(phR.msg); if (!firstErrorEl) firstErrorEl = document.getElementById('phone'); }
+                if (phone2 && !validatePhone(phone2).ok) { errors.push('Invalid second phone'); if (!firstErrorEl) firstErrorEl = document.getElementById('phone2'); }
+                if (!selectedWilayaCode) { showError(document.getElementById('wilayaSelect').querySelector('.custom-select-trigger'), document.getElementById('wilayaError'), 'Please select a wilaya'); errors.push('Wilaya required'); if (!firstErrorEl) firstErrorEl = document.getElementById('wilayaSelect'); }
                 if (!selectedCommune) {
                     var msg = selectedDeliveryType === 'post' ? 'Please select a hub' : 'Please select a commune';
                     showError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'), msg);
                     errors.push(msg);
+                    if (!firstErrorEl) firstErrorEl = document.getElementById('communeSelect');
+                }
+                if (selectedDeliveryType === 'home' && !homeAddress) {
+                    showError(document.getElementById('homeAddress'), document.getElementById('homeAddressError'), 'Please enter your delivery address');
+                    errors.push('Address required');
+                    if (!firstErrorEl) firstErrorEl = document.getElementById('homeAddress');
                 }
                 if (cart.length === 0) { alert('Your cart is empty'); errors.push('Empty cart'); }
 
                 if (errors.length > 0) {
                     btn.classList.remove('loading');
                     btn.disabled = false;
+                    if (firstErrorEl) {
+                        firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstErrorEl.focus();
+                    }
                     return;
                 }
 
@@ -1227,6 +1240,15 @@
                 document.getElementById('emptyCartNotice').style.display = 'block';
                 document.getElementById('cooldownBanner').style.display = 'none';
             }
+
+            // Auto-clear errors on typing
+            ['firstName','lastName','phone','phone2','homeAddress','notes'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.addEventListener('input', function() {
+                    var errEl = document.getElementById(id + 'Error');
+                    if (errEl) clearError(this, errEl);
+                });
+            });
 
             // Phone hints
             document.getElementById('phone').addEventListener('input', function() {
