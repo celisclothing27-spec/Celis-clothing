@@ -536,7 +536,7 @@
         var _bsProducts = yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
             .then(function(r) { return (r.error ? null : r.data) || []; })
             .catch(function() { return []; });
-        var _bsOutfits = yunDb.from('outfits').select('id, name, slug, base_price, sale_price').eq('is_active', true).order('name')
+        var _bsOutfits = yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
             .then(function(r) { return (r.error ? [] : r.data || []); })
             .catch(function() { return []; });
 

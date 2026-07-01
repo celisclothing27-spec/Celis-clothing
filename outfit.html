@@ -353,6 +353,10 @@
         .outfit-product-colors .color-swatch { padding: 6px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; background: transparent; color: rgba(255,255,255,0.6); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
         .outfit-product-colors .color-swatch:hover { border-color: rgba(197,217,139,0.4); color: #c5d98b; }
         .outfit-product-colors .color-swatch.selected { background: #c5d98b; color: #0a0a0a; border-color: #c5d98b; font-weight: 600; }
+        .outfit-product-img { position: relative; cursor: pointer; }
+        .outfit-preview { display: none; position: fixed; z-index: 200; pointer-events: none; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); background: #111; }
+        .outfit-preview img { width: 280px; height: 360px; object-fit: contain; background: #111; }
+        .outfit-preview.active { display: block; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -385,6 +389,8 @@
         <a href="index.html" data-i18n="nav_home">Home</a>
         <a href="products.html" data-i18n="nav_products">Products</a>
     </div>
+
+    <div class="outfit-preview" id="outfitPreview"><img src="" alt="Preview"></div>
 
     <div class="outfit-page" id="outfitPage">
         <a href="products.html" class="back-link">&larr; Back to Shop</a>
@@ -540,7 +546,7 @@
                         if (!products.length) return [outfit, mainImg, [], sizeGuideUrl];
 
                         var variantPromises = products.map(function(p) {
-                            return yunDb.from('outfit_variants').select('id, size, stock, price, color').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
+                            return yunDb.from('outfit_variants').select('*').eq('outfit_product_id', p.id).order('sort_order').then(function(vRes) {
                                 return {
                                     product: { name: p.name, base_price: p.price || outfit.base_price, sale_price: null },
                                     image: p.image_url || '',
@@ -741,6 +747,30 @@
         });
 
         details.querySelector('#addOutfitBtn').addEventListener('click', addOutfitToCart);
+
+        // Hover preview for child product images
+        var preview = document.getElementById('outfitPreview');
+        var previewImg = preview.querySelector('img');
+        details.querySelectorAll('.outfit-product-img').forEach(function(imgWrap) {
+            var img = imgWrap.querySelector('img');
+            if (!img) return;
+            img.addEventListener('mouseenter', function(e) {
+                previewImg.src = img.src;
+                preview.classList.add('active');
+            });
+            img.addEventListener('mousemove', function(e) {
+                var x = e.clientX + 16;
+                var y = e.clientY - 180;
+                if (x + 300 > window.innerWidth) x = e.clientX - 300;
+                if (y < 10) y = 10;
+                if (y + 380 > window.innerHeight) y = window.innerHeight - 380;
+                preview.style.left = x + 'px';
+                preview.style.top = y + 'px';
+            });
+            img.addEventListener('mouseleave', function() {
+                preview.classList.remove('active');
+            });
+        });
     }
 
     function toggleExpand(id) {
