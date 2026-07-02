@@ -28,6 +28,10 @@
         }
         html { scroll-behavior: smooth; font-family: var(--font-body); background: var(--bg); color: var(--text-primary); overflow-x: hidden; }
         body { line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        #page-transition { position: fixed; inset: 0; background: #0a0a0a; z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; pointer-events: none; }
+        #page-transition img { height: 64px; width: auto; object-fit: contain; opacity: 0.8; }
+        .pt-spinner { width: 32px; height: 32px; border: 3px solid rgba(197,217,139,0.15); border-top-color: #c5d98b; border-radius: 50%; margin-top: 24px; animation: ptSpin 0.8s linear infinite; }
+        @keyframes ptSpin { to { transform: rotate(360deg); } }
         img { max-width: 100%; display: block; }
         a { text-decoration: none; color: inherit; }
         button { border: none; background: none; cursor: pointer; font-family: inherit; outline: inherit; }
@@ -368,6 +372,7 @@
     <script src="i18n.js"></script>
 </head>
 <body>
+    <div id="page-transition"><img src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing"><div class="pt-spinner"></div></div>
     <nav class="navbar">
         <a href="index.html" class="navbar-brand"><img src="https://res.cloudinary.com/dblanptpo/image/upload/v1782584610/4B0C2A90-DFBD-4E4D-BD0E-BDE7891D7F02_z15hr9.png" alt="Celis clothing" style="height:36px;width:auto;object-fit:contain"></a>
         <div class="navbar-links">
@@ -516,8 +521,19 @@
         updateCartUI();
 
         var slug = new URLSearchParams(window.location.search).get('slug');
-        if (!slug) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found.</p>'; return; }
-        if (!yunDb) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Connection error.</p>'; return; }
+    // Page transition
+    (function(){
+        var pt=document.getElementById('page-transition');
+        if(!pt)return;
+        window.addEventListener('pageshow',function(){if(pt){pt.style.display='none';pt.style.transition='none';pt.style.transform='translateY(100%)';}});
+        pt.style.transition='none';pt.style.transform='translateY(0%)';pt.style.display='flex';pt.style.opacity='1';
+        window.__hidePageOverlay=function(){if(pt.style.display==='none')return;pt.style.transition='opacity 0.5s';pt.style.opacity='0';setTimeout(function(){pt.style.display='none';},500);};
+        setTimeout(function(){if(window.__hidePageOverlay)window.__hidePageOverlay();},5000);
+        document.addEventListener('click',function(e){var l=e.target.closest('a[href]');if(!l)return;var h=l.getAttribute('href');if(!h||h.startsWith('#')||h.startsWith('http')||h.startsWith('mailto')||h.startsWith('tel')||l.target==='_blank')return;e.preventDefault();pt.style.display='flex';pt.style.transition='none';pt.style.transform='translateY(0%)';pt.style.opacity='1';sessionStorage.setItem('yun_visited','1');setTimeout(function(){window.location.href=h;},300);});
+    })();
+
+        if (!slug) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found.</p>'; if(window.__hidePageOverlay)window.__hidePageOverlay(); return; }
+        if (!yunDb) { document.getElementById('outfitContent').innerHTML='<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Connection error.</p>'; if(window.__hidePageOverlay)window.__hidePageOverlay(); return; }
         loadOutfit(slug);
     });
 
@@ -525,7 +541,7 @@
         YunCache.invalidate('outfit_' + slug);
 
         function doLoad() {
-            return YunCache.fetch('outfit_' + slug, 120000, function() {
+            return YunCache.fetch('outfit_' + slug, 300000, function() {
                 return yunDb.from('outfits').select('*').eq('slug', slug).eq('is_active', true).single().then(function(res) {
                     if (res.error || !res.data) throw new Error('Outfit not found');
                     var outfit = res.data;
@@ -582,9 +598,11 @@
             _outfitItems = r[2];
             _sizeGuideUrl = r[3];
             renderOutfit(r[0], r[1], r[2], r[3]);
+            if(window.__hidePageOverlay)window.__hidePageOverlay();
         }).catch(function(e) {
             console.error('Outfit load error:', e);
             document.getElementById('outfitContent').innerHTML = '<p style="color:rgba(255,255,255,0.4);padding:40px 0;text-align:center">Outfit not found. (' + e.message + ')</p>';
+            if(window.__hidePageOverlay)window.__hidePageOverlay();
         });
     }
 

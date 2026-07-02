@@ -790,8 +790,10 @@
         var pt=document.getElementById('page-transition');
         if(!pt)return;
         window.addEventListener('pageshow',function(){if(pt){pt.style.display='none';pt.style.transition='none';pt.style.transform='translateY(100%)';}});
-        if(sessionStorage.getItem('yun_visited')){pt.style.transition='none';pt.style.transform='translateY(0%)';pt.style.display='flex';requestAnimationFrame(function(){requestAnimationFrame(function(){pt.style.transition='transform 0.7s cubic-bezier(0.76,0,0.24,1)';pt.style.transform='translateY(100%)';setTimeout(function(){pt.style.display='none';},750);});});}else{pt.style.display='none';}
-        document.addEventListener('click',function(e){var l=e.target.closest('a[href]');if(!l)return;var h=l.getAttribute('href');if(!h||h.startsWith('#')||h.startsWith('http')||h.startsWith('mailto')||h.startsWith('tel')||l.target==='_blank')return;e.preventDefault();pt.style.display='flex';pt.style.transition='none';pt.style.transform='translateY(100%)';requestAnimationFrame(function(){requestAnimationFrame(function(){pt.style.transition='transform 0.7s cubic-bezier(0.76,0,0.24,1)';pt.style.transform='translateY(0%)';setTimeout(function(){window.location.href=h;},750);});});});
+        pt.style.transition='none';pt.style.transform='translateY(0%)';pt.style.display='flex';pt.style.opacity='1';
+        window.__hidePageOverlay=function(){if(pt.style.display==='none')return;pt.style.transition='opacity 0.5s';pt.style.opacity='0';setTimeout(function(){pt.style.display='none';},500);};
+        setTimeout(function(){if(window.__hidePageOverlay)window.__hidePageOverlay();},5000);
+        document.addEventListener('click',function(e){var l=e.target.closest('a[href]');if(!l)return;var h=l.getAttribute('href');if(!h||h.startsWith('#')||h.startsWith('http')||h.startsWith('mailto')||h.startsWith('tel')||l.target==='_blank')return;e.preventDefault();pt.style.display='flex';pt.style.transition='none';pt.style.transform='translateY(0%)';pt.style.opacity='1';sessionStorage.setItem('yun_visited','1');setTimeout(function(){window.location.href=h;},300);});
     })();
     </script>
     <script>
@@ -805,7 +807,7 @@
     function optImg(url,w){ if(!url||url.indexOf('cloudinary')===-1)return url; return url.replace('/image/upload/','/image/upload/w_'+(w||600)+',q_auto,f_auto/'); }
 
     function yunCacheFetch(slug) {
-        return YunCache.fetch('product_' + slug, 120000, function() {
+        return YunCache.fetch('product_' + slug, 300000, function() {
             return yunDb.from('products').select('id, name, name_ar, slug, category, base_price, sale_price, description, description_ar, size_guide_text, size_guide_images, offer_enabled, offer_text, offer_discount_type, offer_discount_value, offer_min_qty').eq('slug', slug).single().then(function(res) {
                 if (res.error || !res.data) throw new Error('Not found');
                 var p = res.data;
@@ -972,7 +974,7 @@
 
         // Load related products (cached, specific columns)
         var relatedCacheKey = 'related_' + product.category + '_' + product.id;
-        YunCache.fetch(relatedCacheKey, 120000, function() {
+        YunCache.fetch(relatedCacheKey, 300000, function() {
             return yunDb.from('products').select('id, name, slug, base_price, sale_price, category').eq('category',product.category).neq('id',product.id).limit(8).then(function(res) {
                 var prods = res.data || [];
                 if (!prods.length) {
@@ -1004,7 +1006,9 @@
                 cards.forEach(function(c){scroll.appendChild(c);});
             });
         });
-    }).catch(function(){document.getElementById('pName').textContent='Product not found';});
+    }).then(function(){
+        if(window.__hidePageOverlay)window.__hidePageOverlay();
+    }).catch(function(){document.getElementById('pName').textContent='Product not found';if(window.__hidePageOverlay)window.__hidePageOverlay();});
 })();
 </script>
     <script src="wepnest-protect.js"></script>

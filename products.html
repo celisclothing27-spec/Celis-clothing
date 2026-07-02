@@ -593,6 +593,7 @@
             </div>
             <select id="sortSelect" class="sort-select">
                 <option value="default">Sort: Featured</option>
+                <option value="sort_order">Sort by Order</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
                 <option value="newest">Newest First</option>
@@ -806,6 +807,11 @@
                     var dateB = b.dataset.createdAt || '';
                     return dateB.localeCompare(dateA);
                 }
+                if (sortSelect.value === 'sort_order') {
+                    var sortA = parseInt(a.dataset.sortOrder || '0') || 0;
+                    var sortB = parseInt(b.dataset.sortOrder || '0') || 0;
+                    return sortA - sortB;
+                }
                 return 0;
             });
             visible.concat(hidden).forEach(function(c) { grid.appendChild(c); });
@@ -912,31 +918,21 @@
     (function() {
         var pt = document.getElementById('page-transition');
         if (!pt) return;
-        // On back/forward navigation
         window.addEventListener('pageshow', function() { if (pt) { pt.style.display = 'none'; pt.style.transition = 'none'; pt.style.transform = 'translateY(100%)'; } });
-        if (sessionStorage.getItem('yun_visited')) {
-            // Show black screen, hide when content is ready
-            pt.style.transition = 'none';
-            pt.style.transform = 'translateY(0%)';
-            pt.style.display = 'flex';
-            pt.style.opacity = '1';
-            // Hide after products load (listen for first product card or timeout 3s)
-            function hidePT() {
-                if (pt.style.display === 'none') return;
-                pt.style.transition = 'opacity 0.5s';
-                pt.style.opacity = '0';
-                setTimeout(function() { pt.style.display = 'none'; }, 500);
-            }
-            var observer = new MutationObserver(function() {
-                var grid = document.getElementById('productsGrid');
-                if (grid && grid.querySelector('.product-card')) { observer.disconnect(); hidePT(); }
-            });
-            var grid = document.getElementById('productsGrid');
-            if (grid) observer.observe(grid, { childList: true });
-            setTimeout(hidePT, 3500); // max 3s fallback
-        } else {
-            pt.style.display = 'none';
-        }
+        // Always show overlay on visit, hide when content ready
+        pt.style.transition = 'none';
+        pt.style.transform = 'translateY(0%)';
+        pt.style.display = 'flex';
+        pt.style.opacity = '1';
+        // Global function to hide overlay — called after ALL data loads
+        window.__hidePageOverlay = function() {
+            if (pt.style.display === 'none') return;
+            pt.style.transition = 'opacity 0.5s';
+            pt.style.opacity = '0';
+            setTimeout(function() { pt.style.display = 'none'; }, 500);
+        };
+        // Fallback: force hide after 5s max
+        setTimeout(function() { if (window.__hidePageOverlay) window.__hidePageOverlay(); }, 5000);
         document.addEventListener('click', function(e) {
             var link = e.target.closest('a[href]');
             if (!link) return;
@@ -1010,11 +1006,11 @@
                 if (p.is_bestseller || p.offer_enabled) {
                     badgesHtml = '<div class="badge-stack">';
                     if (p.is_bestseller) badgesHtml += '<div class="badge-hot">BEST SELLER</div>';
-                    if (!p.is_bestseller && p.offer_enabled) badgesHtml += '<div class="badge-promo">PROMO</div>';
+                    if (p.offer_enabled) badgesHtml += '<div class="badge-promo">OFFER</div>';
                     badgesHtml += '</div>';
                 }
 
-                return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '" data-created-at="' + escapeHtml(p.created_at || '') + '">' +
+                return '<a href="' + linkUrl + '" class="product-card" data-category="' + escapeHtml(p.category || '') + '" data-product-id="' + escapeHtml(p.slug) + '" data-created-at="' + escapeHtml(p.created_at || '') + '" data-sort-order="' + (p.sort_order || 0) + '">' +
                     '<div class="product-img-wrap">' +
                         '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml((p.name||'').toUpperCase()) + '" loading="lazy" decoding="async">' +
                         '<div class="card-hover-overlay"></div>' +
@@ -1032,8 +1028,8 @@
         }
 
         try {
-            var res = await YunCache.fetch('products_all', 60000, function() {
-                return yunDb.from('products').select('id, name, slug, category, base_price, sale_price, is_bestseller, offer_enabled, product_images(cloudinary_url, is_primary)').eq('is_active', true).neq('category', 'outfit_child').order('name');
+            var res = await YunCache.fetch('products_all', 300000, function() {
+                return yunDb.from('products').select('id, name, slug, category, base_price, sale_price, is_bestseller, offer_enabled, product_images(cloudinary_url, is_primary)').eq('is_active', true).neq('category', 'outfit_child').order('sort_order').order('name');
             });
             if (res.error) throw res.error;
             var products = (res.data || []).map(function(p) {
@@ -1042,7 +1038,8 @@
                 return {
                     id: p.id, name: p.name, slug: p.slug, category: p.category,
                     base_price: p.base_price, sale_price: p.sale_price, is_bestseller: p.is_bestseller, offer_enabled: p.offer_enabled,
-                    primary_image: primary ? primary.cloudinary_url : (imgs[0] ? imgs[0].cloudinary_url : '')
+                    primary_image: primary ? primary.cloudinary_url : (imgs[0] ? imgs[0].cloudinary_url : ''),
+                    sort_order: p.sort_order || 0
                 };
             });
             renderProducts(products);
@@ -1053,7 +1050,7 @@
 
         // Load outfits
         try {
-            var outfitRes = await yunDb.from('outfits').select('*').eq('is_active', true).order('created_at', { ascending: false });
+            var outfitRes = await yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller, offer_enabled').eq('is_active', true).order('sort_order').order('name');
             if (outfitRes.data && outfitRes.data.length > 0) {
                 var outfitIds = outfitRes.data.map(function(o) { return o.id; });
                 var { data: outfitImgs } = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
@@ -1077,9 +1074,18 @@
                         priceHtml = '<span class="price-current">' + new Intl.NumberFormat('en-DZ').format(base) + ' DA</span>';
                     }
 
+                    var outfitBadges = '';
+                    if (o.is_bestseller || o.offer_enabled) {
+                        outfitBadges = '<div class="badge-stack">';
+                        if (o.is_bestseller) outfitBadges += '<div class="badge-hot">BEST SELLER</div>';
+                        if (o.offer_enabled) outfitBadges += '<div class="badge-promo">OFFER</div>';
+                        outfitBadges += '</div>';
+                    }
+
                     card.innerHTML = '<div class="product-img-wrap">' +
                         '<img src="' + escapeHtml(optImg(img, 800)) + '" alt="' + escapeHtml(o.name.toUpperCase()) + '" loading="lazy" decoding="async">' +
                         '<div class="card-hover-overlay"></div>' +
+                        outfitBadges +
                     '</div>' +
                     '<div class="card-info">' +
                         '<div class="card-info-left">' +
@@ -1096,6 +1102,8 @@
         } catch(e) {
             console.log('Outfits load skipped:', e.message);
         }
+        // ALL data loaded — hide overlay
+        if (window.__hidePageOverlay) window.__hidePageOverlay();
     });
     </script>
     <script src="wepnest-protect.js"></script>
