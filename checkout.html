@@ -402,6 +402,18 @@
                         <span class="summary-row-label">Subtotal</span>
                         <span class="summary-row-value" id="summarySubtotal">0 DA</span>
                     </div>
+                    <!-- Promo Code -->
+                    <div style="margin:12px 0">
+                        <div style="display:flex;gap:8px">
+                            <input type="text" id="promoInput" placeholder="Promo code" style="flex:1;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;font-size:0.8rem;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.05em">
+                            <button type="button" id="promoApplyBtn" onclick="applyPromoCode()" style="padding:10px 16px;background:#c5d98b;color:#0a0a0a;border:none;border-radius:8px;font-weight:700;font-size:0.7rem;cursor:pointer;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.05em">APPLY</button>
+                        </div>
+                        <div id="promoMessage" style="margin-top:6px;font-size:0.7rem;display:none"></div>
+                    </div>
+                    <div id="promoDiscountRow" style="display:none" class="summary-row">
+                        <span class="summary-row-label" style="color:#00c864">PROMO DISCOUNT</span>
+                        <span class="summary-row-value" style="color:#00c864" id="summaryDiscount">-0 DA</span>
+                    </div>
                     <div class="summary-row">
                         <span class="summary-row-label">Delivery</span>
                         <span class="summary-row-value" id="summaryShipping">Select wilaya...</span>
@@ -965,6 +977,40 @@
         }
         function getCartSubtotal() { return cart.reduce(function(s, i) { return s + i.price * i.qty; }, 0); }
 
+        // === PROMO CODE ===
+        var appliedPromo = null;
+
+        async function applyPromoCode() {
+            var code = document.getElementById('promoInput').value.trim().toUpperCase();
+            var msg = document.getElementById('promoMessage');
+            var btn = document.getElementById('promoApplyBtn');
+            if (!code) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Enter a code'; return; }
+            btn.textContent = '...'; btn.disabled = true;
+            try {
+                var { data: promo, error } = await yunDb.from('promo_codes').select('*').eq('code', code).eq('is_active', true).single();
+                if (error || !promo) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Invalid or inactive code'; appliedPromo = null; updateSummary(); return; }
+                if (promo.expires_at && new Date(promo.expires_at) < new Date()) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Code has expired'; appliedPromo = null; updateSummary(); return; }
+                if (promo.max_uses > 0 && promo.used_count >= promo.max_uses) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Usage limit reached'; appliedPromo = null; updateSummary(); return; }
+                var subtotal = getCartSubtotal();
+                if (promo.min_order > 0 && subtotal < promo.min_order) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Min order: ' + promo.min_order.toLocaleString() + ' DA'; appliedPromo = null; updateSummary(); return; }
+                var discount = promo.discount_type === 'percent' ? Math.round(subtotal * promo.discount_value / 100) : Math.min(promo.discount_value, subtotal);
+                appliedPromo = Object.assign({}, promo, { discount: discount });
+                msg.style.display = 'block'; msg.style.color = '#00c864';
+                msg.textContent = '✓ ' + (promo.discount_type === 'percent' ? promo.discount_value + '% off' : promo.discount_value.toLocaleString() + ' DA off') + ' — You save ' + discount.toLocaleString() + ' DA';
+                btn.textContent = 'REMOVE'; btn.onclick = removePromoCode;
+                updateSummary();
+            } catch(e) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Error: ' + e.message; }
+            finally { if (!appliedPromo) { btn.textContent = 'APPLY'; btn.onclick = applyPromoCode; } btn.disabled = false; }
+        }
+
+        function removePromoCode() {
+            appliedPromo = null;
+            document.getElementById('promoInput').value = '';
+            var msg = document.getElementById('promoMessage'); msg.style.display = 'none';
+            var btn = document.getElementById('promoApplyBtn'); btn.textContent = 'APPLY'; btn.onclick = applyPromoCode;
+            updateSummary();
+        }
+
         // === ORDER SUMMARY ===
         function updateSummary() {
             var subtotal = getCartSubtotal();
@@ -1011,8 +1057,18 @@
                 shippingEl.textContent = 'Select wilaya...';
             }
 
-            var total = subtotal + (shipping || 0);
+            var total = subtotal + (shipping || 0) - (appliedPromo ? appliedPromo.discount : 0);
             document.getElementById('summaryTotal').textContent = total.toLocaleString() + ' DA';
+
+            // Show/hide promo discount row
+            var discountRow = document.getElementById('promoDiscountRow');
+            var discountEl = document.getElementById('summaryDiscount');
+            if (appliedPromo && appliedPromo.discount > 0) {
+                discountRow.style.display = 'flex';
+                discountEl.textContent = '-' + appliedPromo.discount.toLocaleString() + ' DA';
+            } else {
+                discountRow.style.display = 'none';
+            }
 
             // Enable/disable button
             var btn = document.getElementById('placeOrderBtn');
@@ -1102,7 +1158,8 @@
 
                 var shippingCost = selectedDeliveryType === 'home' ? pricing.home_price : pricing.post_price;
                 var subtotal = getCartSubtotal();
-                var total = subtotal + shippingCost;
+                var promoDiscount = appliedPromo ? appliedPromo.discount : 0;
+                var total = subtotal + shippingCost - promoDiscount;
                 var eventId = 'purchase_' + Date.now();
 
                 // Stock check
@@ -1131,12 +1188,14 @@
                     commune: selectedCommune, delivery_type: selectedDeliveryType,
                     home_address: selectedDeliveryType === 'home' ? homeAddress : null,
                     shipping_cost: shippingCost, subtotal: subtotal, total: total,
+                    promo_code: appliedPromo ? appliedPromo.code : null,
+                    promo_discount: promoDiscount || null,
                     notes: orderNotes,
                     status: 'pending', meta_event_id: eventId
                 }).select().single();
 
                 if (orderError && orderError.code === '42703') {
-                    console.warn('Missing columns, retrying without phone2/notes');
+                    console.warn('Missing columns, retrying without phone2/notes/promo');
                     var retry = await yunDb.from('orders').insert({
                         first_name: firstName, last_name: lastName, phone: phone,
                         wilaya_code: selectedWilayaCode, wilaya_name: selectedWilayaName,
@@ -1184,11 +1243,20 @@
                     alert('Order was created but items failed to save. Please contact support with order #' + order.order_number);
                 }
 
+                // Increment promo code usage
+                if (appliedPromo && order && order.promo_code) {
+                    try {
+                        await yunDb.from('promo_codes').update({ used_count: appliedPromo.used_count + 1 }).eq('id', appliedPromo.id);
+                    } catch(e) { console.error('Promo usage increment failed:', e); }
+                }
+
                 localStorage.removeItem('yun_cart');
                 localStorage.setItem('yun_order_total', total);
                 localStorage.setItem('yun_last_order', JSON.stringify({
                     order_number: order.order_number, subtotal: subtotal,
                     shipping_cost: shippingCost, total: total,
+                    promo_code: appliedPromo ? appliedPromo.code : null,
+                    promo_discount: promoDiscount || null,
                     delivery_type: selectedDeliveryType, phone: phone,
                     wilaya_name: selectedWilayaName, commune: selectedCommune
                 }));

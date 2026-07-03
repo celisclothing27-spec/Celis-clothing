@@ -467,6 +467,10 @@
                             <span class="ty-label">SHIPPING</span>
                             <span class="ty-val" id="tyShipping">— DA</span>
                         </div>
+                        <div class="ty-summary-row" id="tyPromoRow" style="display:none">
+                            <span class="ty-label" style="color:#00c864">PROMO (<span id="tyPromoCode"></span>)</span>
+                            <span class="ty-val" style="color:#00c864" id="tyPromoDiscount">— DA</span>
+                        </div>
                         <div class="ty-summary-row">
                             <span class="ty-label">DELIVERY</span>
                             <span class="ty-val" id="tyDelivery">—</span>
@@ -625,6 +629,13 @@
                 document.getElementById('tySubtotal').textContent = lastOrder.subtotal.toLocaleString() + ' DA';
                 document.getElementById('tyShipping').textContent = (lastOrder.shipping_cost || 0).toLocaleString() + ' DA';
                 document.getElementById('tyTotal').textContent = (lastOrder.total || 0).toLocaleString() + ' DA';
+
+                // Show promo discount if applied
+                if (lastOrder.promo_code && lastOrder.promo_discount && lastOrder.promo_discount > 0) {
+                    document.getElementById('tyPromoRow').style.display = 'flex';
+                    document.getElementById('tyPromoCode').textContent = lastOrder.promo_code;
+                    document.getElementById('tyPromoDiscount').textContent = '-' + lastOrder.promo_discount.toLocaleString() + ' DA';
+                }
                 document.getElementById('tyDelivery').textContent = lastOrder.delivery_type === 'home' ? 'Home Delivery' : 'Stop Desk';
                 document.getElementById('tyPhone').textContent = '📞 ' + (lastOrder.phone || '—');
                 document.getElementById('tyWilaya').textContent = '📍 ' + (lastOrder.wilaya_name || '—') + (lastOrder.commune ? ', ' + lastOrder.commune : '');
