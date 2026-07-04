@@ -109,6 +109,27 @@
         .custom-select-trigger .chevron { transition: transform 0.2s; color: rgba(197,217,139,0.5); flex-shrink: 0; margin-left: 12px; }
         .custom-select-trigger.open .chevron { transform: rotate(180deg); }
         .custom-select-dropdown { position: absolute; top: calc(100% + 4px); left: 0; width: 100%; background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; z-index: 9999; box-shadow: 0 12px 40px rgba(0,0,0,0.6); display: none; }
+        .commune-search-wrap { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .commune-search-input { width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none; box-sizing: border-box; }
+        .commune-search-input:focus { border-color: #c5d98b; }
+        .commune-search-input::placeholder { color: rgba(255,255,255,0.4); }
+        .commune-custom-wrap { padding: 8px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .commune-custom-input { width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none; box-sizing: border-box; }
+        .commune-custom-input:focus { border-color: #c5d98b; }
+        .commune-custom-input::placeholder { color: rgba(255,255,255,0.4); }
+        .commune-custom-btn { width: 100%; padding: 8px; background: #c5d98b; color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 6px; font-size: 0.8rem; }
+
+        /* === PROMO CODE ANIMATIONS === */
+        @keyframes promoFadeSlide {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes promoPriceDown {
+            0% { color: #c5d98b; transform: scale(1.08); }
+            100% { color: #e0e0e0; transform: scale(1); }
+        }
+        .promo-fade-anim { animation: promoFadeSlide 0.35s ease forwards; }
+        .promo-price-down { animation: promoPriceDown 0.5s ease forwards; }
         .custom-select-dropdown.open { display: block; }
         .custom-select-options { max-height: 240px; overflow-y: auto; padding: 8px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
         .custom-select-option { padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; color: rgba(197,217,139,0.75); transition: background 0.15s; }
@@ -242,6 +263,7 @@
     <script src="yun-cache.js"></script>
     <script src="i18n.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="opt.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -261,6 +283,10 @@
         </div>
         <div class="navbar-icons">
             <div id="langSwitcher"></div>
+            <button aria-label="Cart" class="cart-btn-wrap cart-icon" onclick="openCart()" style="position:relative">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span class="cart-count-badge" id="cartCountBadge" style="display:none"></span>
+            </button>
             <button class="hamburger" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
     </nav>
@@ -370,6 +396,9 @@
                                             <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                                         </div>
                                         <div class="custom-select-dropdown">
+                                            <div class="commune-search-wrap">
+                                                <input type="text" id="communeSearch" class="commune-search-input" placeholder="Search commune..." oninput="filterCommunes(this.value)">
+                                            </div>
                                             <div class="custom-select-options" id="communeOptions"></div>
                                         </div>
                                     </div>
@@ -519,7 +548,7 @@
             '06': ['Bejaïa','Akbou','Sidi Aïch','El Kseur','Kherrata','Adekar','Amizour','Tichy','Tala Guilef','Ouzellaguen','Semaoun','Tigzirt','Beni Melik','Bouzegza','Illoula Oumalou','Ouled Rached','Aït R\'zine','Chemini','Souk El Ténine','Igzen','Tamokra','Taskriout'],
             '07': ['Biskra','Tolga','Sidi Okba','M\'Chouneche','Djemorah','Branis','El Kantara','El Outaya','M\'Lili','Foughala','Ouled Djellal','Khanguet Sidi N\'jil','Sidi Khaled','Chaiba','Béchar','El Achab','Guellif','Tengount'],
             '08': ['Béchar','Boukais','Abadla','Meridja','Tabelbala','Boulenouar','Ras Dbibiza','Kerboubi','Brek','El Ouata','Ouled Khoudir','Lahmar','Beni Ikhlef','Mechraa Houari Boumedienne','Timoudi'],
-            '09': ['Blida','Boufarik','Mouzaïa','Larbaa','Bougara','Chiffa','Beni Tamou','Bouaroua','El Affroun','Chéraga','El Hamadia','Beni Mered','Bougara','Sidi Moussa','Aïn Romana','Djebabra','Meftah','Soumaa','Ouled Yaïch','N\'Dra Ben Chabane','Beni Khellil','Guerdjaou','Hamadi'],
+            '09': ['Blida','Boufarik','Mouzaïa','Larbaa','Bougara','Chiffa','Beni Tamou','Bouaroua','El Affroun','Chéraga','El Hamadia','Beni Mered','Bougara','Sidi Moussa','Aïn Romana','Djebabra','Meftah','Soumaa','Ouled Yaïch','N\'Dra Ben Chabane','Beni Khellil','Guerdjaou','Hamadi','Staouali'],
             '10': ['Bouira','Sour El Ghozlane','Aïn El Hadjar','Djebabila Tiouni','Sour El Ghozlane','Ouled Rached','El Asnam','Aïn Tayef','Bouderbala','Z\u0027barbar','Had Ezzouak','El Khabouzia','Bouira','Maala','Souk El Khemis','Dechmaa','Bechloul','El Hachimia','Haïta Djamel','Ridha','El Eulma','Oued El Berdi','Ouled Brahim'],
             '11': ['Tamanrasset','Abalessa','In Guezzam','In Salah','Tamanghasset','Idlès','Tinzaoutine','Tasnaouine','In Amenas','Ménoussa','Foggaret Ezzaouia'],
             '12': ['Tébessa','Bir El Ater','Cheria','El Ma Labiodh','Negrine','El Koui','El Ogla','Bou Haouane','Aïn Zerga','El Malki','Ouenza','Stah Guentis','El Oued','Tlidjene','Morsott','Bir Dheheb','Ferkane','Bouira Lahdid'],
@@ -546,19 +575,19 @@
             '33': ['Illizi','Bordj El Haouas','Bordj Badji Mokhtar','Djanet','In Amenas','In Guezzam','Tamanrasset','Tazrouk','Tinzaoutine','Béchar','El Oued','Ouargla','Tlemcen'],
             '34': ['Bordj Bou Arréridj','Ras El Oued','Sidi Khaled','El M\'Ghair','Tikjda','Bordj Ghdir','Bouzeguene','Béni Aziz','Béni Saf','El Arib','El Achir','El Hamadia','Hasnaoua','Ksour','Tafreg','Taglits','Tassamante','Ouled Sidi Brahim','Takhemaret'],
             '35': ['Boumerdès','Thénia','Béni Amrane','Bouzegza Keddara','Cherchell','Dellys','Khemis El Khechna','L\'Arbaa Naït Irathen','Legata','Ouled Aïssa','Sidi Daoud','Si Mustapha','Souamaa','Timezrit','Zeghaia','Thenia','Mansourah','Tidjelabine','Ammal','Ben Choud','Bouzegzene','Chabet El Ameur','Isser','Naciria','Ouled Aïssa','Sidi Douaoud'],
-            '36': ['Tizi Ouzou','Azazga','Aït Yahia','Draâ El Mizan','Larba Nath Iraten','Maâtkas','Ouadhias','Tigzirt','Aïn El Hammam','Boudjima','Aït Chaffâa','Aït Yahia Moussa','Tirmitine','Benzouai','Beni Douala','Bni Yenni','Aït Aggouncha','Iferhounene','Aït Bouadif','Aït Toudert','Illoula Oumalou','Iboudraren','Makouda','Mekhada','Sidi Belloua','Tazrout','Yakouren'],
-            '37': ['Tlemcen','Maghnia','Ghazaouet','Nédroma','Remchi','El Fehoul','Hennaya','El Aricha','Bensekrane','Aïn Ghoraba','Peghni','Terni Beni Hendel','Sebaa Chioukh','Beni Ouarsous','Amieur','Fellaoucene','Tianet','Ouled Mimoun','Zenata','Bab El Assa','Sidi Hosni','Beni Mostepha','Sidi Ali','El Bouhi','Ouled Amran','Marsa Ben M\'Hidi','Sidi Abdelli','Sebdou','Tessala'],
-            '38': ['Bouira','Sour El Ghozlane','Aïn El Hadjar','Ouled Rached','El Asnam','Aïn Tayef','Bouderbala','Z\'barbar','Had Ezzouak','El Khabouzia','Maala','Souk El Khemis','Dechmaa','Bechloul','El Hachimia','Ridha','El Eulma','Oued El Berdi','Ouled Brahim','Aïn Boulmane','Aïn Roua','Aïn Sefra','Chorfa','Djebla','El Haouch','El Intissar','Guernina','Hadjeb Aïounoun','Kadiria','Lakhdaria','M\'Cid Ousserir','Oued N\'Sa','Sahari','Sidi Ziane','Sobha','Sour El Ghozlane','Tadjenanet','Taghzout','Tikjda'],
-            '39': ['Jijel','El Ancer','Sidi Marouf','Taher','Emdjez Edchich','El Aouana','Aïn El Kebira','Aïn Tahar','Boussif Ouled Asker','Bouchkine','Sidi Abdelaziz','Tizi','Boucif','Darguina','El Haouch','El Kort','Ferme Athmane','Guerboussi','Iatna','Kaoûsia','Kherba','Makhlouf','Moudjbour','Ouled Rabah','Oumanaou','Ras Beni Khelifa','Rouached','Sassi','Sidi Saâdi','Skikda','Tadjerouine','Tatahouine','Telaghma','Timezrit','Zitouna'],
-            '40': ['Tissemsilt','Lardjem','El Idrissia','Bouzeguène','Sidi Slimane','Aïn El Hadjar','Bordj Bounaama','Lahdidjane','Sidi Said','Tamalaït','Maasif Aïn Soltane','El Hadjaria','Maacem','Ouled Bessam','Sidi Lantri','Boussif','Tamelaht','Youssoufia'],
-            '41': ['El Oued','Robbah','El Guemar','Bayadha','Djamaa','M\'Rara','Sidi Aoun','Tebala','Trifaoui','Hassi Khalifah','Oued Alkaleb','Aïn Redja','Aïn Taya','Bougdara','El Amria','El Kouta','Guelaat Bousbaâ','Hassi Ben Abdellah','Hassani Abdelmoumene','Kouinine','Maknissi','Merouana','M\'liliha','Nakhla','Oum Touyour','Sidi Aïssa','Sidi El Heni','Sidi Khelifa','Sidi Maamar','Sidi Salem','Still','Tama','Touggourt','Zeribet El Oued','El M\'Ghair','El Meniaa','Beni Thour'],
-            '42': ['El Bayadh','Rouisset','Aïn El Orak','Boualem','Bougtoub','Chellal','El Bnoud','El Kheiter','Guerzim','Kef El Ahmar','Sidi Aïssa','Sidi Slimane','Tousnina','Zaafoul','El Abiodh Sidi Cheikh','El Kaid','El Mehara','Krakda','Sidi Amar','Bouzad','Eddis','El Bnoud','El Kheiter','Fleifla','Ghardaia','Guerrara','Hassasna','Mekhadma','Metlili'],
-            '43': ['Constantine','El Khroub','Didouche Mourad','Hamma Bouziane','Ali Mendjeli','Aïn Smara','El Harahcha','Belkacem','Ibn Ziad','Hcidouche','Zighoud Youcef','Aïn Abid','Benchicao','Beni Hamidane','Daias','El Guellaa','Ouled Rahmoune','Sidi Mabrouk'],
-            '44': ['Médéa','El Omaria','Ksbei El Ouiden','Bouaiche','Ouled Bouachra','Sidi Naamane','Ouzera','Aïn Boucif','Baata','Aïn Hellal','Chahbounia','El Azizia','Sidi Zahar','Sidi Damed','Tablat','Tafraout','Tlalet','Guerouaou','El Guelb El Kebir','Mechraa Bel Ksiri','Ouled Maaref','Ras El Aioun','Bouzeguene','Derrag','Oued Chorfa','Rebaia'],
-            '45': ['Mostaganem','Aïn Nouïssy','Hassiane Aïssa','Fornaka','Sidi Ali','Sidi Khettab','Touahria','Hadjadj','El Hassiane','Bouguirat','Khelifia','Masqueray','Oued El Kheir','Touggourt','Aïn Sidi Abdelaziz','Froha','Aïn Tini','El Matmar','Sour','El Borma','Merahna','Ouled Maamer','Sidi Abdallah','Sidi Abdelmoumene'],
-            '46': ['M\'sila','Bou Saâda','Sidi Aïssa','Aïn El Hadjel','Ouled Derradj','El Hamel','Bouzegza','Hammam Dalaa','Khettouti Sed Djellal','Mtarfa','Ouled Attia','Sidi Ameur','Terrai Bainen','Slimane','Aïn Khadra','Belaiba','Chellal','Djemaa El Djouad','El Baramka','Maadid','M\'Cif','Ouled Madhi','Sidi Hadjerine','Sidi Ille','Tamsamane'],
-            '47': ['Mascara','Tighennif','Mohammadia','Aïn Fares','Aïn Fekan','El Bordj','El Guéitna','Bou Hanifia','Chorfa','Froha','Guerdjoum','Hachem','Khalouia','Makda','Oued El Abtal','Ras El Aïn','Sehailia','Sidi Kada','Sidi Mohamed','Zellafa','Sidi Boussaid','Maâlem','El Menasria','El Gourzi','Hammam Bou Hadjar'],
-            '48': ['Ouargla','Hassi Messaoud','Rouissat','El Borma','El Oued','Temacine','Touggourt','El Kheneg','Benaceur','El Allia','El Guemar','El Kharidja','Hassi Ben Abdellah','Hassi Khelifa','M\'Naguer','N\'Goussa','Sidi Aoun','Taibet','Tamalhent','Zaouiet El Mouldjeneit','El M\'Ghair','El Meniaa'],
+            '36': ['Ain El Assel','Bougous','El Tarf','Zitouna','Besbes','Ain Kerma','Bouhadjar','Hammam Beni Salah','Oued Zitoun','Ben M Hidi','Berrihane','Chebaita Mokhtar','Echatt','El Aioun','El Kala','Souarekh','Zerizer','Bouteldja','Chefia','Lac Des Oiseaux','Chihani','Raml Souk','Asfour','Drean'],
+            '37': ['Tindouf','Oum El Assel'],
+            '38': ['Khemisti','Theniet El Had','Ouled Bessam','Sidi Boutouchent','Tissemsilt','Sidi Lantri','Beni Chaib','Beni Lahcene','Sidi Abed','Sidi Slimane','Boucaid','Larbaa','Lazharia','Lardjem','Melaab','Layoune','Tamellahet','Youssoufia','Bordj El Emir Abdelkader','Ammari','Maacem','Bordj Bounaama'],
+            '39': ['Douar El Maa','El Ogla','Magrane','Sidi Aoun','Mih Ouansa','Kouinine','Bayadha','Nakhla','Robbah','Guemar','Ben Guecha','Ourmes','Taghzout','Hamraia','Reguiba','Debila','Hassani Abdelkrim','Hassi Khalifa','Trifaoui','Taleb Larbi','Oued El Alenda','El-Oued'],
+            '40': ['Khirane','Babar','El Mahmal','Ouled Rechache','Djellal','Yabous','Khenchela','Kais','Chelia','Remila','Taouzianat','Baghai','El Hamma','Ensigha','Tamza','Ain Touila','M\'toussa','Bouhmama','El Oueldja','M\'sara','Chechar'],
+            '41': ['Souk Ahras','Ain Soltane','Sedrata','Hanencha','Machroha','Ain Zana','Ouled Driss','Terraguelt','Oum El Adhaim','Oued Kebrit','Tiffech','Ragouba','Drea','Taoura','Zaarouria','Haddada','Khedara','Ouled Moumen','Merahna','Ouillen','Sidi Fredj','Bir Bouhouche','Safel El Ouiden','Khemissa','M\'daourouche','Zouabi'],
+            '42': ['Hadjout','Merad','Menaceur','Aghbal','Nador','Sidi-Amar','Gouraya','Messelmoun','Cherchell','Hadjret Ennous','Sidi Ghiles','Damous','Larhat','Fouka','Ain Tagourait','Bou Haroun','Bou Ismail','Khemisti','Ahmer El Ain','Bourkika','Douaouda','Sidi Rached','Attatba','Chaiba','Kolea','Sidi Semiane','Tipaza','Beni Mileuk'],
+            '43': ['El Mechira','El Ayadi Barbes','Ain Beida Harriche','Tassala Lematai','Terrai Bainen','Amira Arres','Tassadane Haddada','Minar Zarza','Sidi Merouane','Chigara','Hamala','Grarem Gouga','Tiberguent','Rouached','Derrahi Bousselah','Zeghaia','Oued Endja','Ahmed Rachedi','Tadjenanet','Ain Mellouk','Ouled Khalouf','Benyahia Abderrahmane','Teleghma','Oued Seguen','Oued Athmenia','Ain Tine','Chelghoum Laid','Yahia Beniguecha','Ferdjioua','Sidi Khelifa','Mila','Bouhatem'],
+            '44': ['Khemis-Miliana','Sidi-Lakhdar','Ain-Benian','Ain-Torki','Hammam-Righa','Bourached','Hoceinia','Djelida','Arib','Djemaa Ouled Cheikh','El-Amra','El-Attaf','Tiberkanine','Ain-Bouyahia','El-Abadia','Tacheta Zegagha','Birbouche','Djendel','Ben Allal','Oued Chorfa','Boumedfaa','Ain-Lechiakh','Ain-Soltane','Oued Djemaa','El-Maine','Rouina','Zeddine','Bir-Ould-Khelifa','Bordj-Emir-Khaled','Tarik-Ibn-Ziad','Bathia','Belaas','Hassania','Ain-Defla','Miliana','Mekhatria'],
+            '45': ['Tiout','Moghrar','Asla','Kasdir','Makmen Ben Amar','Ain Sefra','Mecheria','El Biodh','Ain Ben Khelil','Naama','Djenienne Bourezg','Sfissifa'],
+            '46': ['Sidi Boumediene','Tamzoura','Chaabat El Ham','El Maleh','Ouled Kihal','Chentouf','Terga','Oued Sebbah','El Amria','Hassi El Ghella','Ouled Boudjemaa','Aghlal','Ain Kihal','Ain Tolba','Aoubellil','Beni Saf','Hassasna','Emir Abdelkader','Sidi Safi','Oulhaca El Gheraba','Sidi Ouriache','Ain El Arbaa','El Messaid','Oued Berkeche','Sidi Ben Adda','Ain Temouchent','Bouzedjar','Hammam Bou Hadjar'],
+            '47': ['Dhayet Bendhahoua','Mansoura','El Atteuf','Bounoura','Zelfana','El Guerrara','Sebseb','Metlili','Berriane','Ghardaia'],
+            '48': ['El-Guettar','Ouled Aiche','Beni Dergoun','Dar Ben Abdelah','Zemmoura','Djidiouia','Hamri','Belaassel Bouzagza','El-Matmar','Sidi Khettab','Sidi M\'hamed Benaouda','Ain-Tarek','Had Echkalla','El Ouldja','Mazouna','Ain Rahma','Kalaa','Sidi Saada','Yellel','Souk El Had','Mendes','Oued Essalem','Sidi Lazreg','Ammi Moussa','Ouarizane','Merdja Sidi Abed','Ouled Sidi Mihoub','Bendaoud','Oued-Rhiou','El Hassi','Sidi M\'hamed Benali','Mediouna','Beni Zentis','Oued El Djemaa','Lahlef','Relizane','El H\'madna','Ramka'],
             '49': ['Timimoun','Reggane','Aoulef','Tsabit','Fenoughil','Timiaouine','Aougrout','Deldoul','Charouine','Sali','Metarif','Ouled Said','Mansoura','Beni Abbes','Tamentit'],
             '50': ['Bordj Badji Mokhtar','Timiaouine','In Guezzam','Tamanrasset','Abalessa'],
             '51': ['Ouled Djellal','Sidi Khaled','Bordj Badji Mokhtar','Charef','Djamaa','El Guerara','El Kharidja','M\'Liliha','Touggourt'],
@@ -568,8 +597,612 @@
             '55': ['Touggourt','El Oued','El M\'Ghair','Djamaa','Temacine','El Guemar','El Kheneg','El Kharidja','Benaceur','El Allia','Hassi Ben Abdellah','Hassi Khelifa','M\'Naguer','N\'Goussa','Oum Touyour','Sidi Aoun','Taibet','Tamalhent','El Meniaa'],
             '56': ['Djanet','Illizi','Bordj El Haouas','In Amenas'],
             '57': ["El M'Ghair","Ouled Djellal","Sidi Khaled","El Oued","Djamaa","Touggourt","El Guemar","El Kharidja","Hassi Ben Abdellah","M\'Naguer","N\'Goussa","Sidi Aoun","Taibet"],
-            '58': ['El Meniaa','Ghardaia','Metlili','Guerrara','Mekhadma','Hassi Fehal','Hassi Gara','Berririne']
+            '58': ['El Meniaa','Ghardaia','Metlili','Guerrara','Mekhadma','Hassi Fehal','Hassi Gara','Berririne'],
         };
+
+        // === ARABIC NAMES ===
+        var WILAYAS_AR = {
+            '01': 'أدرار','02': 'الشلف','03': 'الأغواط','04': 'أم البواقي','05': 'باتنة',
+            '06': 'بجاية','07': 'بسكرة','08': 'بشار','09': 'البليدة','10': 'البويرة',
+            '11': 'تمنراست','12': 'تبسة','13': 'تلمسان','14': 'تيارت','15': 'تيزي وزو',
+            '16': 'الجزائر','17': 'الجلفة','18': 'جيجل','19': 'سطيف','20': 'سعيدة',
+            '21': 'سكيكدة','22': 'سيدي بلعباس','23': 'عنابة','24': 'قالمة','25': 'قسنطينة',
+            '26': 'المدية','27': 'مستغانم','28': 'المسيلة','29': 'معسكر','30': 'ورقلة',
+            '31': 'وهران','32': 'البيض','33': 'إليزي','34': 'برج بوعريريج','35': 'بومرداس',
+            '36': 'الطارف','37': 'تندوف','38': 'تيسمسيلت','39': 'الوادي','40': 'خنشلة',
+            '41': 'سوق أهراس','42': 'تيبازة','43': 'ميلة','44': 'عين الدفلى','45': 'النعامة',
+            '46': 'عين تموشنت','47': 'غرداية','48': 'غليزان','49': 'تيميمون','50': 'برج باجي مختار',
+            '51': 'أولاد جلال','52': 'بني عباس','53': 'عين صالح','54': 'عين قزام','55': 'تقرت',
+            '56': 'جانت','57': 'المغير','58': 'المنيعة'
+        };
+
+        var COMMUNES_AR = {
+            'Adrar': 'أدرار','Timimoun': 'تيميمون','Reggane': 'رڨان','In Salah': 'عين صالح',
+            'Aoulef': 'أولف','Timiaouine': 'تيمياوين','Tsabit': 'تسابيت','Fenoughil': 'فنوغيل',
+            'Tamentit': 'تامنطيت','Charouine': 'شروين','Aougrout': 'أوقروت','Deldoul': 'دﻟﺪول',
+            'Sali': 'سالى','Metarfa': 'المطارفة','Ouled Said': 'أولاد سعيد','Mansoura': 'المنصورة',
+            'Timmimoun': 'تيميمون','Beni Abbes': 'بني عباس','El Menia': 'المنيعة',
+            'Chlef': 'الشلف','Ténès': 'تنس','El Karimia': 'الكريمية','El Marsa': 'المرصى',
+            'Sidi Abderrahmane': 'سيدي عبد الرحمان','Sidi Moussa': 'سيدي موسى',
+            'Aïn Merane': 'عين مران','Chettia': 'الشطية','Sidi Akkacha': 'سيدي عكاشة',
+            'Abou El Hassan': 'أبو الحسن','El Hadjadj': 'الحجاج','Boukadir': 'بوقدير',
+            'Taougrite': 'تاوقريت','Beni Rached': 'بني راشد','Sendjas': 'سنجاس',
+            'Zeboudja': 'الزبوجة','Dahra': 'الظهرة',
+            'Laghouat': 'الأغواط','Aflou': 'أفلو','Sidi Makhlouf': 'سيدي مخلوف',
+            'Hassi Delaa': 'حاسي دلاعة','Aïn Sidi Ali': 'عين سيدي علي','Brida': 'بريدة',
+            'Kheneg': 'الخنق','Guerrara': 'ڨرارة','El Ghicha': 'الغيشة',
+            'Tadjmout': 'تاجموت','Ksar El Hirane': 'قصر الحيران',
+            'Oum El Bouaghi': 'أم البواقي','Aïn Beida': 'عين البيضاء',
+            'Aïn M\'lila': 'عين مليلة','El Amiria': 'العامرية','El Belala': 'البلالة',
+            'Aïn Babouche': 'عين بابوش','Ouled Hamla': 'أولاد حملة','Dhala': 'الضلعة',
+            'Aïn Kercha': 'عين كرشة','El Djazia': 'الجازيـــة','Aïn Diss': 'عين الديس',
+            'Fkirina': 'فكرينة','Souk Naamane': 'سوق نعمان','Zorg': 'الزرڨ',
+            'Ouled Zouai': 'أولاد زواي','Bir Chouhada': 'بئر الشهداء',
+            'Ksar Sbahi': 'قصر صباحي','Meskiana': 'مسكيانة','Aïn Fekroune': 'عين فكرون',
+            'Aïn Zitoun': 'عين الزيتون',
+            'Batna': 'باتنة','Ghassira': 'غسيرة','Merouana': 'مروانة','Seriana': 'سريانة',
+            'Menaa': 'منعة','El Madher': 'المعذر','Tazoult': 'تازولت','Ngaous': 'نڨاوس',
+            'Guigba': 'قيقبة','Ouyoun El Assafir': 'عيون العصافير','Bitam': 'بيطام',
+            'Arris': 'اريس','Kimmel': 'كيمل','Ain Djasser': 'عين جاسر',
+            'Ouled Selam': 'أولاد سلام','Tigherghar': 'تيغرغار','Ain Yagout': 'عين ياقوت',
+            'Fesdis': 'فسديس','Sefiane': 'سفيان','Tighanimine': 'تيغانمين',
+            'Ksar Belezma': 'قصر بلازمة','Seggana': 'سقانة','Ichmoul': 'ايشمول',
+            'Foum Toub': 'فم الطوب','Oued El Ma': 'واد الماء','Talkhamt': 'تالخمت',
+            'Bouzina': 'بوزينة','Chemora': 'الشمرة','Taxlent': 'تاكسلانت',
+            'Gosbat': 'القصبات','Boumagueur': 'بــومقر','Barika': 'بريكة',
+            'Djezzar': 'الجزار','Tkout': 'تكوت','Ain Touta': 'عين التوتة',
+            'Hidoussa': 'حيدوسة','Teniet El Abed': 'نية العابد','Oued Taga': 'وادي الطاقة',
+            'Timgad': 'تيمقاد','Ras El Aioun': 'رأس العيون','Chir': 'شير',
+            'Ouled Si Slimane': 'أولاد سي سليمان','Larbaa': 'الاربعاء',
+            'Bejaia': 'بجاية','Amizour': 'اميزور','Ferraoun': 'فرعون',
+            'Tichi': 'تيشي','Semaoun': 'سمعون','Kendira': 'كنديرة',
+            'Tifra': 'تيفرة','Ighram': 'إغرم','Amalou': 'امالو',
+            'Ighil Ali': 'إغيل على','Toudja': 'توجة','Darguina': 'درقينة',
+            'Sidi Ayad': 'سيدي عياد','Aokas': 'أوقاس','Adekar': 'آدكار',
+            'Akbou': 'أقبو','Seddouk': 'صدوق','Tazmalt': 'تازمالت',
+            'Ait R\'zine': 'آيت أرزين','Chemini': 'شميني','Souk Oufella': 'سوق أوفلة',
+            'Taskriout': 'تاسقريوت','Tala Hamza': 'ثالة حمزة','Barbacha': 'برباشة',
+            'Beni Ksila': 'بنى كسيلة','Ouzallaguen': 'أوزلاقن','Bouhamza': 'بوحمزة',
+            'Beni Melikeche': 'بنى مليكش','Sidi Aich': 'سيدي عيش','El Kseur': 'القصر',
+            'Melbou': 'ملبو','Akfadou': 'اكفادو','Kherrata': 'خراطة',
+            'Tamridjet': 'تامريجت','Ait Smail': 'آيت سماعيل','Boukhelifa': 'بوخليفة',
+            'Tizi N\'berber': 'تيزى نبربر','Beni Maouch': 'بني معوش','Oued Ghir': 'وادي غير',
+            'Boudjellil': 'بوجليل',
+            'Biskra': 'بسكرة','Oumache': 'أوماش','Branis': 'البرانس','Chetma': 'شتمة',
+            'Ouled Djellal': 'أولاد جلال','Ras El Miaad': 'راس الميعاد',
+            'Besbes': 'البسباس','Sidi Khaled': 'سيدي خالد','Doucen': 'الدوسن',
+            'Sidi Okba': 'سيدي عقبة','Mchouneche': 'مشونش','El Haouch': 'الحوش',
+            'Ain Naga': 'عين الناقة','Zeribet El Oued': 'زريبة الوادي','El Feidh': 'الفيض',
+            'El Kantara': 'القنطرة','El Outaya': 'لوطاية','Djemorah': 'جمورة',
+            'Tolga': 'طولقة','Lioua': 'لواء','Lichana': 'لشانة','Ourlal': 'أورلال',
+            'M\'lili': 'مليلي','Foughala': 'فوغالة','Bouchagroun': 'بوشقرون',
+            'Mekhadma': 'مخادمة','El Ghrous': 'الغروس','El Hadjab': 'الحاجب',
+            'Bechar': 'بشار','Erg Ferradj': 'عرق فراج','Ouled Khoudir': 'أولاد خدير',
+            'Meridja': 'مريجة','Timoudi': 'تيمودى','Lahmar': 'لحمر',
+            'Beni Ikhlef': 'بني يخلف','Kenedsa': 'القنادسة','Igli': 'إقلي',
+            'Tabalbala': 'تبلبالة','Taghit': 'تــــاغـيــث','El Ouata': 'الوطى',
+            'Boukais': 'بوكايس','Mogheul': 'موغل','Abadla': 'العبادلة',
+            'Kerzaz': 'كرزاز','Ksabi': 'قصابى','Tamtert': 'تامترت',
+            'Beni Ounif': 'بني ونيف',
+            'Blida': 'البليدة','Chebli': 'الشبلي','Bouinan': 'بوعينان',
+            'Oued El Alleug': 'واد العلايڨ','Ouled Yaich': 'اولاد يعيش','Chrea': 'الشريعة',
+            'El Affroun': 'العفرون','Chiffa': 'الشفة','Hammam Melouane': 'حمام ملوان',
+            'Ben Khlil': 'بني خليل','Soumaa': 'صومعة','Mouzaia': 'موزاية',
+            'Souhane': 'صوحان','Meftah': 'مفتاح','Ouled Selama': 'أولاد سلامة',
+            'Boufarik': 'بوفاريك','Larbaa': 'الاربعاء','Oued Djer': 'واد جر',
+            'Beni Tamou': 'بني تامو','Bouarfa': 'بوعرفة','Beni Mered': 'بني مراد',
+            'Bougara': 'بوڨرة','Guerrouaou': 'ڨرواو','Ain Romana': 'عين الرمانة',
+            'Djebabra': 'جبابرة',
+            'Bouira': 'البويرة','El Asnam': 'الأصنام','Guerrouma': 'قرومة',
+            'Souk El Khemis': 'سوق الخميس','Kadiria': 'قادرية','Hanif': 'احنيف',
+            'Dirah': 'ديــرة','Ait Laaziz': 'آيت لعزيز','Taghzout': 'تاغزوت',
+            'Raouraoua': 'الروراوة','Mezdour': 'مسدور','Haizer': 'حيزر',
+            'Lakhdaria': 'الأخضرية','Maala': 'معالة','El Hachimia': 'الھاشمية',
+            'Aomar': 'أعمر','Chorfa': 'الشرفاء','Bordj Oukhriss': 'برج أوخريص',
+            'El Adjiba': 'العجيبة','El Hakimia': 'الحاكمية','El Khebouzia': 'الخبوزية',
+            'Ahl El Ksar': 'أھل القصر','Bouderbala': 'بودربالة','Zbarbar': 'زبربر',
+            'Ain El Hadjar': 'عين الحجر','Djebahia': 'الجباحية','Aghbalou': 'أغبالو',
+            'Taguedit': 'تاڨديت','Ain Turk': 'عين الترك','Saharidj': 'الصهاريج',
+            'Dechmia': 'الدشمية','Ridane': 'ريدان','Bechloul': 'بشلول',
+            'Boukram': 'بوكرام','Ain Bessam': 'عين بسام','Bir Ghbalou': 'بئر غبالو',
+            'Mchedallah': 'مشدا الله',
+            'Tamanrasset': 'تمنراست','Abalessa': 'أبالة','In Guezzam': 'عين قزام',
+            'Idlès': 'إدلس','Tinzaoutine': 'تينزوتن','Tasnaouine': 'تسناوين',
+            'In Amenas': 'عين الوزان','Foggaret Ezzaouia': 'فقارة الزوية',
+            'Tebessa': 'تبسة','Bir El Ater': 'بئر العاتر','Cheria': 'الشريعة',
+            'El Ma Labiodh': 'الماء الأبيض','Negrine': 'نقرين','El Ogla': 'العقول',
+            'Bou Haouane': 'بوحواصل','Aïn Zerga': 'عين الزرقة','Ouenza': 'الونزة',
+            'Stah Guentis': 'الستاح','Tlidjene': 'تelligane','Morsott': 'مرسط',
+            'Bir Dheheb': 'بئر الذهب','Ferkane': 'فركان',
+            'Tlemcen': 'تلمسان','Maghnia': 'المغنية','Ghazaouet': 'الغازوت',
+            'Nédroma': 'ندرومة','Remchi': 'الرمشي','El Fehoul': 'الفعول',
+            'Hennaya': 'الحنانية','El Aricha': 'العريشة','Bensekrane': 'بن سكران',
+            'Aïn Ghoraba': 'عين الغرابة','Nedroma': 'ندرومة',
+            'Aïn Tallout': 'عين التلات','Peghni': 'ปани','Sebaa Chioukh': 'سبع شيوخ',
+            'Beni Ouarsous': 'بني وارسوس','Amieur': 'عمير','Fellaoucene': 'فلاوسن',
+            'Tianet': 'تيانت','Ouled Mimoun': 'أولاد ميمون','Zenata': 'الزناينة',
+            'Bab El Assa': 'باب العسة','Sidi Hosni': 'سيديحسني',
+            'Sidi Ali': 'سيدي علي','El Bouhi': 'الباهي',
+            'Tiaret': 'تيارت','Sougueur': 'السوقر','Medroussa': 'مدروسة',
+            'Aïn Deheb': 'عين الذهب','Dahmouni': 'الدحموني','Rahouia': 'الرحوية',
+            'Mahdia': 'المهدية','Tousnina': 'توسنينة','Frenda': 'فرندة',
+            'Aïn Kermes': 'عين كرمس','Ksar Chellala': 'قصر الشلالة',
+            'Rechaïga': 'الرشايقة','Takhemaret': 'تخمّارت',
+            'Sidi Hosni': 'سيديحسني','Bougara': 'بوڨرة','Hamadia': 'الحمادية',
+            'Naima': 'النعيمة','Faidja': 'الفيجة',
+            'Tizi Ouzou': 'تيزي وزو','Azazga': 'عزازقة','Aït Yahia': 'آيت يحيى',
+            'Larba Nath Iraten': 'أrwiri n Iraten','Draâ El Mizan': 'ذراع الميزان',
+            'Ouadhias': 'واضية','Maâtkas': 'معaucas','Tigzirt': 'تيقزيرت',
+            'Aïn El Hammam': 'عين الحممة','Boudjima': 'بوجيما',
+            'Aït Chaffâa': 'آيت شفعة','Aït Yahia Moussa': 'آيت يحي موسى',
+            'Tirmitine': 'تيرميتين','Benzouai': 'بن زوي','Beni Douala': 'بني دوالة',
+            'Bni Yenni': 'بني يني','Aït Aggouncha': 'آيت عقونشة',
+            'Iferhounene': 'إيفرخونن','Aït Bouadif': 'آيت واديف',
+            'Aït Toudert': 'آيت ودерт','Illoula Oumalou': 'إيلولا وملو',
+            'Iboudraren': 'ابودرارن','Makouda': 'ماكودة','Mekhada': 'مخادة',
+            'Sidi Belloua': 'سيدي بلﻌwa','Tazrout': 'تازروت','Yakouren': 'ياكورن',
+            'Djelfa': 'الجلفة','M\'sara': 'المسارة','Aïn Oussera': 'عين وسارة',
+            'Hassi Bahbah': 'حاسي بهbah','El Khechba': 'الخشبة',
+            'Sidi Aïssa': 'سيدي عيسى','Zaccar': 'زكار',
+            'Aïn Chouhada': 'عين الشهداء','Aïn El Ibel': 'عين الإبل',
+            'Aïn Feka': 'عين الفكة','Beni Fouda': 'بني فضة',
+            'Chaâba': 'العابة','Chaabet El Ham': 'شعابة الحم',
+            'Charef': 'الشريف','Dar El Had Djelladji': 'دار الحديث جلادجي',
+            'El Guedid': 'القديد','El Haarr': 'الhaar','El Khemis': 'الخميس',
+            'El Ksiba': 'القصيبة','Faidh El Botma': 'فيض البطمة',
+            'Guerdjoum': 'قرجوم','Guettara': 'قارة','Hamri': 'الحمري',
+            'Khanguet Beni Guerroume': 'خنڨة بني قروم',
+            'Messaad': 'مسعد','Mihoub': 'ميهوب',
+            'Ouled Derradji': 'أولاد دراجي','Ouled Guebel': 'أولاد قابل',
+            'Sed Rahal': 'سد الرحال','Sebseb': 'سبسب','Selmana': 'سلمانة',
+            'Tadmit': 'تادميت','Talh': 'الطلح','Terfine': 'ترفينة',
+            'Jijel': 'جيجل','El Ancer': 'العنصر','Sidi Marouf': 'سيدي معروف',
+            'Taher': 'الطاهر','Emdjez Edchich': 'امجاد عديش',
+            'El Aouana': 'العونان','Aïn El Kebira': 'عين الكبير',
+            'Aïn Tahar': 'عين الطحان','Boussif Ouled Asker': 'بوسعيد أولد عسكر',
+            'Bouchkine': 'بوشقين','Sidi Abdelaziz': 'سيدي عبد العزيز',
+            'Tamaouchent': 'تمouchent','El Milia': 'الميلية',
+            'Sétif': 'سطيف','Aïn Oulmene': 'عين أولمان','El Eulma': 'العلمة',
+            'Aïn Arnat': 'عين أرنات','Aïn El Hadjar': 'عين الحجر',
+            'El Ouricia': 'الوريسية','Darguina': 'درقينة','Sidi Aïssa': 'سيدي عيسى',
+            'Aïn Lahdjar': 'عين الحجر','Ouled Sabor': 'أولاد الصابر',
+            'El Hassasna': 'الحสนانة','Béni Ourtilane': 'بني ورtilane',
+            'Ain Smara': 'عين الصمارة','El M\'Cid': 'المسيد',
+            'Guellal': 'قلال','Ouled Tebben': 'أولاد تبان',
+            'Hamam Soukhna': 'حمام السخنة','Tazoult': 'تازولت',
+            'Bougaa': 'بوقاعة','Salah Bey': 'صالح Bey',
+            'Ain Abessa': 'عين عيسى',
+            'Saïda': 'سعيدة','Moulay Larbi': 'مولاي ل arab',
+            'Sidi Boubekeur': 'سيدي بوبكر','Youb': 'يوب',
+            'Ain Sekhouna': 'عين.sulake','Ain Toudja': 'عين توجة',
+            'Ouled Khaled': 'أولاد خالد','Sfissef': 'سفيصيف',
+            'Redjem Demouche': 'رجم دموش',
+            'Skikda': 'سكيكدة','El Hadaiek': 'الحدائق','El Marsa': 'المرصى',
+            'Azzaba': 'العزابة','Djendjena': 'جنجنة','Zitouna': 'الزيتونة',
+            'Ramdane Djamel': 'رجمال','Aïn Kechra': 'عين кечра',
+            'Aïn Bouziane': 'عين بوزيان','Tamalous': 'تمالوس',
+            'Aïn Charchar': 'عين شرشار','Bouchtata': 'بشتاتة',
+            'Filfila': 'فيلفيلة','Cheraia': 'الشرايع','Beni Zid': 'بني زيد',
+            'Ouled Attia': 'أولاد عطية','Serra': 'الصرة','Guelaata': 'قلعة',
+            'Sidi Bel Abbès': 'سيدي بلعباس','Telagh': 'تـلاغ',
+            'Sidi Lahcène': 'سيدي لحسن','Mérine': 'مرين','Tessala': 'تesselت',
+            'Sidi Ali Benyoub': 'سيدي علي بن يوب','El Malabat': 'المـلـعـبـات',
+            'Aïn El Berd': 'عين البرد','Ras El Ma': 'رأس الماء',
+            'Aïn Thrid': 'عين الثريد','Lamtar': 'لمطار',
+            'Sidi Hamadouche': 'سيدي حmadouche','Belarbi': 'بلعرب',
+            'Mezzen': 'مزن','Ouled Sidi Bel Abbès': 'أولاد سيدي بلعباس',
+            'Benamission': 'بني 미SSION','Chetouane Belaila': 'شتوان بلعلا',
+            'Dhaya': 'الضاية','El Hailta': 'الحيطة','Makedra': 'مكدورة',
+            'Marhoum': 'مرحوم','Ras El Aïn': 'رأس العين',
+            'Sidi Chaib': 'سيدي شعيب','Tafaraoui': 'طفراوي',
+            'Tilibit': 'تيليبيت','Tighennif': 'تغنيف','Zerouala': 'زروالة',
+            'Annaba': 'عنابة','El Bouni': 'البوني','El Hadjar': 'الحجار',
+            'Berrahal': 'البحرال','El Eulma': 'العلمة','Herraj': 'الحraj',
+            'Aïn Berda': 'عين البردة','Bouhadjar': 'بوحجار',
+            'Seraïdi': 'السرايدي','Oued El Aneb': 'وادي العنب',
+            'Cheddra': 'شـــدرة',
+            'Guelma': 'قالمة','Nechmaya': 'نشماية','Oued Zenati': 'وادي الزناتي',
+            'Tamlouka': 'تاملوكة','Aïn Sandel': 'عين وسارة',
+            'Bouhachana': 'بوحشانة','Khezara': 'خزارة',
+            'Sidi Kacem': 'سيدي كا셈','Belkhir': 'البلخير',
+            'Oued Cheham': 'وادي الشحم','Aïn Regada': 'عين رقادة',
+            'Bouchegouf': 'بوشقوف','Hammam N\'Bail': 'حمام النبايل',
+            'Oued Thour': 'وادي الثور',
+            'Constantine': 'قسنطينة','El Khroub': 'الخروب',
+            'Didouche Mourad': 'ديوش مراد','Hamma Bouziane': 'حمة بوزيان',
+            'Ali Mendjeli': 'علي منجلي','Aïn Smara': 'عين الصمارة',
+            'El Harahcha': 'الحرشة','Belkacem': 'بلقاسم',
+            'Ibn Ziad': 'ابن زياد','Zighoud Youcef': 'زقوّد يوسف',
+            'Aïn Abid': 'عين عبيد','Benchicao': 'بن شicao',
+            'Ouled Rahmoune': 'أولاد رحمون',
+            'Médéa': 'المدية','El Omaria': 'العمرية',
+            'Ksbei El Ouiden': 'قصbei الويدين','Bouaiche': 'بوعيش',
+            'Ouled Bouachra': 'أولاد بوعشرا','Sidi Naamane': 'سيدي نعمان',
+            'Ouzera': 'وزرة','Aïn Boucif': 'عين بوسيف',
+            'Baata': 'بعة','Aïn Hellal': 'عين الهلال',
+            'Chahbounia': 'الهبonia','El Azizia': 'العزيزية',
+            'Sidi Zahar': 'سيدي زهار','Sidi Damed': 'سيدي دامد',
+            'Tablat': 'تابلاط','Tafraout': 'تفراعوت',
+            'El Guelb El Kebir': 'القلب الكبير',
+            'Mechraa Bel Ksiri': 'مشرع بلقصيري',
+            'Mostaganem': 'مستغانم','Aïn Nouïssy': 'عين Nunesy',
+            'Hassiane Aïssa': 'الحسيان عيسى','Fornaka': 'فرناكة',
+            'Sidi Ali': 'سيدي علي','Sidi Khettab': 'سيدي خـطـاب',
+            'Hadjadj': 'الحجاج','El Hassiane': 'الحسين',
+            'Bouguirat': 'بوقيراط','Khelifia': 'الخليفة',
+            'Masqueray': 'مسقراي','Oued El Kheir': 'وادي الخير',
+            'Ain Sidi Abdelaziz': 'عين سيدي Abdelaziz',
+            'Froha': 'فروحة','Ain Tini': 'عين التين',
+            'El Matmar': 'المتár','Sour': 'صور',
+            'M\'sila': 'المسيلة','Bou Saâda': 'بوعـصـادة',
+            'Aïn El Hadjel': 'عين الحجل','Ouled Derradj': 'أولاد دراج',
+            'El Hamel': 'الهامل','Bouzegza': 'بوزقزة',
+            'Hammam Dalaa': 'حمام_DLAA','Khettouti Sed Djellal': 'خطوطي سيدي الجلال',
+            'Mtarfa': 'م Tarfa','Ouled Attia': 'أولاد عطية',
+            'Sidi Ameur': 'سيدي أمين','Terrai Bainen': 'تيراي بنيين',
+            'Slimane': 'سليمان','Aïn Khadra': 'عين الخضراء',
+            'Belaiba': 'بلايبة','Chellal': 'شلال',
+            'Djemaa El Djouad': 'جمعة الجواد','El Baramka': 'البرامكة',
+            'Maadid': 'المعديد','Ouled Madhi': 'أولاد مادي',
+            'Sidi Hadjerine': 'سيدي هgerine',
+            'Mascara': 'معسكر','Tighennif': 'تغنيف',
+            'Mohammadia': 'المحمدية','Aïn Fares': 'عين فارس',
+            'Aïn Fekan': 'عين فكان','El Bordj': 'البرج',
+            'Bou Hanifia': 'بـو حنيفة','Chorfa': 'الشرفاء',
+            'Froha': 'فروحة','Guerdjoum': 'قرجوم',
+            'Hachem': 'ال_hashim','Khalouia': 'خلوية',
+            'Makda': 'مقدة','Oued El Abtal': 'وادي الأبطال',
+            'Ras El Aïn': 'رأس العين','Sehailia': 'السهايلية',
+            'Sidi Kada': 'سيدي كادا','Sidi Mohamed': 'سيدي محمد',
+            'Zellafa': 'الصفافة','Sidi Boussaid': 'سيدي بوسعيد',
+            'El Menasria': 'المنصورية',
+            'Ouargla': 'ورقلة','Hassi Messaoud': 'حاسي مسعود',
+            'Rouissat': 'الرويسات','El Borma': 'البرمة',
+            'Temacine': 'تامسة','Touggourt': 'تقرت',
+            'El Kheneg': 'الخنق','Benaceur': 'بن عسكر',
+            'El Allia': 'العالية','El Guemar': 'القمر',
+            'El Kharidja': 'الخريجة','Hassi Ben Abdellah': 'حاسي بن عبدالله',
+            'Hassi Khelifa': 'حاسي خليفة','M\'Naguer': 'منقور',
+            'Sidi Aoun': 'سيدي عون','Taibet': 'الTAIBET',
+            'Tamalhent': 'تاملنت',
+            'Oran': 'وهران','Aïn Turk': 'عين الترك','Arzew': 'أرزيو',
+            'Bir El Djir': 'بئر الجير','Boufatis': 'بوفاطيس',
+            'Bou Sfer': 'بوفصافر','El Ancer': 'العنصر',
+            'Es Senia': 'السانية','Mers El Kébir': 'المرسى الكبير',
+            'Sidi Ben Yebka': 'سيدي بن يبكة',
+            'Aïn El Kerma': 'عين الكرمة','Boutlelis': 'بوتليليس',
+            'El Braya': 'البراية','Gdyel': 'اوقديل',
+            'Hassi Ameur': 'حاسي عمير','Irendjen': 'إرنجن',
+            'Kirwan': 'كروان','Lamoricière': 'اللويزاريس',
+            'Misserghin': 'مسرغين','Oued Tlelat': 'وادي تلات',
+            'Sidi Chahmi': 'سيدي الشحمي','Tafaraoui': 'طفراوي',
+            'Tessala': 'تesselت','Tichy': 'تيشي',
+            'El Bayadh': 'البيض','Rouisset': 'الرويسة',
+            'Aïn El Orak': 'عين العراك','Boualem': 'بوعلام',
+            'Bougtoub': 'بـوغـطـوب','Chellal': 'شلال',
+            'El Bnoud': 'البـنـود','El Kheiter': 'الخيتر',
+            'Guerzim': 'قورزيم','Kef El Ahmar': 'كاف الأحمر',
+            'Sidi Slimane': 'سيدي سليمان','Tousnina': 'توسنينة',
+            'Zaafoul': 'زاعفول','El Abiodh Sidi Cheikh': 'الأبيض سيدي الشيخ',
+            'El Kaid': 'القايد','El Mehara': 'المحرة',
+            'Krakda': 'كركدة','Sidi Amar': 'سيدي عمار',
+            'Illizi': 'إليزي','Bordj El Haouas': 'برج الحواس',
+            'Bordj Badji Mokhtar': 'برج باجي مختار','Djanet': 'جانت',
+            'In Amenas': 'عين الوزان','Tazrouk': 'تازروك',
+            'Bordj Bou Arreridj': 'برج بوعريريج','Ras El Oued': 'رأس الوادي',
+            'Sidi Khaled': 'سيدي خالد',
+            'Bordj Ghdir': 'برج الغدير','Bouzeguene': 'بوزقن',
+            'Béni Aziz': 'بني عزيز','El Arib': 'العريب',
+            'El Achir': 'العشير','El Hamadia': 'الحمادية',
+            'Hasnaoua': 'حسناوة','Ksour': 'قصور',
+            'Tafreg': 'تفرغير','Taglits': 'تقلت',
+            'Boumerdes': 'بومرداس','Thénia': 'الثنية',
+            'Béni Amrane': 'بني عمران','Bouzegza Keddara': 'بوزقزة قدارة',
+            'Dellys': 'دليس','Khemis El Khechna': 'خميس الخشنة',
+            'Legata': 'اللّـقاتة','Sidi Daoud': 'سيدي داود',
+            'Si Mustapha': 'سي مصطفى','Timezrit': 'تميزريت',
+            'Ammal': 'عمّال','Ben Choud': 'بن شود',
+            'Chabet El Ameur': 'شعبة Amir','Isser': 'يسر',
+            'Naciria': 'الناصريّة',
+            'El Tarf': 'الطارf','Bougous': 'بوقوس','Besbes': 'البسباس',
+            'Ain Kerma': 'عين الكرمة','Bouhadjar': 'بوحجار',
+            'Hammam Beni Salah': 'حمام بن صالح','Oued Zitoun': 'وادي الزيتون',
+            'Berrihane': 'بريهان','Chebaita Mokhtar': 'شبيطة مختار',
+            'Echatt': 'الشط','El Aioun': 'العوينات',
+            'El Kala': 'القالة','Souarekh': 'السواريخ','Zerizer': 'زريزر',
+            'Bouteldja': 'بوجلحية','Chefia': 'الشطية',
+            'Lac Des Oiseaux': 'بحيرة الطيور','Chihani': 'الشخاني',
+            'Raml Souk': 'رمل السوق','Asfour': 'العصافير','Drean': 'الذرعان',
+            'Tindouf': 'تندوف','Oum El Assel': 'أم العسل',
+            'Khemisti': 'الخميستي','Theniet El Had': 'ثنيةHad',
+            'Ouled Bessam': 'أولاد بـسّام','Sidi Boutouchent': 'سيدي بتوشنت',
+            'Tissemsilt': 'تيسمسيلت','Sidi Lantri': 'سيدي لعنتري',
+            'Beni Chaib': 'بني شعيب','Beni Lahcene': 'بني لحسن',
+            'Sidi Abed': 'سيدي عابد','Boucaid': 'بوقايد',
+            'Larbaa': 'الأربعاء','Lazharia': 'اللازارية',
+            'Lardjem': 'اللرجgem','Melaab': 'ملعاب',
+            'Layoune': 'العيون','Tamellahet': 'تاملالت',
+            'Youssoufia': 'الYSUFIA','Bordj El Emir Abdelkader': 'برج الأمير عبد القادر',
+            'Ammari': 'عمري','Maacem': 'معاقد',
+            'Bordj Bounaama': 'برج بن عماي',
+            'El Oued': 'الوادي','Robbah': 'الروبّة',
+            'El Guemar': 'القمر','Bayadha': 'البايضة',
+            'Djamaa': 'جـمـعـة','M\'Rara': 'مـرار',
+            'Sidi Aoun': 'سيدي عون','Tebala': 'تابالة',
+            'Trifaoui': 'تريفاوي','Hassi Khalifa': 'حاسي خليفة',
+            'Kouinine': 'كوينين','Nakhla': 'النخلة',
+            'Oum Touyour': 'أم الطيور','Sidi El Heni': 'سيدي الهاني',
+            'Still': 'س Till','Tama': 'تامة',
+            'El M\'Ghair': 'المغير','El Meniaa': 'المنيعة',
+            'Khenchela': 'خنشلة','Babar': 'بـابـار',
+            'El Mahmal': 'المحمل','Ouled Rechache': 'أولاد رشـاش',
+            'Djellal': 'جلال','Yabous': 'يابوس',
+            'Kais': 'قايس','Chelia': 'شليا',
+            'Remila': 'الرميلة','Taouzianat': 'Taouzianat',
+            'Baghai': 'بـاغاي','El Hamma': 'الحمة',
+            'Ensigha': 'انسيغة','Tamza': 'تامزة',
+            'Ain Touila': 'عين toeila','M\'toussa': 'متّوسعة',
+            'Bouhmama': 'بومعمة','El Oueldja': 'الولجة',
+            'M\'sara': 'مسارة','Chechar': 'ششار',
+            'Souk Ahras': 'سوق أهراس','Ain Soltane': 'عين Sultan',
+            'Sedrata': 'سدراتة','Hanencha': 'حننشة',
+            'Machroha': 'المشروح','Ain Zana': 'عين زiane',
+            'Ouled Driss': 'أولاد إدريس','Terraguelt': 'ترقالت',
+            'Oum El Adhaim': 'أم العظيم','Oued Kebrit': 'وادي الكبريت',
+            'Tiffech': 'تي闪闪','Ragouba': 'الرغوبة',
+            'Drea': 'الدرعة','Taoura': 'تاورة',
+            'Zaarouria': 'الزعرورية','Haddada': 'الحدادة',
+            'Khedara': 'الخضارة','Ouled Moumen': 'أولاد مـومـن',
+            'Merahna': 'المراحنة','Ouillen': 'ويلان',
+            'Sidi Fredj': 'سيدي فرج','Bir Bouhouche': 'بئر بوحوش',
+            'Safel El Ouiden': 'سافل الويـدن','Khemissa': 'خميصة',
+            'M\'daourouche': 'مداوروش','Zouabi': 'الزوابي',
+            'Tipaza': 'تيبازة','Hadjout': 'حجوت',
+            'Merad': 'مراد','Menaceur': 'منصورة',
+            'Aghbal': 'أغبال','Nador': 'الناظور',
+            'Sidi-Amar': 'سيدي عمار','Gouraya': 'قوراية',
+            'Messelmoun': 'مسملون','Cherchell': 'شرشال',
+            'Hadjret Ennous': 'الحجرة النوسية','Sidi Ghiles': 'سيدي غيلاس',
+            'Damous': 'ال damus','Larhat': 'لارـهـات',
+            'Fouka': 'فوكة','Ain Tagourait': 'عين تقورايت',
+            'Bou Haroun': 'بوجـردة','Bou Ismail': 'بوسماعيل',
+            'Ahmer El Ain': 'الحمر عين','Bourkika': 'بـوركيكة',
+            'Douaouda': 'دواودة','Sidi Rached': 'سيدي راشد',
+            'Attatba': 'الatba','Chaiba': 'الشيبة',
+            'Kolea': 'قليعة','Sidi Semiane': 'سيدي سيمان',
+            'Beni Mileuk': 'بني ميلك',
+            'Mila': 'ميلة','El Mechira': 'المشيرة',
+            'El Ayadi Barbes': 'اليعدي برباس',
+            'Ain Beida Harriche': 'عين البيضاء هريش',
+            'Tassala Lematai': 'تسالة الماطي',
+            'Terrai Bainen': 'تيراي بنيين',
+            'Amira Arres': 'عـمـيـرة أراس',
+            'Tassadane Haddada': 'تسعدان حداد',
+            'Minar Zarza': 'مينار زرز',
+            'Sidi Merouane': 'سيدي مروان',
+            'Chigara': 'شقارة','Hamala': 'الحمالة',
+            'Grarem Gouga': 'الغرمة قوقة',
+            'Tiberguent': 'تيبرgonت','Rouached': 'الرواشد',
+            'Derrahi Bousselah': 'دراحي بوسـلة',
+            'Zeghaia': 'زغاية','Oued Endja': 'وادي نجا',
+            'Ahmed Rachedi': 'أحمد راشدي',
+            'Tadjenanet': 'تادجيـنانـت',
+            'Ain Mellouk': 'عين ملوك',
+            'Ouled Khalouf': 'أولاد خلوف',
+            'Teleghma': 'تلعجة',
+            'Oued Seguen': 'وادي سقان',
+            'Oued Athmenia': 'وادي الأثمانية',
+            'Ain Tine': 'عين التين',
+            'Chelghoum Laid': 'شلغوم العيد',
+            'Yahia Beniguecha': 'يحيى بن نicheqa',
+            'Ferdjioua': 'فرجيوة',
+            'Sidi Khelifa': 'سيدي خليفة',
+            'Bouhatem': 'بوحاتم',
+            'Ain Defla': 'عين الدفلى','Khemis-Miliana': 'خميس مليانة',
+            'Sidi-Lakhdar': 'سيدي لخضر',
+            'Ain-Benian': 'عين البنيان','Ain-Torki': 'عينتركي',
+            'Hammam-Righa': 'حمام الرقعة',
+            'Bourached': 'بورached','Hoceinia': 'الحسينية',
+            'Djelida': 'الجليدة','Arib': 'عريب',
+            'Djemaa Ouled Cheikh': 'جمعة ولد الشيخ',
+            'El-Amra': 'العمرة','El-Attaf': 'العطاف',
+            'Tiberkanine': 'تبركانين',
+            'Ain-Bouyahia': 'عين بوياحي',
+            'El-Abadia': 'العبادية',
+            'Tacheta Zegagha': 'تاشتة زقاغة',
+            'Birbouche': 'بـيربـوش',
+            'Djendel': 'جندل','Ben Allal': 'بن علال',
+            'Oued Chorfa': 'وادي الشرفاء',
+            'Boumedfaa': 'بومدفع','Ain-Lechiakh': 'عين الشعاب',
+            'Ain-Soltane': 'عين Sultan','Oued Djemaa': 'وادي جمعة',
+            'El-Maine': 'الماين','Rouina': 'الروينة',
+            'Zeddine': 'الزدين','Bir-Ould-Khelifa': 'بئر أولد خليفة',
+            'Bordj-Emir-Khaled': 'برج الأمير خالد',
+            'Tarik-Ibn-Ziad': 'طارق ابن زياد',
+            'Bathia': 'الـبـثـيـة','Belaas': 'بلاعس',
+            'Hassania': 'الحـسـنـيـة','Miliana': 'مليانة',
+            'Mekhatria': 'المخاطرية',
+            'Naama': 'النعامة','Tiout': 'تيوت',
+            'Moghrar': 'مغرار','Asla': 'عسلة',
+            'Kasdir': 'قصدير','Makmen Ben Amar': 'مكمن بن عمر',
+            'Ain Sefra': 'عين الصفراء','Mecheria': 'الشريعة',
+            'El Biodh': 'البيض','Ain Ben Khelil': 'عين بن خليل',
+            'Djenienne Bourezg': 'جنين بورزق',
+            'Sfissifa': 'سفيصيفة',
+            'Ain Temouchent': 'عين تموشنت','Sidi Boumediene': 'سيدي بومدين',
+            'Tamzoura': 'تامزورة',
+            'Chaabat El Ham': 'شعابة الحم','El Maleh': 'المالح',
+            'Ouled Kihal': 'أولاد كيحل','Chentouf': 'شنتوف',
+            'Terga': 'تarga','Oued Sebbah': 'وادي الصباح',
+            'El Amria': 'العميرية','Hassi El Ghella': 'حاسي الغلة',
+            'Ouled Boudjemaa': 'أولاد بوجمعة','Aghlal': 'أغلال',
+            'Ain Kihal': 'عين كيحل','Ain Tolba': 'عين الطلبة',
+            'Aoubellil': 'أوبيليل','Beni Saf': 'بني saf',
+            'Hassasna': 'الحصـاسنة','Emir Abdelkader': 'الأمير عبد القادر',
+            'Sidi Safi': 'سيدي صافي',
+            'Oulhaca El Gheraba': 'ولهاسة الغربة',
+            'Sidi Ouriache': 'سيدي اورياش',
+            'Ain El Arbaa': 'عين الأربعة',
+            'El Messaid': 'المساعيد',
+            'Oued Berkeche': 'وادي برقش',
+            'Sidi Ben Adda': 'سيدي بن عـدة',
+            'Bouzedjar': 'بوزجار',
+            'Hammam Bou Hadjar': 'حمام بوحجر',
+            'Ghardaia': 'غرداية',
+            'Dhayet Bendhahoua': 'ضاية بن ظهيوة',
+            'Mansoura': 'المنصورة','El Atteuf': 'العطف',
+            'Bounoura': 'بنورة','Zelfana': 'اللفنا',
+            'Sebseb': 'سبسب','Metlili': 'متليلي',
+            'Berriane': 'بريان',
+            'Ghardaia': 'غرداية',
+            'Relizane': 'غليزان','El-Guettar': 'القطار',
+            'Ouled Aiche': 'أولاد عيش','Beni Dergoun': 'بني دركون',
+            'Dar Ben Abdelah': 'دار بن عبد الله',
+            'Zemmoura': 'زمورة','Djidiouia': 'جidiaوين',
+            'Hamri': 'الحمري','El-Matmar': 'المتár',
+            'Sidi Khettab': 'سيدي خـطـاب',
+            'Ain-Tarek': 'عين Tarik','Mazouna': 'مازونة',
+            'Ain Rahma': 'عين الرحمـة','Kalaa': 'القلعة',
+            'Sidi Saada': 'سيدي سعادة','Yellel': 'يـلل',
+            'Souk El Had': 'سوق الأحد','Mendes': 'منـديـس',
+            'Oued Essalem': 'وادي السلام',
+            'Sidi Lazreg': 'سيدي لزREG',
+            'Ammi Moussa': 'عمي موسي','Ouarizane': 'واريزان',
+            'Bendaoud': 'بـنـداد','Oued-Rhiou': 'وادي رهيو',
+            'El Hassi': 'الحاسي','Mediouna': 'المديونة',
+            'Beni Zentis': 'بني زنتيس',
+            'Lahlef': 'لحلف','Ramka': 'رمشة',
+            'Timimoun': 'تيميمون','Reggane': 'رڨان',
+            'Tsabit': 'تسابيت','Fenoughil': 'فنوغيل',
+            'Tamentit': 'تامنطيت','Charouine': 'شروين',
+            'Aougrout': 'أوقروت','Deldoul': 'دﻟﺪول',
+            'Sali': 'سالى','Metarfa': 'المطارفة',
+            'Ouled Said': 'أولاد سعيد','Bouda': 'بودة',
+            'Talmine': 'طلمين',
+            'Bordj Badji Mokhtar': 'برج باجي مختار',
+            'Sbaa': 'السبع',
+            'Ouled Djellal': 'أولاد جلال','Sidi Khaled': 'سيدي خالد',
+            'Bordj Badji Mokhtar': 'برج باجي مختار',
+            'Beni Abbes': 'بني عباس','Timimoun': 'تيميمون',
+            'Charouine': 'شروين','Reggane': 'رڨان',
+            'Aoulef': 'أولف','Tsabit': 'تسابيت',
+            'Fenoughil': 'فنوغيل','Timiaouine': 'تيمياوين',
+            'Aougrout': 'أوقروت','Deldoul': 'دﻟﺪول',
+            'Sali': 'سالى','Metarfa': 'المطارفة',
+            'Ouled Said': 'أولاد سعيد',
+            'In Salah': 'عين صالح','In Guezzam': 'عين قزام',
+            'Abalessa': 'أبالة','Idlès': 'إدلس',
+            'Tinzaoutine': 'تينزوتن','Tasnaouine': 'تسناوين',
+            'In Amenas': 'عين الوزان',
+            'In Guezzam': 'عين قزام','Tinzaoutine': 'تينزوتن',
+            'Tazrouk': 'تازروك','Tamanghasset': 'تمنراست',
+            'Touggourt': 'تقرت','El Oued': 'الوادي',
+            'El M\'Ghair': 'المغير','Djamaa': 'جمعـة',
+            'Temacine': 'تامسة','El Guemar': 'القمر',
+            'El Kheneg': 'الخنق','El Kharidja': 'الخريجة',
+            'Hassi Ben Abdellah': 'حاسي بن عبدالله',
+            'M\'Naguer': 'منقور','N\'Goussa': 'النقـوسـة',
+            'Oum Touyour': 'أم الطيور',
+            'Sidi Aoun': 'سيدي عون','Taibet': 'ال_taibet',
+            'Tamalhent': 'تاملنت',
+            'Djanet': 'جانت','Illizi': 'إليزي',
+            'Bordj El Haouas': 'برج الحواس','In Amenas': 'عين الوزان',
+            'El Meniaa': 'المنيعة','Ghardaia': 'غرداية',
+            'Metlili': 'متليلي','Guerrara': 'ڨرارة',
+            'Mekhadma': 'مخادمة','Hassi Fehal': 'حاسي الفحل',
+            'Hassi Gara': 'حاسي الغار','Berririne': 'بريرين'
+        ,
+            'Metarif': 'المطارفة',
+            'Talerga': 'تلاغة','Dzéroua': 'زروى','Koudieta': 'قديعة','Bouzeguène': 'بوزقن',
+            'Harchoun': 'حرشون','Taougrit': 'تاوقريت','Tadjena': 'تاجنة',
+            'El Hassaïa': 'الحساية','Sidi Bouzid': 'سيدي بوزيد','Beni Oudjoud': 'بني ودجود',
+            'Mekaret': 'المكارت','Aïn Madhi': 'عين المدي','Tacine': 'تاسين',
+            'Mecheraa Baâdi': 'مشرع العبادي',
+            'El Aïn': 'العين','Aïn Fakroun': 'عين فاكران','Tebiltit': 'تبلتيت',
+            'Belkheir': 'الخير','El Karmadone': 'الكرادونة','Bouatiour': 'بوعتيور','Mesadja': 'مساجة',
+            'N\'Gaous': 'نڨاوس','Inoughmen': 'إينوغمان','El Manara': 'المنارة',
+            'Imoula': 'إيمولا','Azil Babor': 'عزيل بابور','El Hamra': 'الحمراء',
+            'Ouled Gacem': 'أولاد قاسم','Tangour': 'تنڨور','Djemaa': 'جمعة',
+            'Inzenzer': 'إينزنزر','Sbiba': 'سبيبة','Bouhamama': 'بوحمامات',
+            'Bejaïa': 'بجاية','Sidi Aïch': 'سيدي عيش','Tala Guilef': 'ثالة علايفة',
+            'Ouzellaguen': 'أوزلاقن','Beni Melik': 'بني مليك','Ouled Rached': 'أولاد راشد',
+            'Souk El Ténine': 'سوق التنين','Igzen': 'إيگزّن',
+            'M\'Chouneche': 'مشونش','M\'Lili': 'مليلي','Khanguet Sidi N\'jil': 'خنڨة سيدي نجيل',
+            'El Achab': 'العشاب','Guellif': 'قلّيف','Tengount': 'تمنطي',
+            'Tabelbala': 'تبلبالة','Boulenouar': 'بولنوار','Ras Dbibiza': 'راس دبيبزة',
+            'Kerboubi': 'كربوبي','Brek': 'بريكة',
+            'Mouzaïa': 'موزاية','Bouaroua': 'بوعروة','Chéraga': 'الشراقة',
+            'N\'Dra Ben Chabane': 'نضرة بن شبان','Beni Khellil': 'بني خليل',
+            'Guerdjaou': 'قرجاوة','Hamadi': 'حمادي','Staouali': 'سطاوالي',
+            'Sour El Ghozlane': 'سور الغزلان','Djebabila Tiouni': 'جبابلا تيوني',
+            'Aïn Tayef': 'عين الطيف','Z\'barbar': 'زبربر','Had Ezzouak': 'حظة الزواق',
+            'Dechmaa': 'الدشمية','Ridha': 'ريدة','Oued El Berdi': 'وادي البردي',
+            'Ouled Brahim': 'أولاد إبراهيم',
+            'Ménoussa': 'منوسّة',
+            'El Koui': 'القوي','El Malki': 'الملكي','Bouira Lahdid': 'بويرة لحديد',
+            'Terni Beni Hendel': 'تيرني بني حنديل','El Bouhey': 'الباهي',
+            'Laamarna': 'لعمارة','Sidi Ali Mellal': 'سيدي علي ملال',
+            'Taoudmout': 'تودمّوت','Zmalet El Emir Aekid': 'زمالة الأمير العقيد',
+            'Azrou': 'أزرو','Beni Ziki': 'بني زكي','Draâ Tazegza': 'ذراع تيغزة',
+            'Aït Aissa Mimoun': 'آيت عيسى ميمون',
+            'Bab El Oued': 'باب الوادي','Sidi M\'Hamed': 'سيدي امحمد','El Biar': 'الأبيار',
+            'Bouzareah': 'بوزريعة','Bir Mourad Raïs': 'بئر مراد رايس','Hydra': 'حيدرة',
+            'Ben Aknoun': 'بن عكنون','Hussein Dey': 'حسين داي','Kouba': 'القبة',
+            'El Harrach': 'الحراش','Bachdjerrah': 'باش جراح','Dély Ibrahim': 'دالي إبراهيم',
+            'Draria': 'درارية','El Achour': 'العشارة','Saoula': 'سحولة',
+            'Birtouta': 'بير توتة','Zeralda': 'زرالدة','Reghaia': 'الرغاية',
+            'Rouiba': 'الرويبة','Bab Ezzouar': 'باب الزوار','Bir Touati': 'بئر توادي',
+            'Kharoubi': 'الخروبي','Maâllem': 'المعاليم','Ouled Fayet': 'أولاد فايت',
+            'Aïn Maâbouf': 'عين معابوف','Beni Yagoubine': 'بني يعقوبين',
+            'Bir Aissa': 'بئر عيسى','Douas': 'دواس','Ferrah': 'فرح',
+            'Had-Sahary': 'حظ السهاري','M\'dilla': 'المدية','M\'liliha': 'مليلة',
+            'Pozzuoli': 'بوزوولي','Kerimala': 'قريمالا','Texala': 'تقصلة',
+            'Boussâada': 'بوسعادة','Aïn Sebaâ Lâarous': 'عين السبع لعرّوص',
+            'Guelta Zerga': 'قلتة الزرقا','El Ouldja': 'الولجة',
+            'Bir El Arch': 'بئر الأرش','Beni Chebana': 'بني شبانة',
+            'Tella Guema': 'تالة قEMA','Aïn Abessa': 'عين عيسى',
+            'Aïn Soltane': 'عين السلطان','Aïn Sekhouna': 'عين السخونة',
+            'Aïn Toudja': 'عين توجة','Hassi El Aber': 'حاسي الأبر',
+            'Sidi Ahmed': 'سيدي أحمد','M\'Cif': 'المسيف','Tamous': 'تamous',
+            'Aïn El Kial': 'عين الكيّال',
+            'Ould Benzaama': 'ولد بن عزّامة','El Bared': 'البارد',
+            'Aïn El Turck': 'عين الترك','Treat': 'تريات','El Bujaria': 'البوجارية',
+            'El Majaz': 'المجاز','Oued Sebt': 'وادي السبت','Bouzizoune': 'بوزيزون',
+            'Lahouidj': 'لحويج','Aïn Hamadouche': 'عين حمودة',
+            'Ras El Agba': 'رأس العقبة','Oued Fragha': 'وادي فرخة',
+            'Aïn Benian': 'عين البنيان','Taya': 'الطاية','Teglgit': 'تقلّجيت','Zeraka': 'الزرقة',
+            'Hcidouche': 'حسيدوش','Beni Hamidane': 'بني حميدان',
+            'El Guellaa': 'القالة','Khroub': 'الخروب','Sidi Mabrouk': 'سيدي مبروك',
+            'Guerouaou': 'قرواو','Ouled El Aljem': 'أولاد العلجوم',
+            'Ouled Maaref': 'أولاد معارف','Tlalet': 'تلاعة','Derrag': 'الدراج',
+            'N\'Gossaoua': 'نقساوة','Mansourah': 'المنصورة','Sidi Bellater': 'سيدي بلعطار',
+            'Touahria': 'الطواهرية','Khodnet Souinia': 'خضنة سوينية',
+            'Tamsamane': 'تمسامان','Beni Ilmane': 'بني إيلمان',
+            'Ouled Sidi Brahim': 'أولاد سيدي إبراهيم',
+            'El Gueitna': 'القتينة','El Gourzi': 'قورزي','Aïn Fras': 'عين فراس',
+            'Djellida': 'جليدة','Oued Taref': 'وادي تعرف','Tizi': 'تيزي',
+            'Bouati Ladjel': 'بوعتي لاجل','Sidi Abdeldjebbar': 'سيدي عبد الجبّار',
+            'Zaouiet El Mouldjeneit': 'زاوية المولجانية',
+            'Tlela': 'تلعلع','Aïn Biya': 'عين البية','El Orfaly': 'العرفالي',
+            'Tikjda': 'تيگجدة','Tassamante': 'تاسامانت',
+            'L\'Arbaa Naït Irathen': 'الأرشاء ن يراتن','Souamaa': 'سوامة',
+            'Thenia': 'الثنية','Tidjelabine': 'تجلابين','Bouzegzene': 'بوزقزان',
+            'Sidi Douaoud': 'سيدي داود',
+            'Ain El Assel': 'عين العسل','Ben M Hidi': 'بن مهدي',
+            'Douar El Maa': 'دوار الماء','Magrane': 'مقران','Mih Ouansa': 'مية وانسة',
+            'Ben Guecha': 'بن قشة','Ourmes': 'عورمس','Hamraia': 'الحمرية',
+            'Reguiba': 'رقيبة','Debila': 'الدبيلة','Hassani Abdelkrim': 'حساني عبد الكريم',
+            'Taleb Larbi': 'طالب العربي','Oued El Alenda': 'وادي الألّندة','El-Oued': 'الوادي',
+            'Khirane': 'خيران',
+            'Benyahia Abderrahmane': 'بني يحيى عبد الرحمن',
+            'El Guerrara': 'ڨرارة',
+            'Belaassel Bouzagza': 'بلاعل بوزقزة','Had Echkalla': 'حظ إشكالة',
+            'Merdja Sidi Abed': 'مرجاع سيدي عابد','Ouled Sidi Mihoub': 'أولاد سيدي مهوب',
+            'Sidi M\'hamed Benaouda': 'سيدي امحمد بنعودة','Sidi M\'hamed Benali': 'سيدي امحمد بنعلي',
+            'El H\'madna': 'الحمادية','El Guerara': 'الڨرارة','Fogaret Ezzaouia': 'فقارة الزاوية',
+            'Tafasna': 'تفسّنة',
+            'Algiers': 'الجزائر'
+        }
 
         // === STATE ===
         var selectedDeliveryType = 'home';
@@ -678,12 +1311,18 @@
         }
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.custom-select')) closeAllSelects();
+            // Keep dropdown open when clicking search input
+            if (e.target.id === 'communeSearch' || e.target.id === 'communeCustomInput') {
+                var dropdown = document.getElementById('communeSelect').querySelector('.custom-select-dropdown');
+                dropdown.classList.add('open');
+            }
         });
 
         function populateWilayaSelect() {
             var container = document.getElementById('wilayaOptions');
             container.innerHTML = WILAYAS.map(function(w) {
-                return '<div class="custom-select-option" data-code="' + w.code + '" data-name="' + w.name + '">' + w.code + ' - ' + w.name + '</div>';
+                var arName = WILAYAS_AR[w.code] || '';
+                return '<div class="custom-select-option" data-code="' + w.code + '" data-name="' + w.name + '">' + w.code + ' - ' + w.name + (arName ? ' - ' + arName : '') + '</div>';
             }).join('');
             container.querySelectorAll('.custom-select-option').forEach(function(opt) {
                 opt.addEventListener('click', function() {
@@ -693,11 +1332,13 @@
                     selectedWilayaName = name;
 
                     // Update trigger text
+                    var arName = WILAYAS_AR[code] || '';
+                    var displayText = code + ' - ' + name + (arName ? ' - ' + arName : '');
                     var trigger = document.getElementById('wilayaSelect').querySelector('.custom-select-trigger');
-                    trigger.querySelector('.placeholder') ? trigger.innerHTML = '<span>' + code + ' - ' + name + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' : null;
+                    trigger.querySelector('.placeholder') ? trigger.innerHTML = '<span>' + displayText + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' : null;
                     var span = trigger.querySelector('span');
-                    if (span) span.textContent = code + ' - ' + name;
-                    else { trigger.innerHTML = '<span>' + code + ' - ' + name + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+                    if (span) span.textContent = displayText;
+                    else { trigger.innerHTML = '<span>' + displayText + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
 
                     // Mark selected
                     container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
@@ -729,18 +1370,48 @@
             });
         }
 
+        // === COMMUNE SEARCH STATE ===
+        var currentCommunes = [];
+        var selectedCommuneIsCustom = false;
+
         function populateCommuneOptions(communes) {
+            currentCommunes = communes;
+            selectedCommuneIsCustom = false;
             var container = document.getElementById('communeOptions');
-            container.innerHTML = communes.map(function(c) {
-                return '<div class="custom-select-option" data-name="' + c + '">' + c + '</div>';
+            renderCommuneList(communes);
+            // Clear search
+            var searchInput = document.getElementById('communeSearch');
+            if (searchInput) searchInput.value = '';
+        }
+
+        function renderCommuneList(communes) {
+            var container = document.getElementById('communeOptions');
+            var html = communes.map(function(c) {
+                var arName = COMMUNES_AR[c] || '';
+                return '<div class="custom-select-option" data-name="' + c + '">' + c + (arName ? ' - ' + arName : '') + '</div>';
             }).join('');
+            // Add "Other commune" option
+            html += '<div class="custom-select-option commune-other-option" data-name="__custom__" style="border-top:1px solid rgba(255,255,255,0.1);color:#c5d98b;font-weight:600;">✎ Other commune (type it below)</div>';
+            html += '<div class="commune-custom-wrap" id="communeCustomWrap" style="display:none;">';
+            html += '<input type="text" id="communeCustomInput" class="commune-custom-input" placeholder="Type your commune name..." onkeydown="if(event.key===\'Enter\')confirmCustomCommune()">';
+            html += '<button type="button" class="commune-custom-btn" onclick="confirmCustomCommune()">CONFIRM</button>';
+            html += '</div>';
+            container.innerHTML = html;
+            // Add click handlers
             container.querySelectorAll('.custom-select-option').forEach(function(opt) {
                 opt.addEventListener('click', function() {
+                    if (this.dataset.name === '__custom__') {
+                        var wrap = document.getElementById('communeCustomWrap');
+                        wrap.style.display = 'block';
+                        var customInput = document.getElementById('communeCustomInput');
+                        customInput.focus();
+                        return;
+                    }
                     selectedCommune = this.dataset.name;
-                    var trigger = document.getElementById('communeSelect').querySelector('.custom-select-trigger');
-                    var span = trigger.querySelector('span');
-                    if (span) span.textContent = selectedCommune;
-                    else { trigger.innerHTML = '<span>' + selectedCommune + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+                    selectedCommuneIsCustom = false;
+                    var arName = COMMUNES_AR[selectedCommune] || '';
+                    var displayText = selectedCommune + (arName ? ' - ' + arName : '');
+                    updateCommuneTrigger(displayText);
                     container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
                     this.classList.add('selected');
                     closeAllSelects();
@@ -748,6 +1419,40 @@
                 });
             });
         }
+
+        window.confirmCustomCommune = function() {
+            var customInput = document.getElementById('communeCustomInput');
+            var val = customInput ? customInput.value.trim() : '';
+            if (!val) { customInput.focus(); return; }
+            selectedCommune = val;
+            selectedCommuneIsCustom = true;
+            updateCommuneTrigger(val);
+            closeAllSelects();
+            clearError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'));
+        };
+
+        function updateCommuneTrigger(text) {
+            var trigger = document.getElementById('communeSelect').querySelector('.custom-select-trigger');
+            var span = trigger.querySelector('span');
+            if (span) span.textContent = text;
+            else { trigger.innerHTML = '<span>' + text + '</span><svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>'; }
+        }
+
+        window.filterCommunes = function(query) {
+            if (!query || !query.trim()) {
+                renderCommuneList(currentCommunes);
+                return;
+            }
+            query = query.toLowerCase().trim();
+            var filtered = currentCommunes.filter(function(c) {
+                var arName = (COMMUNES_AR[c] || '').toLowerCase();
+                return c.toLowerCase().indexOf(query) !== -1 || arName.indexOf(query) !== -1;
+            });
+            renderCommuneList(filtered);
+            // Re-open dropdown
+            var dropdown = document.getElementById('communeSelect').querySelector('.custom-select-dropdown');
+            dropdown.classList.add('open');
+        };
 
         async function populateHubsForWilaya(wilayaCode, wilayaName) {
             var container = document.getElementById('communeOptions');
@@ -909,7 +1614,7 @@
                 var qty = item.qty || item.quantity || 1;
                 if (item.outfit_group_id && item.products && item.products.length > 0) {
                     var prodImgs = item.products.map(function(p) {
-                        return '<img src="' + p.image + '" alt="' + p.name + '" style="width:32px;height:40px;object-fit:cover;border-radius:3px">';
+                        return '<img src="' + optImg(p.image, 32) + '" alt="' + p.name + '" style="width:32px;height:40px;object-fit:cover;border-radius:3px">';
                     }).join('');
                     var prodInfo = item.products.map(function(p) {
                         return '<div style="font-size:0.7rem;color:rgba(255,255,255,0.5)">' + p.name + ': ' + p.size + '</div>';
@@ -933,7 +1638,7 @@
                     '</div>';
                 } else {
                     html += '<div class="drawer-cart-item">' +
-                        '<img src="' + item.image + '" alt="' + item.name + '">' +
+                        '<img src="' + optImg(item.image, 200) + '" alt="' + item.name + '">' +
                         '<div class="drawer-item-info">' +
                             '<div class="drawer-item-category">' + (item.category||'') + '</div>' +
                             '<div class="drawer-item-name">' + item.name + '</div>' +
@@ -988,19 +1693,30 @@
             btn.textContent = '...'; btn.disabled = true;
             try {
                 var { data: promo, error } = await yunDb.from('promo_codes').select('*').eq('code', code).eq('is_active', true).single();
-                if (error || !promo) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Invalid or inactive code'; appliedPromo = null; updateSummary(); return; }
-                if (promo.expires_at && new Date(promo.expires_at) < new Date()) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Code has expired'; appliedPromo = null; updateSummary(); return; }
-                if (promo.max_uses > 0 && promo.used_count >= promo.max_uses) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Usage limit reached'; appliedPromo = null; updateSummary(); return; }
+                if (error || !promo) { promoError('Invalid or inactive code'); return; }
+                if (promo.expires_at && new Date(promo.expires_at) < new Date()) { promoError('Code has expired'); return; }
+                if (promo.max_uses > 0 && promo.used_count >= promo.max_uses) { promoError('Usage limit reached'); return; }
                 var subtotal = getCartSubtotal();
-                if (promo.min_order > 0 && subtotal < promo.min_order) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Min order: ' + promo.min_order.toLocaleString() + ' DA'; appliedPromo = null; updateSummary(); return; }
+                if (promo.min_order > 0 && subtotal < promo.min_order) { promoError('Min order: ' + promo.min_order.toLocaleString() + ' DA'); return; }
                 var discount = promo.discount_type === 'percent' ? Math.round(subtotal * promo.discount_value / 100) : Math.min(promo.discount_value, subtotal);
                 appliedPromo = Object.assign({}, promo, { discount: discount });
-                msg.style.display = 'block'; msg.style.color = '#00c864';
-                msg.textContent = '✓ ' + (promo.discount_type === 'percent' ? promo.discount_value + '% off' : promo.discount_value.toLocaleString() + ' DA off') + ' — You save ' + discount.toLocaleString() + ' DA';
+                msg.style.display = 'block'; msg.style.color = '#c5d98b';
+                msg.innerHTML = '✓ ' + (promo.discount_type === 'percent' ? promo.discount_value + '% off' : promo.discount_value.toLocaleString() + ' DA off') + ' — You save <strong>' + discount.toLocaleString() + ' DA</strong>';
+                msg.classList.add('promo-fade-anim');
                 btn.textContent = 'REMOVE'; btn.onclick = removePromoCode;
-                updateSummary();
-            } catch(e) { msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = 'Error: ' + e.message; }
+                try { updateSummary(); } catch(e) { console.error('updateSummary:', e); }
+            } catch(e) { promoError('Error: ' + e.message); }
             finally { if (!appliedPromo) { btn.textContent = 'APPLY'; btn.onclick = applyPromoCode; } btn.disabled = false; }
+        }
+        window.applyPromoCode = applyPromoCode;
+
+        function promoError(text) {
+            var msg = document.getElementById('promoMessage');
+            msg.style.display = 'block'; msg.style.color = '#ff3232'; msg.textContent = '✗ ' + text;
+            msg.classList.add('promo-fade-anim');
+            appliedPromo = null;
+            try { updateSummary(); } catch(e) {}
+            setTimeout(function() { msg.classList.remove('promo-fade-anim'); }, 400);
         }
 
         function removePromoCode() {
@@ -1021,7 +1737,7 @@
                 productsEl.innerHTML = cart.map(function(item) {
                     if (item.outfit_group_id && item.products && item.products.length > 0) {
                         var prodImgs = item.products.map(function(p) {
-                            return '<img src="' + p.image + '" alt="" style="width:24px;height:30px;object-fit:cover;border-radius:2px">';
+                            return '<img src="' + optImg(p.image, 24) + '" alt="" style="width:24px;height:30px;object-fit:cover;border-radius:2px">';
                         }).join('');
                         var prodInfo = item.products.map(function(p) {
                             return '<div style="font-size:0.65rem;color:rgba(255,255,255,0.4)">' + p.name + ': ' + p.size + '</div>';
@@ -1036,7 +1752,7 @@
                         '</div>';
                     }
                     return '<div class="summary-product">' +
-                        '<img src="' + item.image + '" alt="' + item.name + '">' +
+                        '<img src="' + optImg(item.image, 80) + '" alt="' + item.name + '">' +
                         '<div class="summary-product-info">' +
                             '<div class="summary-product-name">' + item.name + '</div>' +
                             '<div class="summary-product-meta">' + (item.size || '') + (item.color ? ' / ' + item.color : '') + ' × ' + item.qty + '</div>' +
@@ -1058,16 +1774,29 @@
             }
 
             var total = subtotal + (shipping || 0) - (appliedPromo ? appliedPromo.discount : 0);
-            document.getElementById('summaryTotal').textContent = total.toLocaleString() + ' DA';
+            var totalEl = document.getElementById('summaryTotal');
+            var prevTotal = parseInt(totalEl.textContent.replace(/[^0-9]/g, '')) || 0;
+            totalEl.textContent = total.toLocaleString() + ' DA';
+            if (total < prevTotal) {
+                totalEl.classList.remove('promo-price-down');
+                totalEl.offsetHeight;
+                totalEl.classList.add('promo-price-down');
+            }
 
             // Show/hide promo discount row
             var discountRow = document.getElementById('promoDiscountRow');
             var discountEl = document.getElementById('summaryDiscount');
             if (appliedPromo && appliedPromo.discount > 0) {
+                var wasHidden = discountRow.style.display === 'none';
                 discountRow.style.display = 'flex';
                 discountEl.textContent = '-' + appliedPromo.discount.toLocaleString() + ' DA';
+                if (wasHidden) {
+                    discountRow.classList.add('promo-fade-anim');
+                    setTimeout(function() { discountRow.classList.remove('promo-fade-anim'); }, 400);
+                }
             } else {
                 discountRow.style.display = 'none';
+                discountRow.classList.remove('promo-fade-anim');
             }
 
             // Enable/disable button
@@ -1389,9 +2118,9 @@
             });
         })();
 
-        // Expose for cart drawer
-        window.openCart = openCart;
-        window.closeCart = closeCart;
+        // Expose for HTML onclick handlers
+        window.applyPromoCode = applyPromoCode;
+        window.removePromoCode = removePromoCode;
 
     })();
     </script>

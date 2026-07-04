@@ -543,6 +543,7 @@
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="opt.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -564,6 +565,10 @@
         </div>
         <div class="navbar-icons">
             <div id="langSwitcher"></div>
+            <button aria-label="Cart" class="cart-btn-wrap cart-icon" onclick="openCart()" style="position:relative">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span class="cart-count-badge" id="cartCountBadge" style="display:none"></span>
+            </button>
             <button class="hamburger" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </div>
     </nav>
@@ -699,7 +704,7 @@
         if (empty) empty.style.display = 'none';
         list.innerHTML = cart.map(function(item, i) {
             return '<div class="drawer-cart-item">' +
-                '<img src="' + item.image + '" alt="' + escapeHtml(item.name) + '">' +
+                '<img src="' + optImg(item.image, 400) + '" alt="' + escapeHtml(item.name) + '">' +
                 '<div class="drawer-item-info">' +
                     '<div class="drawer-item-category">' + escapeHtml(item.category||'') + '</div>' +
                     '<div class="drawer-item-name">' + escapeHtml(item.name) + '</div>' +

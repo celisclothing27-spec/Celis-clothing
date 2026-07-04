@@ -384,6 +384,7 @@
     <script src="i18n.js"></script>
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="opt.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -561,7 +562,7 @@
           if (empty) empty.style.display = 'none';
           list.innerHTML = cart.map(function(item, i) {
             return '<div class="drawer-cart-item">' +
-              '<img src="' + item.image + '" alt="' + item.name + '">' +
+              '<img src="' + optImg(item.image, 200) + '" alt="' + item.name + '">' +
               '<div class="drawer-item-info">' +
                 '<div class="drawer-item-category">' + (item.category||'') + '</div>' +
                 '<div class="drawer-item-name">' + item.name + '</div>' +

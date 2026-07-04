@@ -212,6 +212,7 @@
         #sizeSection.shake { animation: shake 0.4s ease; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="opt.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -441,7 +442,7 @@
         if (cart.length === 0) { list.innerHTML = ''; empty.style.display = 'flex'; return; }
         empty.style.display = 'none';
         list.innerHTML = cart.map(function(it, i) {
-            return '<div class="cd-item"><img src="'+it.image+'" alt="'+it.name+'"><div class="cd-item-info"><div class="cd-item-name">'+it.name+'</div><div class="cd-item-meta">'+(it.color?'Color: '+it.color:'')+(it.size?' / Size: '+it.size:'')+'</div><div class="cd-item-qty"><button class="cd-qbtn" onclick="chgQty('+i+',-1)">&minus;</button><span class="cd-qnum">'+it.qty+'</span><button class="cd-qbtn" onclick="chgQty('+i+',1)">+</button></div></div><div class="cd-item-right"><button class="cd-rm" onclick="rmItem('+i+')">&#10005;</button><span class="cd-item-price">'+(it.price*it.qty).toLocaleString()+' DA</span></div></div>';
+            return '<div class="cd-item"><img src="'+optImg(it.image,60)+'" alt="'+it.name+'"><div class="cd-item-info"><div class="cd-item-name">'+it.name+'</div><div class="cd-item-meta">'+(it.color?'Color: '+it.color:'')+(it.size?' / Size: '+it.size:'')+'</div><div class="cd-item-qty"><button class="cd-qbtn" onclick="chgQty('+i+',-1)">&minus;</button><span class="cd-qnum">'+it.qty+'</span><button class="cd-qbtn" onclick="chgQty('+i+',1)">+</button></div></div><div class="cd-item-right"><button class="cd-rm" onclick="rmItem('+i+')">&#10005;</button><span class="cd-item-price">'+(it.price*it.qty).toLocaleString()+' DA</span></div></div>';
         }).join('');
         updateCartUI();
     }
