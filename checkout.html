@@ -264,6 +264,7 @@
     <script src="i18n.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="opt.js"></script>
+    <script src="analytics.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -555,7 +556,7 @@
             '13': ['Tlemcen','Maghnia','Maghnia','Ghazaouet','Nédroma','Remchi','El Fehoul','Ghazaouet','Hennaya','El Aricha','Bensekrane','Aïn Ghoraba','Nedroma','Aïn Tallout','Peghni','Terni Beni Hendel','Sebaa Chioukh','Beni Ouarsous','Amieur','Fellaoucene','Tianet','Ouled Mimoun','Zenata','Sidi Boumediene','El Bouhey','Bab El Assa','Laamarna','Sidi Ali Mellal','Belkheir'],
             '14': ['Tiaret','Sougueur','Medroussa','Aïn Deheb','Dahmouni','Rahouia','Mahdia','Tousnina','Frenda','Aïn Kermes','Ksar Chellala','Rechaïga','Takhemaret','Medroussa','Taoudmout','Sidi Hosni','Zmalet El Emir Aekid','Takhemaret','Bougara','Hamadia','Rouached','Naima','Faidja'],
             '15': ['Tizi Ouzou','Azazga','Aït Yahia','Larba Nath Iraten','Draâ El Mizan','Ouadhias','Maâtkas','Azazga','Tigzirt','Aïn El Hammam','Boudjima','Aït Chaffâa','Aït Yahia Moussa','Tirmitine','Azrou','Beni Douala','Bni Yenni','Iferhounene','Aït Aggouncha','Aït Bouadif','Aït Toudert','Beni Ziki','Draâ Tazegza','Illoula Oumalou','Iboudraren','Aït Aissa Mimoun','Makouda','Mekhada','Ouled Aïssa'],
-            '16': ['Algiers','Bab El Oued','Sidi M\'Hamed','El Biar','Bouzareah','Bir Mourad Raïs','Hydra','Ben Aknoun','Hussein Dey','Kouba','El Harrach','Bachdjerrah','Dély Ibrahim','Draria','Dely Ibrahim','El Achour','Saoula','Birtouta','Zeralda','Reghaia','Rouiba','Reghaia','Bab Ezzouar','Bir Touati','Hammadi','Kharoubi','Maâllem','Ouled Fayet'],
+            '16': ['Alger Centre','Bab El Oued','Sidi M\'Hamed','El Biar','Bouzareah','Bir Mourad Raïs','Hydra','Ben Aknoun','Hussein Dey','Kouba','El Harrach','Bachdjerrah','Dély Ibrahim','Draria','El Achour','Saoula','Zeralda','Reghaia','Rouiba','Bab Ezzouar','Ouled Fayet','Birkhadem','Chraga','Bourouba','Mohammadia','Belouizdad','Dar El Beida','Baraki','Bordj El Kiffan','Djisr Kasentina','Les Ecalyptus','Birtouta','Staoueli','Oued Korich','Bologhin','Oued Semar','El Magharia','Sidi Moussa','Ain Taya','Beni Messous','Rais Hamidou','El Mouradia','Khraicia','Hraoua','Bordj El Bahri','El Madania','Casbah','El Hammamet','Baba Hassen','Tassala El Merdja','Souldania','Mhalma','El Marsa','Rahmania','Bir Touati','Hammadi','Kharoubi','Maâllem'],
             '17': ['Djelfa','M\'sara','Aïn Oussera','Hassi Bahbah','El Khechba','Bou Saâda','Sidi Aïssa','Zaccar','Aïn Chouhada','Aïn El Ibel','Aïn Feka','Aïn Maâbouf','Beni Fouda','Beni Yagoubine','Bir Aissa','Chaâba','Chaabet El Ham','Charef','Dar El Had Djelladji','Douas','El Guedid','El Haarr','El Khemis','El Ksiba','Faidh El Botma','Ferrah','Guerdjoum','Guettara','Had-Sahary','Hamri','Hassi Bahbah','Khanguet Beni Guerroume','M\'dilla','M\'liliha','Messaad','Mihoub','Ouled Derradji','Ouled Guebel','Sed Rahal','Sebseb','Selmana','Tadmit','Talh','Terfine','T\'kout'],
             '18': ['Jijel','El Ancer','Sidi Marouf','Taher','Emdjez Edchich','El Aouana','Aïn El Kebira','Aïn Tahar','Boussif Ouled Asker','Bouchkine','Sidi Abdelaziz','Skikda','El Milia','Pozzuoli','Kerimala','Texala'],
             '19': ['Sétif','Aïn Oulmene','El Eulma','Aïn Arnat','Aïn El Hadjar','Boussâada','El Ouricia','Darguina','Sidi Aïssa','Aïn Lahdjar','Ouled Sabor','El Hassasna','Béni Ourtilane','Aïn Sebaâ Lâarous','El Guedid','Guelta Zerga','El Ouldja','Bir El Arch','Beni Chebana','Aïn Smara','Tella Guema','El M\'Cid','Guellal','Ouled Tebben','Hamam Soukhna','El Hamma','Tazoult','Sétif','Bougaa','Salah Bey','Aïn Abessa','El Eulma'],
@@ -1153,6 +1154,17 @@
             'Birtouta': 'بير توتة','Zeralda': 'زرالدة','Reghaia': 'الرغاية',
             'Rouiba': 'الرويبة','Bab Ezzouar': 'باب الزوار','Bir Touati': 'بئر توادي',
             'Kharoubi': 'الخروبي','Maâllem': 'المعاليم','Ouled Fayet': 'أولاد فايت',
+            'Birkhadem': 'بئر خادم','Chraga': 'شراقة','Bourouba': 'بورويبة',
+            'Mohammadia': 'المحمدية','Belouizdad': 'بوعزيز','Dar El Beida': 'الدار البيضاء',
+            'Baraki': 'براقي','Bordj El Kiffan': 'برج الكيفان','Djisr Kasentina': 'جسر القسنطينية',
+            'Les Ecalyptus': 'الكاليتوس','Staoueli': 'ستاولي','Oued Korich': 'وادي كريش',
+            'Bologhin': 'بولوغين','Oued Semar': 'وادي السمار','El Magharia': 'المغارية',
+            'Sidi Moussa': 'سيدي موسى','Ain Taya': 'عين الطاية','Beni Messous': 'بني مسوس',
+            'Rais Hamidou': 'رأس حميدو','El Mouradia': 'المoria','Khraicia': 'خرايسية',
+            'Hraoua': 'حراوة','Bordj El Bahri': 'برج البحري','El Madania': 'المدنية',
+            'Casbah': 'القصبة','El Hammamet': 'الحمامات','Baba Hassen': 'بابة حسن',
+            'Tassala El Merdja': 'تسلة المرج','Souldania': 'سوليدانية','Mhalma': 'محلمة',
+            'El Marsa': 'المرسى','Rahmania': 'الرحمانية','Alger Centre': 'الجزائر وسط',
             'Aïn Maâbouf': 'عين معابوف','Beni Yagoubine': 'بني يعقوبين',
             'Bir Aissa': 'بئر عيسى','Douas': 'دواس','Ferrah': 'فرح',
             'Had-Sahary': 'حظ السهاري','M\'dilla': 'المدية','M\'liliha': 'مليلة',
@@ -1215,29 +1227,48 @@
         var wilayaPricesCache = {};
         var zrSettings = { apiKey: null, tenantId: null, useApiRates: false };
         var zrHubsCache = null;
+        var _siteSettingsCache = null;
+        var _allWilayaPrices = null;
 
-        async function loadZrSettings() {
+        async function loadAllSettings() {
+            if (_siteSettingsCache) return _siteSettingsCache;
             try {
-                var result = await yunDb.from('site_settings')
-                    .select('key, value')
-                    .in('key', ['zr_api_key', 'zr_tenant_id', 'zr_use_api_rates']);
-                
-                if (result.data) {
-                    result.data.forEach(function(row) {
-                        if (row.key === 'zr_api_key') zrSettings.apiKey = row.value;
-                        if (row.key === 'zr_tenant_id') zrSettings.tenantId = row.value;
-                        if (row.key === 'zr_use_api_rates') zrSettings.useApiRates = row.value === 'true';
-                    });
+                var { data } = await yunDb.from('site_settings').select('key, value').in('key', ['zr_api_key', 'zr_tenant_id', 'zr_use_api_rates', 'checkout_background', 'zr_hubs']);
+                if (data) {
+                    _siteSettingsCache = {};
+                    data.forEach(function(r) { _siteSettingsCache[r.key] = r.value; });
+                    if (_siteSettingsCache.zr_api_key) zrSettings.apiKey = _siteSettingsCache.zr_api_key;
+                    if (_siteSettingsCache.zr_tenant_id) zrSettings.tenantId = _siteSettingsCache.zr_tenant_id;
+                    if (_siteSettingsCache.zr_use_api_rates) zrSettings.useApiRates = _siteSettingsCache.zr_use_api_rates === 'true';
+                    if (_siteSettingsCache.checkout_background) {
+                        document.body.style.backgroundImage = "url('" + _siteSettingsCache.checkout_background + "')";
+                    }
                 }
-            } catch(e) {
-                console.warn('Failed to load ZR settings:', e);
-            }
+            } catch(e) { console.warn('Settings load failed:', e); }
+        }
+
+        async function preloadAllWilayaPrices() {
+            if (_allWilayaPrices) return _allWilayaPrices;
+            try {
+                var { data } = await yunDb.from('wilaya_pricing').select('wilaya_code, home_price, post_price');
+                if (data) {
+                    _allWilayaPrices = {};
+                    data.forEach(function(r) { _allWilayaPrices[r.wilaya_code] = { home_price: r.home_price, post_price: r.post_price }; });
+                    return _allWilayaPrices;
+                }
+            } catch(e) { console.warn('Wilaya prices preload failed:', e); }
+            return {};
         }
 
         // === ZR EXPRESS HUBS ===
 
         async function fetchZrHubs() {
             if (zrHubsCache) return zrHubsCache;
+            if (_siteSettingsCache && _siteSettingsCache.zr_hubs) {
+                var parsed = typeof _siteSettingsCache.zr_hubs === 'string' ? JSON.parse(_siteSettingsCache.zr_hubs) : _siteSettingsCache.zr_hubs;
+                zrHubsCache = Array.isArray(parsed) ? parsed : [];
+                return zrHubsCache;
+            }
             try {
                 var { data } = await yunDb.from('site_settings').select('value').eq('key', 'zr_hubs').single();
                 if (data && data.value) {
@@ -1546,6 +1577,13 @@
                 }
             }
             
+            // Try preloaded bulk data first
+            if (_allWilayaPrices && _allWilayaPrices[wilayaCode]) {
+                wilayaPricesCache[wilayaCode] = _allWilayaPrices[wilayaCode];
+                updateSummary();
+                return;
+            }
+            
             try {
                 var result = await yunDb.from('wilaya_pricing')
                     .select('home_price, post_price')
@@ -1554,6 +1592,7 @@
                 
                 if (result.data) {
                     wilayaPricesCache[wilayaCode] = result.data;
+                    if (_allWilayaPrices) _allWilayaPrices[wilayaCode] = result.data;
                     updateSummary();
                 }
             } catch(e) {
@@ -2002,16 +2041,7 @@
 
         // === INIT ===
         document.addEventListener('DOMContentLoaded', function() {
-            // Load checkout background from database
-            if (yunDb) {
-                yunDb.from('site_settings').select('value').eq('key', 'checkout_background').single()
-                    .then(function(r) {
-                        if (r.data && r.data.value) {
-                            document.body.style.backgroundImage = "url('" + r.data.value + "')";
-                        }
-                    }).catch(function() {});
-                loadZrSettings();
-            }
+            if (yunDb) { loadAllSettings(); preloadAllWilayaPrices(); }
 
             // Hamburger
             var hamburger = document.querySelector('.hamburger');

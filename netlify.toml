@@ -5,6 +5,9 @@
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
 
+[functions."keep-alive"]
+  schedule = "*/15 * * * *"
+
 [[headers]]
   for = "/*"
   [headers.values]

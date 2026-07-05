@@ -544,6 +544,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="opt.js"></script>
+    <script src="analytics.js"></script>
     <script>
     const SUPABASE_URL = 'https://afbmxzrtdwqiawzsddtq.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_3zK-PWVRezCH0KrhzNNXUQ_Ud5Kmoz3';
@@ -704,7 +705,7 @@
         if (empty) empty.style.display = 'none';
         list.innerHTML = cart.map(function(item, i) {
             return '<div class="drawer-cart-item">' +
-                '<img src="' + optImg(item.image, 400) + '" alt="' + escapeHtml(item.name) + '">' +
+                '<img src="' + optImg(item.image, 400) + '" alt="' + escapeHtml(item.name) + '" loading="lazy" decoding="async">' +
                 '<div class="drawer-item-info">' +
                     '<div class="drawer-item-category">' + escapeHtml(item.category||'') + '</div>' +
                     '<div class="drawer-item-name">' + escapeHtml(item.name) + '</div>' +
@@ -857,12 +858,16 @@
 
     // Load Best Sellers — products + outfits in parallel, render ONCE
     if (yunDb) {
-        var _bsProducts = yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
-            .then(function(r) { return (r.error ? null : r.data) || []; })
-            .catch(function() { return []; });
-        var _bsOutfits = yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
-            .then(function(r) { return (r.error ? [] : r.data || []); })
-            .catch(function() { return []; });
+        var _bsProducts = YunCache.fetch('bs_products', 300000, function() {
+            return yunDb.from('products').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
+                .then(function(r) { return (r.error ? null : r.data) || []; })
+                .catch(function() { return []; });
+        });
+        var _bsOutfits = YunCache.fetch('bs_outfits', 300000, function() {
+            return yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_bestseller').eq('is_active', true).eq('is_bestseller', true).order('name')
+                .then(function(r) { return (r.error ? [] : r.data || []); })
+                .catch(function() { return []; });
+        });
 
         Promise.all([_bsProducts, _bsOutfits]).then(function(results) {
             var bsGrid = document.getElementById('bestsellersGrid');
@@ -884,16 +889,20 @@
             var imgPromises = [];
             if (productIds.length > 0) {
                 imgPromises.push(
-                    yunDb.from('product_images').select('product_id, cloudinary_url, is_primary').in('product_id', productIds)
-                        .then(function(r) { return (r.data || []).map(function(im) { im._type = 'product'; return im; }); })
-                        .catch(function() { return []; })
+                    YunCache.fetch('bs_prod_imgs', 300000, function() {
+                        return yunDb.from('product_images').select('product_id, cloudinary_url, is_primary').in('product_id', productIds)
+                            .then(function(r) { return (r.data || []).map(function(im) { im._type = 'product'; return im; }); })
+                            .catch(function() { return []; });
+                    })
                 );
             } else { imgPromises.push(Promise.resolve([])); }
             if (outfitIds.length > 0) {
                 imgPromises.push(
-                    yunDb.from('outfit_images').select('outfit_id, cloudinary_url, is_primary').in('outfit_id', outfitIds)
-                        .then(function(r) { return (r.data || []).map(function(im) { im._type = 'outfit'; return im; }); })
-                        .catch(function() { return []; })
+                    YunCache.fetch('bs_outfit_imgs', 300000, function() {
+                        return yunDb.from('outfit_images').select('outfit_id, cloudinary_url, is_primary').in('outfit_id', outfitIds)
+                            .then(function(r) { return (r.data || []).map(function(im) { im._type = 'outfit'; return im; }); })
+                            .catch(function() { return []; });
+                    })
                 );
             } else { imgPromises.push(Promise.resolve([])); }
 
@@ -1055,12 +1064,16 @@
 
         // Load outfits
         try {
-            var outfitRes = await yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller, offer_enabled').eq('is_active', true).order('sort_order').order('name');
-            if (outfitRes.data && outfitRes.data.length > 0) {
+            var outfitRes = await YunCache.fetch('outfits_all', 300000, function() {
+                return yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller, offer_enabled').eq('is_active', true).order('sort_order').order('name');
+            });
+            if (outfitRes && outfitRes.data && outfitRes.data.length > 0) {
                 var outfitIds = outfitRes.data.map(function(o) { return o.id; });
-                var { data: outfitImgs } = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
+                var outfitImgs = await YunCache.fetch('outfit_imgs_all', 300000, function() {
+                    return yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
+                });
                 var imgMap = {};
-                if (outfitImgs) outfitImgs.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
+                if (outfitImgs && outfitImgs.data) outfitImgs.data.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
                 outfitRes.data.forEach(function(o) {
                     var img = imgMap[o.id] || '';
                     var base = Number(o.base_price) || 0;
