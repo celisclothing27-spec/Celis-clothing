@@ -77,9 +77,7 @@
         .bs-wrap { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 60px; }
         .bs-track { display: flex; gap: 16px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; padding: 8px 4px 16px; }
         .bs-track::-webkit-scrollbar { display: none; }
-        .bs-wrap::before, .bs-wrap::after { content:''; position:absolute; top:0; bottom:0; width:80px; z-index:2; pointer-events:none; }
-        .bs-wrap::before { left:52px; background:linear-gradient(to right, #0a0a0a 0%, transparent 100%); }
-        .bs-wrap::after { right:52px; background:linear-gradient(to left, #0a0a0a 0%, transparent 100%); }
+        .bs-wrap::before, .bs-wrap::after { display:none; }
         .bs-card { flex: 0 0 220px; cursor: pointer; border-radius: 14px; overflow: hidden; background: #111; border: 1px solid rgba(197,217,139,0.1); transition: transform 0.3s; }
         .bs-card:hover { transform: translateY(-4px); }
         .bs-card .bs-img { aspect-ratio: 3/4; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #111; }
@@ -99,8 +97,6 @@
             .bs-section { padding: 40px 0 30px; }
             .bs-section h2 { font-size: 1.5rem; margin-bottom: 24px; }
             .bs-wrap { padding: 0 48px; }
-            .bs-wrap::before { left:40px; width:50px; }
-            .bs-wrap::after { right:40px; width:50px; }
             .bs-track { gap: 12px; }
             .bs-card { flex: 0 0 180px; }
             .bs-card .bs-name { font-size: 0.8rem; }
@@ -112,8 +108,6 @@
         }
         @media (max-width: 480px) {
             .bs-wrap { padding: 0 40px; }
-            .bs-wrap::before { left:32px; width:40px; }
-            .bs-wrap::after { right:32px; width:40px; }
             .bs-card { flex: 0 0 160px; }
         }
 
@@ -823,12 +817,6 @@
             visible.concat(hidden).forEach(function(c) { grid.appendChild(c); });
         });
 
-        // URL param filtering
-        var catParam = new URLSearchParams(window.location.search).get('category');
-        if (catParam && filterBar) {
-            var match = filterBar.querySelector('.filter-pill[data-filter="' + catParam + '"]');
-            if (match) { filterBar.querySelectorAll('.filter-pill').forEach(function(b) { b.classList.remove('active'); }); match.classList.add('active'); activeFilter = catParam; filterAndSearch(); }
-        }
     });
 
     // === BEST SELLERS ===
@@ -990,6 +978,12 @@
                     btn.textContent = c.name;
                     bar.appendChild(btn);
                 });
+                // URL param filtering — run AFTER categories are loaded
+                var catParam = new URLSearchParams(window.location.search).get('category');
+                if (catParam) {
+                    var match = bar.querySelector('.filter-pill[data-filter="' + catParam + '"]');
+                    if (match) { bar.querySelectorAll('.filter-pill').forEach(function(b) { b.classList.remove('active'); }); match.classList.add('active'); activeFilter = catParam; filterAndSearch(); }
+                }
             }).catch(function() {});
         }
 
