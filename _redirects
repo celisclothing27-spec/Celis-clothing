@@ -1,0 +1,4 @@
+/netlify/functions/*  /404.html  404
+/netlify/functions/*.js  /404.html  404
+/netlify/functions/*.py  /404.html  404
+/local-config.json  /404.html  404
