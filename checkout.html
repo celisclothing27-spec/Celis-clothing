@@ -1233,12 +1233,10 @@
         async function loadAllSettings() {
             if (_siteSettingsCache) return _siteSettingsCache;
             try {
-                var { data } = await yunDb.from('site_settings').select('key, value').in('key', ['zr_api_key', 'zr_tenant_id', 'zr_use_api_rates', 'checkout_background', 'zr_hubs']);
+                var { data } = await yunDb.from('site_settings').select('key, value').in('key', ['zr_use_api_rates', 'checkout_background', 'zr_hubs']);
                 if (data) {
                     _siteSettingsCache = {};
                     data.forEach(function(r) { _siteSettingsCache[r.key] = r.value; });
-                    if (_siteSettingsCache.zr_api_key) zrSettings.apiKey = _siteSettingsCache.zr_api_key;
-                    if (_siteSettingsCache.zr_tenant_id) zrSettings.tenantId = _siteSettingsCache.zr_tenant_id;
                     if (_siteSettingsCache.zr_use_api_rates) zrSettings.useApiRates = _siteSettingsCache.zr_use_api_rates === 'true';
                     if (_siteSettingsCache.checkout_background) {
                         document.body.style.backgroundImage = "url('" + _siteSettingsCache.checkout_background + "')";
@@ -1277,6 +1275,57 @@
                     return zrHubsCache;
                 }
             } catch(e) { console.warn('ZR hubs fetch from DB failed:', e); }
+            return [];
+        }
+
+        // === ZR COMMUNES ===
+        var zrCommunesData = null;
+
+        async function zrProxy(path, method, body) {
+            var proxyUrl = '/.netlify/functions/zr-api';
+            var proxyBody = { path: path, method: method || 'GET', body: body || null };
+            var response = await fetch(proxyUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyBody) });
+            return response.json();
+        }
+
+        async function loadZrCommunes() {
+            if (zrCommunesData) return zrCommunesData;
+            var result = { byWilayaCode: {} };
+            try {
+                    var all = [];
+                    for (var page = 1; page <= 5; page++) {
+                        var res = await zrProxy('/territories/search?version=1', 'POST', { pageSize: 1000, pageNumber: page });
+                        var items = (res && res.items) || [];
+                        all = all.concat(items);
+                        if (items.length < 1000) break;
+                    }
+                    var wilayaIdToCode = {};
+                    all.forEach(function(t) {
+                        if (t.level === 'wilaya') {
+                            var pc = String(t.postalCode || '');
+                            var code = pc.substring(0, 2);
+                            if (code) wilayaIdToCode[t.id] = code;
+                        }
+                    });
+                    all.forEach(function(t) {
+                        if (t.level === 'commune' && t.parentId && wilayaIdToCode[t.parentId]) {
+                            var wCode = wilayaIdToCode[t.parentId];
+                            if (!result.byWilayaCode[wCode]) result.byWilayaCode[wCode] = [];
+                            result.byWilayaCode[wCode].push({ name: t.name, nameArabic: t.nameArabic || '' });
+                        }
+                    });
+                    zrCommunesData = result;
+                } catch(e) { console.warn('ZR communes load failed:', e); }
+            return result;
+        }
+
+        async function getCommunesForWilaya(code) {
+            var data = await loadZrCommunes();
+            var list = data.byWilayaCode[code];
+            if (list && list.length > 0) return list;
+            if (COMMUNES[code]) {
+                return COMMUNES[code].map(function(n) { return { name: n, nameArabic: COMMUNES_AR[n] || '' }; });
+            }
             return [];
         }
 
@@ -1343,7 +1392,7 @@
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.custom-select')) closeAllSelects();
             // Keep dropdown open when clicking search input
-            if (e.target.id === 'communeSearch' || e.target.id === 'communeCustomInput') {
+            if (e.target.id === 'communeSearch') {
                 var dropdown = document.getElementById('communeSelect').querySelector('.custom-select-dropdown');
                 dropdown.classList.add('open');
             }
@@ -1390,8 +1439,14 @@
                         document.getElementById('communePlaceholder').textContent = 'Loading hubs...';
                         populateHubsForWilaya(code, name);
                     } else {
-                        document.getElementById('communePlaceholder').textContent = 'Select Commune';
-                        populateCommuneOptions(COMMUNES[code] || []);
+                        document.getElementById('communePlaceholder').textContent = 'Loading communes...';
+                        getCommunesForWilaya(code).then(function(list) {
+                            document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                            populateCommuneOptions(list);
+                        }).catch(function() {
+                            document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                            populateCommuneOptions([]);
+                        });
                     }
 
                     // Fetch price and update
@@ -1403,11 +1458,9 @@
 
         // === COMMUNE SEARCH STATE ===
         var currentCommunes = [];
-        var selectedCommuneIsCustom = false;
 
         function populateCommuneOptions(communes) {
             currentCommunes = communes;
-            selectedCommuneIsCustom = false;
             var container = document.getElementById('communeOptions');
             renderCommuneList(communes);
             // Clear search
@@ -1417,30 +1470,22 @@
 
         function renderCommuneList(communes) {
             var container = document.getElementById('communeOptions');
+            if (!communes.length) {
+                container.innerHTML = '<div class="custom-select-option" style="opacity:0.5">No communes available for this wilaya</div>';
+                return;
+            }
             var html = communes.map(function(c) {
-                var arName = COMMUNES_AR[c] || '';
-                return '<div class="custom-select-option" data-name="' + c + '">' + c + (arName ? ' - ' + arName : '') + '</div>';
+                var arName = c.nameArabic || '';
+                var safeName = (c.name || '').replace(/"/g, '&quot;');
+                return '<div class="custom-select-option" data-name="' + safeName + '">' + (c.name || '') + (arName ? ' - ' + arName : '') + '</div>';
             }).join('');
-            // Add "Other commune" option
-            html += '<div class="custom-select-option commune-other-option" data-name="__custom__" style="border-top:1px solid rgba(255,255,255,0.1);color:#c5d98b;font-weight:600;">✎ Other commune (type it below)</div>';
-            html += '<div class="commune-custom-wrap" id="communeCustomWrap" style="display:none;">';
-            html += '<input type="text" id="communeCustomInput" class="commune-custom-input" placeholder="Type your commune name..." onkeydown="if(event.key===\'Enter\')confirmCustomCommune()">';
-            html += '<button type="button" class="commune-custom-btn" onclick="confirmCustomCommune()">CONFIRM</button>';
-            html += '</div>';
             container.innerHTML = html;
             // Add click handlers
             container.querySelectorAll('.custom-select-option').forEach(function(opt) {
                 opt.addEventListener('click', function() {
-                    if (this.dataset.name === '__custom__') {
-                        var wrap = document.getElementById('communeCustomWrap');
-                        wrap.style.display = 'block';
-                        var customInput = document.getElementById('communeCustomInput');
-                        customInput.focus();
-                        return;
-                    }
                     selectedCommune = this.dataset.name;
-                    selectedCommuneIsCustom = false;
-                    var arName = COMMUNES_AR[selectedCommune] || '';
+                    var found = currentCommunes.find(function(c) { return c.name === selectedCommune; });
+                    var arName = found ? (found.nameArabic || '') : '';
                     var displayText = selectedCommune + (arName ? ' - ' + arName : '');
                     updateCommuneTrigger(displayText);
                     container.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
@@ -1450,17 +1495,6 @@
                 });
             });
         }
-
-        window.confirmCustomCommune = function() {
-            var customInput = document.getElementById('communeCustomInput');
-            var val = customInput ? customInput.value.trim() : '';
-            if (!val) { customInput.focus(); return; }
-            selectedCommune = val;
-            selectedCommuneIsCustom = true;
-            updateCommuneTrigger(val);
-            closeAllSelects();
-            clearError(document.getElementById('communeSelect').querySelector('.custom-select-trigger'), document.getElementById('communeError'));
-        };
 
         function updateCommuneTrigger(text) {
             var trigger = document.getElementById('communeSelect').querySelector('.custom-select-trigger');
@@ -1476,8 +1510,9 @@
             }
             query = query.toLowerCase().trim();
             var filtered = currentCommunes.filter(function(c) {
-                var arName = (COMMUNES_AR[c] || '').toLowerCase();
-                return c.toLowerCase().indexOf(query) !== -1 || arName.indexOf(query) !== -1;
+                var n = (c.name || '').toLowerCase();
+                var ar = (c.nameArabic || '').toLowerCase();
+                return n.indexOf(query) !== -1 || ar.indexOf(query) !== -1;
             });
             renderCommuneList(filtered);
             // Re-open dropdown
@@ -1548,10 +1583,10 @@
             var el = document.getElementById('summaryShipping');
             el.textContent = 'Calculating...';
             
-            if (zrSettings.useApiRates && zrSettings.apiKey && zrSettings.tenantId) {
+            if (zrSettings.useApiRates) {
                 try {
                     var proxyUrl = '/.netlify/functions/zr-api';
-                    var proxyBody = { apiKey: zrSettings.apiKey, tenantId: zrSettings.tenantId, path: '/rates?from_wilaya=16&to_wilaya=' + wilayaCode, method: 'GET' };
+                    var proxyBody = { path: '/rates?from_wilaya=16&to_wilaya=' + wilayaCode, method: 'GET' };
                     var response = await fetch(proxyUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(proxyBody) });
                     
                     var apiResult = await response.json();
@@ -1618,8 +1653,14 @@
                 if (type === 'post') {
                     populateHubsForWilaya(selectedWilayaCode, selectedWilayaName);
                 } else {
-                    document.getElementById('communePlaceholder').textContent = 'Select Commune';
-                    populateCommuneOptions(COMMUNES[selectedWilayaCode] || []);
+                    document.getElementById('communePlaceholder').textContent = 'Loading communes...';
+                    getCommunesForWilaya(selectedWilayaCode).then(function(list) {
+                        document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                        populateCommuneOptions(list);
+                    }).catch(function() {
+                        document.getElementById('communePlaceholder').textContent = 'Select Commune';
+                        populateCommuneOptions([]);
+                    });
                 }
             }
             selectedCommune = '';
@@ -1848,10 +1889,10 @@
             if (!yunDb) return { blocked: false };
             try {
                 var cutoff = new Date(Date.now() - COOLDOWN_HOURS * 60 * 60 * 1000).toISOString();
-                var result = await yunDb.from('orders').select('id, created_at').eq('phone', phone).gte('created_at', cutoff).limit(1);
+                var result = await yunDb.rpc('check_recent_order', { p_phone: phone, p_since: cutoff });
                 if (result.error) return { blocked: false };
-                if (result.data && result.data.length > 0) {
-                    var lastOrder = new Date(result.data[0].created_at);
+                if (result.data) {
+                    var lastOrder = new Date(result.data);
                     var expiresAt = new Date(lastOrder.getTime() + COOLDOWN_HOURS * 60 * 60 * 1000);
                     var mins = Math.ceil((expiresAt - new Date()) / 60000);
                     return { blocked: true, minutesLeft: mins };
