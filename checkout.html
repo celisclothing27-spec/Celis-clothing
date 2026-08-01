@@ -2412,6 +2412,10 @@
         }
 
         // === SHIPPING PRICE ===
+        // Fallback prices (DA) used only when a wilaya has no row in wilaya_pricing,
+        // so customers are never blocked with "Shipping not available".
+        var DEFAULT_SHIPPING = { home: 900, post: 500 };
+
         async function fetchShippingPrice(wilayaCode) {
             var el = document.getElementById('summaryShipping');
             el.textContent = 'Calculating...';
@@ -2456,22 +2460,36 @@
                 var result = await yunDb.from('wilaya_pricing')
                     .select('home_price, post_price')
                     .eq('wilaya_code', wilayaCode)
-                    .single();
+                    .maybeSingle();
                 
-                if (result.data) {
+                if (result && result.data) {
                     wilayaPricesCache[wilayaCode] = result.data;
                     if (_allWilayaPrices) _allWilayaPrices[wilayaCode] = result.data;
-                    updateSummary();
+                } else {
+                    // No pricing row for this wilaya — use a safe default so the
+                    // checkout never blocks customers with "Shipping not available".
+                    var fallback = { home_price: DEFAULT_SHIPPING.home, post_price: DEFAULT_SHIPPING.post };
+                    wilayaPricesCache[wilayaCode] = fallback;
+                    if (_allWilayaPrices) _allWilayaPrices[wilayaCode] = fallback;
+                    console.warn('No wilaya_pricing row for ' + wilayaCode + '; using default shipping price.');
                 }
+                updateSummary();
             } catch(e) {
                 console.warn('Shipping price fetch failed:', e);
+                // DB/network error: still allow checkout with the default price.
+                var fallback = { home_price: DEFAULT_SHIPPING.home, post_price: DEFAULT_SHIPPING.post };
+                wilayaPricesCache[wilayaCode] = fallback;
+                if (_allWilayaPrices) _allWilayaPrices[wilayaCode] = fallback;
+                updateSummary();
             }
         }
 
         function getShippingCost() {
             if (!selectedWilayaCode || !wilayaPricesCache[selectedWilayaCode]) return null;
             var p = wilayaPricesCache[selectedWilayaCode];
-            return selectedDeliveryType === 'home' ? p.home_price : p.post_price;
+            var cost = selectedDeliveryType === 'home' ? p.home_price : p.post_price;
+            if (cost == null) cost = DEFAULT_SHIPPING[selectedDeliveryType === 'home' ? 'home' : 'post'];
+            return cost;
         }
 
         // === DELIVERY TYPE ===
@@ -2794,11 +2812,20 @@
 
                 // Cooldown — removed per request
 
-                // Price
-                var { data: pricing } = await yunDb.from('wilaya_pricing').select('home_price, post_price').eq('wilaya_code', selectedWilayaCode).single();
-                if (!pricing) { alert('Shipping not available'); btn.classList.remove('loading'); btn.disabled = false; return; }
+                // Price (cached from the price selector; fall back to DB, then a safe
+                // default — a missing wilaya_pricing row can never block the order)
+                var pricing = wilayaPricesCache[selectedWilayaCode];
+                if (!pricing) {
+                    try {
+                        var pr = await yunDb.from('wilaya_pricing').select('home_price, post_price').eq('wilaya_code', selectedWilayaCode).maybeSingle();
+                        if (pr && pr.data) pricing = pr.data;
+                    } catch(e) {}
+                    if (!pricing) pricing = { home_price: DEFAULT_SHIPPING.home, post_price: DEFAULT_SHIPPING.post };
+                }
 
-                var shippingCost = selectedDeliveryType === 'home' ? pricing.home_price : pricing.post_price;
+                var shippingCost = selectedDeliveryType === 'home'
+                    ? (pricing.home_price != null ? pricing.home_price : DEFAULT_SHIPPING.home)
+                    : (pricing.post_price != null ? pricing.post_price : DEFAULT_SHIPPING.post);
                 var subtotal = getCartSubtotal();
                 var promoDiscount = appliedPromo ? appliedPromo.discount : 0;
                 var total = subtotal + shippingCost - promoDiscount;
