@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Celis clothing — Premium fashion streetwear. Free shipping across Algeria via Zr Express.">
     <meta name="theme-color" content="#0a0a0a">
@@ -1056,16 +1059,12 @@
             grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,255,255,0.3);font-family:\'Space Mono\',monospace;font-size:0.7rem">Failed to load products.</div>';
         }
 
-        // Load outfits
+        // Load outfits (no cache — outfits rarely change)
         try {
-            var outfitRes = await YunCache.fetch('outfits_all', 300000, function() {
-                return yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller, offer_enabled').eq('is_active', true).order('sort_order').order('name');
-            });
+            var outfitRes = await yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller').eq('is_active', true).order('sort_order').order('name');
             if (outfitRes && outfitRes.data && outfitRes.data.length > 0) {
                 var outfitIds = outfitRes.data.map(function(o) { return o.id; });
-                var outfitImgs = await YunCache.fetch('outfit_imgs_all', 300000, function() {
-                    return yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
-                });
+                var outfitImgs = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
                 var imgMap = {};
                 if (outfitImgs && outfitImgs.data) outfitImgs.data.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
                 outfitRes.data.forEach(function(o) {
@@ -1087,11 +1086,8 @@
                     }
 
                     var outfitBadges = '';
-                    if (o.is_bestseller || o.offer_enabled) {
-                        outfitBadges = '<div class="badge-stack">';
-                        if (o.is_bestseller) outfitBadges += '<div class="badge-hot">BEST SELLER</div>';
-                        if (o.offer_enabled) outfitBadges += '<div class="badge-promo">OFFER</div>';
-                        outfitBadges += '</div>';
+                    if (o.is_bestseller) {
+                        outfitBadges = '<div class="badge-stack"><div class="badge-hot">BEST SELLER</div></div>';
                     }
 
                     card.innerHTML = '<div class="product-img-wrap">' +
