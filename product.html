@@ -873,7 +873,7 @@
             var sgt=product.size_guide_text||'Size measurements may vary by 1-2 cm.';
             var sgi=product.size_guide_images||[];
             var html=sgt.replace(/\n/g,'<br>');
-            sgi.forEach(function(u){html+='<img src="'+optImg(u,600)+'" alt="Size Guide" loading="lazy">';});
+            sgi.forEach(function(u){html+='<img src="'+optImg(u,600)+'" alt="Size Guide" loading="eager" decoding="async">';});
             sg.innerHTML=html;
         }
 

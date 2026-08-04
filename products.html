@@ -1067,6 +1067,7 @@
                 var outfitImgs = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
                 var imgMap = {};
                 if (outfitImgs && outfitImgs.data) outfitImgs.data.forEach(function(i) { imgMap[i.outfit_id] = i.cloudinary_url; });
+                var outfitFragment = document.createDocumentFragment();
                 outfitRes.data.forEach(function(o) {
                     var img = imgMap[o.id] || '';
                     var base = Number(o.base_price) || 0;
@@ -1077,6 +1078,7 @@
                     card.className = 'product-card wide-card';
                     card.setAttribute('data-category', 'outfit');
                     card.setAttribute('data-product-id', o.slug);
+                    card.setAttribute('data-sort-order', o.sort_order || 0);
 
                     var priceHtml = '';
                     if (sale) {
@@ -1104,8 +1106,19 @@
                             '<button class="card-place-btn" onclick="event.preventDefault();event.stopPropagation();window.location.href=\'' + outfitUrl + '\'">PLACE ORDER</button>' +
                         '</div>' +
                     '</div>';
-                    grid.insertBefore(card, grid.firstChild);
+                    outfitFragment.appendChild(card);
                 });
+                grid.appendChild(outfitFragment);
+                var allCards = Array.from(grid.querySelectorAll('.product-card'));
+                allCards.sort(function(a, b) {
+                    var sa = parseInt(a.getAttribute('data-sort-order') || '0') || 0;
+                    var sb = parseInt(b.getAttribute('data-sort-order') || '0') || 0;
+                    if (sa !== sb) return sa - sb;
+                    var na = (a.querySelector('.product-name') || {}).textContent || '';
+                    var nb = (b.querySelector('.product-name') || {}).textContent || '';
+                    return na.localeCompare(nb);
+                });
+                allCards.forEach(function(c) { grid.appendChild(c); });
             }
         } catch(e) {
             console.log('Outfits load skipped:', e.message);
