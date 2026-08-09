@@ -1059,7 +1059,7 @@
 
         // Load outfits (no cache — outfits rarely change)
         try {
-            var outfitRes = await yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller').eq('is_active', true).order('sort_order').order('name');
+            var outfitRes = await yunDb.from('outfits').select('id, name, slug, base_price, sale_price, is_active, is_bestseller, sort_order').eq('is_active', true).order('sort_order').order('name');
             if (outfitRes && outfitRes.data && outfitRes.data.length > 0) {
                 var outfitIds = outfitRes.data.map(function(o) { return o.id; });
                 var outfitImgs = await yunDb.from('outfit_images').select('outfit_id, cloudinary_url').eq('is_primary', true).in('outfit_id', outfitIds);
