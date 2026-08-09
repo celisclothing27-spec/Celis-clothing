@@ -1039,7 +1039,7 @@
         }
 
         try {
-            var res = await yunDb.from('products').select('id, name, slug, category, base_price, sale_price, is_bestseller, offer_enabled, product_images(cloudinary_url, is_primary)').eq('is_active', true).neq('category', 'outfit_child').order('sort_order').order('name');
+            var res = await yunDb.from('products').select('id, name, slug, category, base_price, sale_price, is_bestseller, offer_enabled, sort_order, product_images(cloudinary_url, is_primary)').eq('is_active', true).neq('category', 'outfit_child').order('sort_order').order('name');
             if (res.error) throw res.error;
             var products = (res.data || []).map(function(p) {
                 var imgs = p.product_images || [];
